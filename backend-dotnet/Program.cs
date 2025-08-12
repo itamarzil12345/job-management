@@ -1,4 +1,5 @@
 using JobManagementHub.Hubs;
+using JobManagementHub;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddLogging();
+
+// Add background service for job updates
+builder.Services.AddHostedService<JobUpdateService>();
 
 var app = builder.Build();
 
