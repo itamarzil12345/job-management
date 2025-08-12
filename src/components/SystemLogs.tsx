@@ -80,13 +80,13 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
   const getSourceColor = (source?: LogEntry["source"]) => {
     switch (source) {
       case "signalr":
-        return accentColor; // Cyberpunk pink
+        return accentColor; // Dark magenta
       case "nodejs":
-        return "#0080ff"; // Cyberpunk blue
+        return "#4169e1"; // Royal blue
       case "dotnet":
-        return "#00ff41"; // Matrix green
+        return successColor; // Forest green
       default:
-        return "#808080"; // Gray
+        return "#696969"; // Dim gray
     }
   };
 
@@ -111,6 +111,8 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
       display="flex"
       flexDirection="column"
       position="relative"
+      border="1px solid"
+      borderColor={borderColor}
       _before={{
         content: '""',
         position: "absolute",
@@ -118,7 +120,7 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         left: 0,
         right: 0,
         bottom: 0,
-        background: "linear-gradient(45deg, transparent 49%, rgba(0, 255, 65, 0.03) 50%, transparent 51%)",
+        background: "linear-gradient(45deg, transparent 49%, rgba(0, 100, 0, 0.05) 50%, transparent 51%)",
         backgroundSize: "20px 20px",
         pointerEvents: "none",
         zIndex: 1,
@@ -130,28 +132,29 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         gap={2} 
         p={4} 
         pb={2}
-        borderBottom="1px solid"
+        borderBottom="2px solid"
         borderColor={borderColor}
         position="relative"
         zIndex={2}
+        bg="white"
         _after={{
           content: '""',
           position: "absolute",
-          bottom: "-1px",
+          bottom: "-2px",
           left: 0,
           right: 0,
-          height: "2px",
+          height: "3px",
           background: `linear-gradient(90deg, ${borderColor}, ${accentColor}, ${borderColor})`,
           animation: "scan 2s linear infinite",
         }}
       >
         <Box as={FaCircle as any} color={errorColor} boxSize={2} />
         <Box as={FaCircle as any} color={warningColor} boxSize={2} />
-        <Box as={FaCircle as any} color={textColor} boxSize={2} />
-        <Text color={textColor} ml={2} fontWeight="bold" textShadow={`0 0 10px ${textColor}`}>
+        <Box as={FaCircle as any} color={successColor} boxSize={2} />
+        <Text color={textColor} ml={2} fontWeight="bold" textShadow={`0 0 5px rgba(0, 100, 0, 0.3)`}>
           [SYSTEM] TERMINAL_ACCESS_GRANTED
         </Text>
-        <Text color={accentColor} ml="auto" fontSize="xs" fontFamily="mono">
+        <Text color={accentColor} ml="auto" fontSize="xs" fontFamily="mono" fontWeight="bold">
           {new Date().toLocaleTimeString()}
         </Text>
       </Flex>
@@ -175,8 +178,8 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
       >
         <VStack spacing={1} align="stretch">
           {displayLogs.map((log) => (
-            <Flex key={log.id} alignItems="flex-start" gap={2}>
-              <Text color="gray.500" fontSize="xs" minW="70px">
+            <Flex key={log.id} alignItems="flex-start" gap={2} p={1} _hover={{ bg: "rgba(0, 100, 0, 0.05)" }}>
+              <Text color="#666" fontSize="xs" minW="70px" fontFamily="mono" fontWeight="bold">
                 {formatTime(log.timestamp)}
               </Text>
               <Box
@@ -193,7 +196,7 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
                   mt={1}
                 />
               )}
-              <Text color={textColor} flex={1}>
+              <Text color={textColor} flex={1} fontFamily="mono" fontSize="xs">
                 {log.message}
               </Text>
             </Flex>

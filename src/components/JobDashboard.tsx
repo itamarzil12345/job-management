@@ -31,7 +31,7 @@ export const JobDashboard: React.FC = () => {
     jobService.getSignalRStatus()
   );
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [logsPanelHeight, setLogsPanelHeight] = useState(300);
+  const [logsPanelWidth, setLogsPanelWidth] = useState(500);
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
@@ -88,12 +88,12 @@ export const JobDashboard: React.FC = () => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isResizing) {
         e.preventDefault();
-        const newHeight = window.innerHeight - e.clientY - 16; // Distance from bottom (16px padding)
-        const minHeight = 200;
-        const maxHeight = window.innerHeight * 0.7; // Max 70% of screen height
+        const newWidth = window.innerWidth - e.clientX - 16; // Distance from right edge (16px padding)
+        const minWidth = 300;
+        const maxWidth = window.innerWidth * 0.6; // Max 60% of screen width
 
-        if (newHeight >= minHeight && newHeight <= maxHeight) {
-          setLogsPanelHeight(newHeight);
+        if (newWidth >= minWidth && newWidth <= maxWidth) {
+          setLogsPanelWidth(newWidth);
         }
       }
     };
@@ -223,88 +223,64 @@ export const JobDashboard: React.FC = () => {
   }
 
   return (
-    <Box
-      position="relative"
-      h="100vh"
-      p={4}
-      display="flex"
-      flexDirection="column"
-    >
-      {/* Main Content - Takes remaining space */}
-      <Box flex={1} overflow="auto" pb={2}>
-        <VStack spacing={6} align="stretch">
-          <HStack justify="space-between" align="center">
-            <HStack spacing={4}>
-              <Button colorScheme="blue" onClick={onCreateOpen} size="lg">
-                {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
-              </Button>
-              <Button colorScheme="red" onClick={onDeleteOpen} size="lg">
-                {language === "he" ? "מחק עבודות" : "Delete Jobs"}
-              </Button>
+    <Box position="relative" h="100vh" p={4}>
+      <Box position="relative" h="100%" display="flex">
+        {/* Main Content */}
+        <Box flex={1} pr={2} minW="400px" overflow="auto">
+          <VStack spacing={6} align="stretch">
+            <HStack justify="space-between" align="center">
+              <HStack spacing={4}>
+                <Button colorScheme="blue" onClick={onCreateOpen} size="lg">
+                  {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
+                </Button>
+                <Button colorScheme="red" onClick={onDeleteOpen} size="lg">
+                  {language === "he" ? "מחק עבודות" : "Delete Jobs"}
+                </Button>
+              </HStack>
             </HStack>
-            <LanguageSwitcher />
-          </HStack>
 
-          <StatusCards counts={getStatusCounts()} />
+            <StatusCards counts={getStatusCounts()} />
 
-          {/* SignalR Status - Only show when not using mock data */}
-          {!USE_MOCK_DATA && (
-            <SignalRStatus
-              isConnected={signalRStatus.isConnected}
-              connectionState={signalRStatus.connectionState}
-              hubUrl={signalRStatus.connectionInfo.hubUrl}
+            {/* SignalR Status - Only show when not using mock data */}
+            {!USE_MOCK_DATA && (
+              <SignalRStatus
+                isConnected={signalRStatus.isConnected}
+                connectionState={signalRStatus.connectionState}
+                hubUrl={signalRStatus.connectionInfo.hubUrl}
+              />
+            )}
+
+            <JobTable
+              jobs={jobs}
+              onJobAction={handleJobAction}
+              onRefresh={fetchJobs}
             />
-          )}
 
-          <JobTable
-            jobs={jobs}
-            onJobAction={handleJobAction}
-            onRefresh={fetchJobs}
-          />
+            <CreateJobModal
+              isOpen={isCreateOpen}
+              onClose={onCreateClose}
+              onCreateJob={handleCreateJob}
+            />
 
-          <CreateJobModal
-            isOpen={isCreateOpen}
-            onClose={onCreateClose}
-            onCreateJob={handleCreateJob}
-          />
+            <DeleteJobsModal
+              isOpen={isDeleteOpen}
+              onClose={onDeleteClose}
+              onDeleteJobs={handleDeleteJobsByStatus}
+            />
+          </VStack>
+        </Box>
 
-          <DeleteJobsModal
-            isOpen={isDeleteOpen}
-            onClose={onDeleteClose}
-            onDeleteJobs={handleDeleteJobsByStatus}
-          />
-        </VStack>
-      </Box>
-
-      {/* Bottom System Logs Panel - Full Width */}
-      <Box
-        h={`${logsPanelHeight}px`}
-        minH="200px"
-        maxH="70vh"
-        borderTop="1px solid"
-        borderColor="gray.200"
-        bg="white"
-        position="relative"
-        w="100%"
-        ml="-16px"
-        mr="-16px"
-        px="16px"
-      >
-        {/* Resize Handle - Top of the panel */}
+        {/* Resize Handle */}
         <Box
           ref={resizeRef}
-          position="absolute"
-          top="-4px"
-          left="0"
-          right="0"
-          h="8px"
+          w="8px"
           bg={isResizing ? "blue.500" : "gray.200"}
-          cursor="row-resize"
+          cursor="col-resize"
           _hover={{ bg: "blue.300" }}
           _active={{ bg: "blue.500" }}
           onMouseDown={() => {
             setIsResizing(true);
-            document.body.style.cursor = "row-resize";
+            document.body.style.cursor = "col-resize";
             document.body.style.userSelect = "none";
           }}
           transition="background-color 0.2s"
@@ -314,8 +290,8 @@ export const JobDashboard: React.FC = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            h: "2px",
-            w: "40px",
+            w: "2px",
+            h: "40px",
             bg: isResizing ? "white" : "gray.400",
             borderRadius: "1px",
             opacity: isResizing ? 0.9 : 0.6,
@@ -326,15 +302,25 @@ export const JobDashboard: React.FC = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            h: "1px",
-            w: "20px",
+            w: "1px",
+            h: "20px",
             bg: isResizing ? "white" : "gray.500",
             borderRadius: "0.5px",
             opacity: isResizing ? 1 : 0.8,
           }}
         />
 
-        <SystemLogs logs={logs} maxLogs={200} />
+        {/* System Logs Panel - Right Side */}
+        <Box
+          w={`${logsPanelWidth}px`}
+          minW="300px"
+          h="100%"
+          position="relative"
+          borderLeft="1px solid"
+          borderColor="gray.200"
+        >
+          <SystemLogs logs={logs} maxLogs={200} />
+        </Box>
       </Box>
     </Box>
   );
