@@ -223,10 +223,10 @@ export const JobDashboard: React.FC = () => {
   }
 
   return (
-    <Box position="relative" h="100vh" p={4}>
+    <Box position="relative" h="100vh" p={4} pr={0}>
       {/* Main Content - Full width with right margin for logs panel */}
       <Box
-        pr={`${logsPanelWidth + 16}px`}
+        pr={`${logsPanelWidth + 4}px`}
         h="calc(100vh - 32px)"
         overflow="auto"
         maxW="calc(100vw - 32px)"
