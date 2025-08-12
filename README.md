@@ -152,8 +152,8 @@ dotnet restore
 # Build the project
 dotnet build
 
-# Run the server
-dotnet run
+# Run the server on port 5002
+dotnet run --urls "https://localhost:5002"
 ```
 
 **Expected Output:**
@@ -199,6 +199,8 @@ REACT_APP_SIGNALR_HUB_URL=https://localhost:5002/JobSignalRHub
 
 - **Node.js Backend**: Port 5001 (HTTP) - REST API
 - **.NET Backend**: Port 5002 (HTTPS) - SignalR Hub
+
+**Important**: The .NET backend runs on port 5002 to avoid conflicts with the Node.js backend on port 5001.
 
 To change ports:
 
