@@ -224,77 +224,106 @@ export const JobDashboard: React.FC = () => {
 
   return (
     <Box position="relative" h="100vh" p={4}>
-      <Box position="relative" h="100%" display="flex">
-        {/* Main Content */}
-        <Box flex={1} pr={2} minW="400px" overflow="auto">
-          <VStack spacing={6} align="stretch">
-            <HStack justify="space-between" align="center">
-              <HStack spacing={4}>
-                <Button colorScheme="blue" onClick={onCreateOpen} size="lg">
-                  {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
-                </Button>
-                <Button colorScheme="red" onClick={onDeleteOpen} size="lg">
-                  {language === "he" ? "מחק עבודות" : "Delete Jobs"}
-                </Button>
-              </HStack>
+      {/* Main Content - Full width with right margin for logs panel */}
+      <Box
+        pr={`${logsPanelWidth + 16}px`}
+        h="calc(100vh - 32px)"
+        overflow="auto"
+        maxW="calc(100vw - 32px)"
+      >
+        <VStack spacing={6} align="stretch">
+          <HStack justify="space-between" align="center">
+            <HStack spacing={4}>
+              <Button colorScheme="blue" onClick={onCreateOpen} size="lg">
+                {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
+              </Button>
+              <Button colorScheme="red" onClick={onDeleteOpen} size="lg">
+                {language === "he" ? "מחק עבודות" : "Delete Jobs"}
+              </Button>
             </HStack>
+            <LanguageSwitcher />
+          </HStack>
 
-            <StatusCards counts={getStatusCounts()} />
+          <StatusCards counts={getStatusCounts()} />
 
-            {/* SignalR Status - Only show when not using mock data */}
-            {!USE_MOCK_DATA && (
-              <SignalRStatus
-                isConnected={signalRStatus.isConnected}
-                connectionState={signalRStatus.connectionState}
-                hubUrl={signalRStatus.connectionInfo.hubUrl}
-              />
-            )}
-
-            <JobTable
-              jobs={jobs}
-              onJobAction={handleJobAction}
-              onRefresh={fetchJobs}
+          {/* SignalR Status - Only show when not using mock data */}
+          {!USE_MOCK_DATA && (
+            <SignalRStatus
+              isConnected={signalRStatus.isConnected}
+              connectionState={signalRStatus.connectionState}
+              hubUrl={signalRStatus.connectionInfo.hubUrl}
             />
+          )}
 
-            <CreateJobModal
-              isOpen={isCreateOpen}
-              onClose={onCreateClose}
-              onCreateJob={handleCreateJob}
-            />
+          <JobTable
+            jobs={jobs}
+            onJobAction={handleJobAction}
+            onRefresh={fetchJobs}
+          />
 
-            <DeleteJobsModal
-              isOpen={isDeleteOpen}
-              onClose={onDeleteClose}
-              onDeleteJobs={handleDeleteJobsByStatus}
-            />
-          </VStack>
-        </Box>
+          <CreateJobModal
+            isOpen={isCreateOpen}
+            onClose={onCreateClose}
+            onCreateJob={handleCreateJob}
+          />
 
-        {/* Resize Handle */}
+          <DeleteJobsModal
+            isOpen={isDeleteOpen}
+            onClose={onDeleteClose}
+            onDeleteJobs={handleDeleteJobsByStatus}
+          />
+        </VStack>
+      </Box>
+
+      {/* Fixed System Logs Panel - Right Edge */}
+      <Box
+        position="fixed"
+        top="0px"
+        right="0px"
+        w={`${logsPanelWidth}px`}
+        minW="300px"
+        h="calc(100vh - 2px)"
+        borderLeft="1px solid"
+        borderColor="gray.200"
+        overflow="hidden"
+        zIndex={1000}
+      >
+        {/* Resize Handle - Left side of the panel */}
         <Box
           ref={resizeRef}
-          w="8px"
-          bg={isResizing ? "blue.500" : "gray.200"}
+          position="absolute"
+          left="-6px"
+          top="0"
+          bottom="0"
+          w="12px"
+          bg={isResizing ? "blue.500" : "gray.300"}
           cursor="col-resize"
-          _hover={{ bg: "blue.300" }}
-          _active={{ bg: "blue.500" }}
+          _hover={{
+            bg: "blue.400",
+            boxShadow: "0 0 10px rgba(59, 130, 246, 0.5)",
+          }}
+          _active={{
+            bg: "blue.600",
+            boxShadow: "0 0 15px rgba(59, 130, 246, 0.7)",
+          }}
           onMouseDown={() => {
             setIsResizing(true);
             document.body.style.cursor = "col-resize";
             document.body.style.userSelect = "none";
           }}
-          transition="background-color 0.2s"
+          transition="all 0.2s ease"
+          zIndex={1001}
           _after={{
             content: '""',
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            w: "2px",
-            h: "40px",
-            bg: isResizing ? "white" : "gray.400",
-            borderRadius: "1px",
-            opacity: isResizing ? 0.9 : 0.6,
+            w: "3px",
+            h: "60px",
+            bg: isResizing ? "white" : "gray.500",
+            borderRadius: "2px",
+            opacity: isResizing ? 1 : 0.8,
           }}
           _before={{
             content: '""',
@@ -303,24 +332,14 @@ export const JobDashboard: React.FC = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             w: "1px",
-            h: "20px",
-            bg: isResizing ? "white" : "gray.500",
-            borderRadius: "0.5px",
-            opacity: isResizing ? 1 : 0.8,
+            h: "30px",
+            bg: isResizing ? "white" : "gray.600",
+            borderRadius: "1px",
+            opacity: isResizing ? 1 : 0.9,
           }}
         />
 
-        {/* System Logs Panel - Right Side */}
-        <Box
-          w={`${logsPanelWidth}px`}
-          minW="300px"
-          h="100%"
-          position="relative"
-          borderLeft="1px solid"
-          borderColor="gray.200"
-        >
-          <SystemLogs logs={logs} maxLogs={200} />
-        </Box>
+        <SystemLogs logs={logs} maxLogs={200} />
       </Box>
     </Box>
   );
