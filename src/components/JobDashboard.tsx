@@ -31,7 +31,7 @@ export const JobDashboard: React.FC = () => {
     jobService.getSignalRStatus()
   );
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [logsPanelWidth, setLogsPanelWidth] = useState(500);
+  const [logsPanelWidth, setLogsPanelWidth] = useState(250);
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
