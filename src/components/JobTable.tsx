@@ -277,29 +277,12 @@ export const JobTable: React.FC<JobTableProps> = ({
           boxShadow="lg"
           maxH="500px"
           overflowY="auto"
-          css={{
-            "@keyframes gradient": {
-              "0%": {
-                backgroundPosition: "0% 50%",
-              },
-              "50%": {
-                backgroundPosition: "100% 50%",
-              },
-              "100%": {
-                backgroundPosition: "0% 50%",
-              },
-            },
-          }}
         >
           <Table variant="simple" size="md">
             <Thead
               bg="blue.800"
               _dark={{
-                bg: "transparent",
-                background:
-                  "linear-gradient(135deg, #000000 0%, #00ff41 50%, #000000 100%)",
-                backgroundSize: "200% 200%",
-                animation: "gradient 3s ease infinite",
+                bg: "#000000",
               }}
             >
               <Tr>
