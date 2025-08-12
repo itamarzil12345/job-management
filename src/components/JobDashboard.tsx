@@ -250,9 +250,9 @@ export const JobDashboard: React.FC = () => {
             border="1px solid"
             borderColor="gray.200"
             _dark={{
-              bg: "#000000",
-              borderColor: "#00ff41",
-              boxShadow: "0 0 20px rgba(0, 255, 65, 0.1)",
+              bg: "#0f0f23",
+              borderColor: "#8a2be2",
+              boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
             }}
           >
             <HStack justify="space-between" align="center">
@@ -277,9 +277,9 @@ export const JobDashboard: React.FC = () => {
             border="1px solid"
             borderColor="gray.200"
             _dark={{
-              bg: "#000000",
-              borderColor: "#00ff41",
-              boxShadow: "0 0 20px rgba(0, 255, 65, 0.1)",
+              bg: "#0f0f23",
+              borderColor: "#8a2be2",
+              boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
             }}
           >
             <StatusCards counts={getStatusCounts()} />
@@ -295,9 +295,9 @@ export const JobDashboard: React.FC = () => {
               border="1px solid"
               borderColor="gray.200"
               _dark={{
-                bg: "#000000",
-                borderColor: "#00ff41",
-                boxShadow: "0 0 20px rgba(0, 255, 65, 0.1)",
+                bg: "#0f0f23",
+                borderColor: "#8a2be2",
+                boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
               }}
             >
               <SignalRStatus
@@ -317,9 +317,9 @@ export const JobDashboard: React.FC = () => {
             border="1px solid"
             borderColor="gray.200"
             _dark={{
-              bg: "#000000",
-              borderColor: "#00ff41",
-              boxShadow: "0 0 20px rgba(0, 255, 65, 0.1)",
+              bg: "#0f0f23",
+              borderColor: "#8a2be2",
+              boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
             }}
           >
             <JobTable
@@ -357,9 +357,9 @@ export const JobDashboard: React.FC = () => {
         zIndex={1000}
         bg="white"
         _dark={{
-          bg: "#000000",
-          borderColor: "#00ff41",
-          boxShadow: "0 0 30px rgba(0, 255, 65, 0.2)",
+          bg: "#0f0f23",
+          borderColor: "#8a2be2",
+          boxShadow: "0 0 30px rgba(138, 43, 226, 0.3)",
         }}
         boxShadow="lg"
       >
@@ -382,14 +382,14 @@ export const JobDashboard: React.FC = () => {
             boxShadow: "0 0 15px rgba(59, 130, 246, 0.7)",
           }}
           _dark={{
-            bg: isResizing ? "#00ff41" : "#1a1a1a",
+            bg: isResizing ? "#8a2be2" : "#1a1a2e",
             _hover: {
-              bg: "#00ff41",
-              boxShadow: "0 0 15px rgba(0, 255, 65, 0.6)",
+              bg: "#8a2be2",
+              boxShadow: "0 0 15px rgba(138, 43, 226, 0.6)",
             },
             _active: {
-              bg: "#00ff41",
-              boxShadow: "0 0 20px rgba(0, 255, 65, 0.8)",
+              bg: "#8a2be2",
+              boxShadow: "0 0 20px rgba(138, 43, 226, 0.8)",
             },
           }}
           onMouseDown={() => {
@@ -411,7 +411,7 @@ export const JobDashboard: React.FC = () => {
             borderRadius: "2px",
             opacity: isResizing ? 1 : 0.8,
             _dark: {
-              bg: isResizing ? "#00ff41" : "#00ff41",
+              bg: isResizing ? "#8a2be2" : "#8a2be2",
               opacity: isResizing ? 1 : 0.6,
             },
           }}
@@ -427,7 +427,7 @@ export const JobDashboard: React.FC = () => {
             borderRadius: "1px",
             opacity: isResizing ? 1 : 0.9,
             _dark: {
-              bg: isResizing ? "#00ff41" : "#00ff41",
+              bg: isResizing ? "#8a2be2" : "#8a2be2",
               opacity: isResizing ? 1 : 0.8,
             },
           }}

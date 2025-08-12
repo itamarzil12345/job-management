@@ -11,7 +11,7 @@ function App() {
           bg="white"
           minH="100vh"
           color="gray.800"
-          _dark={{ bg: "#000000", color: "#00ff41" }}
+          _dark={{ bg: "#0f0f23", color: "#8a2be2" }}
         >
           <Container maxW="container.xl" py={8}>
             <Box textAlign="center" mb={8}>

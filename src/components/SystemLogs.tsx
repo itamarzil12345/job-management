@@ -31,13 +31,13 @@ interface SystemLogsProps {
 }
 
 const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
-  const bgColor = useColorModeValue("#f8f9fa", "#000000"); // Light gray / Pure black
-  const textColor = useColorModeValue("#006400", "#00ff41"); // Dark green / Bright green
-  const borderColor = useColorModeValue("#006400", "#00ff41"); // Dark green / Bright green
+  const bgColor = useColorModeValue("#f8f9fa", "#0f0f23"); // Light gray / Dark blue-purple
+  const textColor = useColorModeValue("#006400", "#8a2be2"); // Dark green / Bright purple
+  const borderColor = useColorModeValue("#006400", "#8a2be2"); // Dark green / Bright purple
   const accentColor = useColorModeValue("#8b008b", "#ff0080"); // Dark magenta / Bright magenta
   const warningColor = useColorModeValue("#ff8c00", "#ffaa00"); // Dark orange / Bright orange
   const errorColor = useColorModeValue("#dc143c", "#ff0040"); // Crimson red / Bright red
-  const successColor = useColorModeValue("#228b22", "#00ff00"); // Forest green / Bright green
+  const successColor = useColorModeValue("#228b22", "#00bfff"); // Forest green / Deep sky blue
 
   const getLogIcon = (level: LogEntry["level"]): IconType => {
     switch (level) {
@@ -147,7 +147,7 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         bottom: 0,
         background: useColorModeValue(
           "linear-gradient(45deg, transparent 49%, rgba(0, 100, 0, 0.05) 50%, transparent 51%)",
-          "linear-gradient(45deg, transparent 49%, rgba(0, 255, 65, 0.08) 50%, transparent 51%)"
+          "linear-gradient(45deg, transparent 49%, rgba(138, 43, 226, 0.1) 50%, transparent 51%)"
         ),
         backgroundSize: "20px 20px",
         pointerEvents: "none",
@@ -164,11 +164,11 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         borderColor={borderColor}
         position="relative"
         zIndex={2}
-        bg={useColorModeValue("white", "rgba(0, 0, 0, 0.8)")}
+        bg={useColorModeValue("white", "rgba(15, 15, 35, 0.9)")}
         _dark={{
-          bg: "rgba(0, 0, 0, 0.8)",
-          borderColor: "#00ff41",
-          boxShadow: "0 0 20px rgba(0, 255, 65, 0.3)",
+          bg: "rgba(15, 15, 35, 0.9)",
+          borderColor: "#8a2be2",
+          boxShadow: "0 0 20px rgba(138, 43, 226, 0.4)",
         }}
         _after={{
           content: '""',

@@ -19,11 +19,11 @@ const TopBar: React.FC = () => {
 
   const bgColor = useColorModeValue(
     "rgba(255, 255, 255, 0.95)",
-    "rgba(0, 0, 0, 0.95)"
+    "rgba(15, 15, 35, 0.95)"
   );
-  const borderColor = useColorModeValue("gray.200", "#00ff41");
-  const textColor = useColorModeValue("gray.800", "#00ff41");
-  const logoColor = useColorModeValue("blue.600", "#00ff41");
+  const borderColor = useColorModeValue("gray.200", "#8a2be2");
+  const textColor = useColorModeValue("gray.800", "#8a2be2");
+  const logoColor = useColorModeValue("blue.600", "#8a2be2");
 
   return (
     <Box
@@ -49,7 +49,7 @@ const TopBar: React.FC = () => {
         bottom: 0,
         background: useColorModeValue(
           "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          "linear-gradient(135deg, #000000 0%, #00ff41 50%, #000000 100%)"
+          "linear-gradient(135deg, #0f0f23 0%, #8a2be2 25%, #ff0080 50%, #00bfff 75%, #0f0f23 100%)"
         ),
         opacity: useColorModeValue(0.1, 0.3),
         zIndex: -1,

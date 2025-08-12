@@ -407,13 +407,13 @@ export const JobTable: React.FC<JobTableProps> = ({
                   borderBottom="1px solid"
                   borderColor="gray.200"
                   _dark={{
-                    bg: index % 2 === 0 ? "#0a0a0a" : "#000000",
-                    borderColor: "#00ff41",
+                    bg: index % 2 === 0 ? "#1a1a2e" : "#0f0f23",
+                    borderColor: "#8a2be2",
                   }}
                   _hover={{
                     bg: "blue.100",
                     _dark: {
-                      bg: "#001a00",
+                      bg: "#2a2a3e",
                     },
                   }}
                   transition="all 0.2s"
