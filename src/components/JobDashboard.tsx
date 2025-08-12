@@ -126,7 +126,7 @@ export const JobDashboard: React.FC = () => {
   }
 
   return (
-    <VStack spacing={6} align="stretch">
+    <VStack spacing={8} align="stretch">
       <HStack justify="space-between" align="center">
         <HStack spacing={4}>
           <Button colorScheme="blue" onClick={onCreateOpen} size="lg">

@@ -7,7 +7,7 @@ function App() {
   return (
     <ChakraProvider>
       <LanguageProvider>
-        <Box bg="gray.50" minH="100vh" color="gray.800">
+        <Box bg="gray.100" minH="100vh" color="gray.800">
           <Container maxW="container.xl" py={8}>
             <Heading
               as="h1"
@@ -16,7 +16,7 @@ function App() {
               mb={8}
               color="blue.600"
             >
-              Job Management Dashboard
+              Job Dashboard
             </Heading>
             <JobDashboard />
           </Container>

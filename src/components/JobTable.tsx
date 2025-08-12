@@ -15,10 +15,6 @@ import {
   Text,
   Progress,
   Badge,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   useDisclosure,
   AlertDialog,
   AlertDialogBody,
@@ -28,7 +24,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { useRef } from "react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+
 import { Job, JobStatus, JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
 
@@ -134,15 +130,15 @@ export const JobTable: React.FC<JobTableProps> = ({
         text: language === "he" ? "ממתין" : "Pending",
       },
       [JobStatus.InQueue]: {
-        color: "yellow",
+        color: "purple",
         text: language === "he" ? "בתור" : "In Queue",
       },
       [JobStatus.Running]: {
-        color: "green",
+        color: "blue",
         text: language === "he" ? "רץ" : "Running",
       },
       [JobStatus.Completed]: {
-        color: "teal",
+        color: "green",
         text: language === "he" ? "הושלם" : "Completed",
       },
       [JobStatus.Failed]: {
@@ -167,7 +163,7 @@ export const JobTable: React.FC<JobTableProps> = ({
     const priorityConfig: Record<JobPriority, { color: string; text: string }> =
       {
         [JobPriority.Regular]: {
-          color: "gray",
+          color: "blue",
           text: language === "he" ? "רגיל" : "Regular",
         },
         [JobPriority.High]: {
@@ -274,74 +270,84 @@ export const JobTable: React.FC<JobTableProps> = ({
       </HStack>
 
       {/* Table */}
-      <Box overflowX="auto" bg="white" borderRadius="lg" boxShadow="md">
-        <Table variant="simple">
-          <Thead>
+      <Box overflowX="auto" bg="white" borderRadius="xl" boxShadow="lg">
+        <Table variant="simple" size="md">
+          <Thead bg="blue.800" color="white">
             <Tr>
               <Th cursor="pointer" onClick={() => handleSort("name")}>
                 {language === "he" ? "שם העבודה" : "Job Name"}
                 {filters.sortBy === "name" && (
-                  <ChevronDownIcon
+                  <Text
+                    as="span"
                     ml={2}
-                    transform={
-                      filters.sortDirection === "asc"
-                        ? "rotate(180deg)"
-                        : "none"
+                    fontSize="sm"
+                    color={
+                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
                     }
-                  />
+                  >
+                    {filters.sortDirection === "asc" ? "↑" : "↓"}
+                  </Text>
                 )}
               </Th>
               <Th cursor="pointer" onClick={() => handleSort("priority")}>
                 {language === "he" ? "עדיפות" : "Priority"}
                 {filters.sortBy === "priority" && (
-                  <ChevronDownIcon
+                  <Text
+                    as="span"
                     ml={2}
-                    transform={
-                      filters.sortDirection === "asc"
-                        ? "rotate(180deg)"
-                        : "none"
+                    fontSize="sm"
+                    color={
+                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
                     }
-                  />
+                  >
+                    {filters.sortDirection === "asc" ? "↑" : "↓"}
+                  </Text>
                 )}
               </Th>
               <Th cursor="pointer" onClick={() => handleSort("status")}>
                 {language === "he" ? "סטטוס" : "Status"}
                 {filters.sortBy === "status" && (
-                  <ChevronDownIcon
+                  <Text
+                    as="span"
                     ml={2}
-                    transform={
-                      filters.sortDirection === "asc"
-                        ? "rotate(180deg)"
-                        : "none"
+                    fontSize="sm"
+                    color={
+                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
                     }
-                  />
+                  >
+                    {filters.sortDirection === "asc" ? "↑" : "↓"}
+                  </Text>
                 )}
               </Th>
               <Th>{language === "he" ? "התקדמות" : "Progress"}</Th>
               <Th cursor="pointer" onClick={() => handleSort("startedAt")}>
                 {language === "he" ? "זמן התחלה" : "Start Time"}
                 {filters.sortBy === "startedAt" && (
-                  <ChevronDownIcon
+                  <Text
+                    as="span"
                     ml={2}
-                    transform={
-                      filters.sortDirection === "asc"
-                        ? "rotate(180deg)"
-                        : "none"
+                    fontSize="sm"
+                    color={
+                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
                     }
-                  />
+                  >
+                    {filters.sortDirection === "asc" ? "↑" : "↓"}
+                  </Text>
                 )}
               </Th>
               <Th cursor="pointer" onClick={() => handleSort("completedAt")}>
                 {language === "he" ? "זמן סיום" : "End Time"}
                 {filters.sortBy === "completedAt" && (
-                  <ChevronDownIcon
+                  <Text
+                    as="span"
                     ml={2}
-                    transform={
-                      filters.sortDirection === "asc"
-                        ? "rotate(180deg)"
-                        : "none"
+                    fontSize="sm"
+                    color={
+                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
                     }
-                  />
+                  >
+                    {filters.sortDirection === "asc" ? "↑" : "↓"}
+                  </Text>
                 )}
               </Th>
               <Th>{language === "he" ? "פעולות" : "Actions"}</Th>
@@ -359,7 +365,15 @@ export const JobTable: React.FC<JobTableProps> = ({
                       value={job.progress}
                       size="sm"
                       width="100px"
-                      colorScheme={job.progress === 100 ? "green" : "blue"}
+                      colorScheme={
+                        job.status === JobStatus.Completed
+                          ? "green"
+                          : job.status === JobStatus.Failed
+                          ? "red"
+                          : job.status === JobStatus.Stopped
+                          ? "gray"
+                          : "blue"
+                      }
                     />
                     <Text fontSize="sm">{job.progress}%</Text>
                   </VStack>
@@ -367,39 +381,35 @@ export const JobTable: React.FC<JobTableProps> = ({
                 <Td>{formatTimestamp(job.startedAt)}</Td>
                 <Td>{formatTimestamp(job.completedAt)}</Td>
                 <Td>
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<ChevronDownIcon />}
-                      size="sm"
-                    >
-                      {language === "he" ? "פעולות" : "Actions"}
-                    </MenuButton>
-                    <MenuList>
-                      {canStop(job.status) && (
-                        <MenuItem
-                          onClick={() => handleJobAction(job.jobID, "stop")}
-                        >
-                          {language === "he" ? "עצור" : "Stop"}
-                        </MenuItem>
-                      )}
-                      {canRestart(job.status) && (
-                        <MenuItem
-                          onClick={() => handleJobAction(job.jobID, "restart")}
-                        >
-                          {language === "he" ? "התחל מחדש" : "Restart"}
-                        </MenuItem>
-                      )}
-                      {canDelete(job.status) && (
-                        <MenuItem
-                          onClick={() => handleJobAction(job.jobID, "delete")}
-                          color="red.500"
-                        >
-                          {language === "he" ? "מחק" : "Delete"}
-                        </MenuItem>
-                      )}
-                    </MenuList>
-                  </Menu>
+                  <HStack spacing={2}>
+                    {canStop(job.status) && (
+                      <Button
+                        size="sm"
+                        colorScheme="orange"
+                        onClick={() => handleJobAction(job.jobID, "stop")}
+                      >
+                        {language === "he" ? "עצור" : "Stop"}
+                      </Button>
+                    )}
+                    {canRestart(job.status) && (
+                      <Button
+                        size="sm"
+                        colorScheme="blue"
+                        onClick={() => handleJobAction(job.jobID, "restart")}
+                      >
+                        {language === "he" ? "התחל מחדש" : "Restart"}
+                      </Button>
+                    )}
+                    {canDelete(job.status) && (
+                      <Button
+                        size="sm"
+                        colorScheme="red"
+                        onClick={() => handleJobAction(job.jobID, "delete")}
+                      >
+                        {language === "he" ? "מחק" : "Delete"}
+                      </Button>
+                    )}
+                  </HStack>
                 </Td>
               </Tr>
             ))}
