@@ -164,16 +164,17 @@ export const JobTable: React.FC<JobTableProps> = ({
   };
 
   const getPriorityBadge = (priority: JobPriority) => {
-    const priorityConfig: Record<JobPriority, { color: string; text: string }> = {
-      [JobPriority.Regular]: {
-        color: "gray",
-        text: language === "he" ? "רגיל" : "Regular",
-      },
-      [JobPriority.High]: {
-        color: "red",
-        text: language === "he" ? "גבוה" : "High",
-      },
-    };
+    const priorityConfig: Record<JobPriority, { color: string; text: string }> =
+      {
+        [JobPriority.Regular]: {
+          color: "gray",
+          text: language === "he" ? "רגיל" : "Regular",
+        },
+        [JobPriority.High]: {
+          color: "red",
+          text: language === "he" ? "גבוה" : "High",
+        },
+      };
 
     const config = priorityConfig[priority];
     if (!config) {
@@ -254,7 +255,14 @@ export const JobTable: React.FC<JobTableProps> = ({
           <option value="">
             {language === "he" ? "כל הסטטוסים" : "All Statuses"}
           </option>
-          {[JobStatus.Pending, JobStatus.InQueue, JobStatus.Running, JobStatus.Completed, JobStatus.Failed, JobStatus.Stopped].map((status) => (
+          {[
+            JobStatus.Pending,
+            JobStatus.InQueue,
+            JobStatus.Running,
+            JobStatus.Completed,
+            JobStatus.Failed,
+            JobStatus.Stopped,
+          ].map((status) => (
             <option key={status} value={status}>
               {getStatusBadge(status).props.children}
             </option>
