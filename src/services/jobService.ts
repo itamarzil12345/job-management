@@ -45,6 +45,61 @@ const mockJobs: Job[] = [
     completedAt: 0,
     errorMessage: "Connection timeout",
   },
+  {
+    jobID: "4",
+    name: "Email Campaign Job",
+    status: 1, // In Queue
+    priority: 0, // Regular
+    progress: 0,
+    createdAt: Date.now() - 900000,
+    startedAt: 0,
+    completedAt: 0,
+    errorMessage: null,
+  },
+  {
+    jobID: "5",
+    name: "Report Generation",
+    status: 2, // Running
+    priority: 1, // High
+    progress: 30,
+    createdAt: Date.now() - 2400000,
+    startedAt: Date.now() - 2000000,
+    completedAt: 0,
+    errorMessage: null,
+  },
+  {
+    jobID: "6",
+    name: "Database Cleanup",
+    status: 5, // Stopped
+    priority: 0, // Regular
+    progress: 75,
+    createdAt: Date.now() - 5400000,
+    startedAt: Date.now() - 5000000,
+    completedAt: 0,
+    errorMessage: null,
+  },
+  {
+    jobID: "7",
+    name: "File Sync Job",
+    status: 0, // Pending
+    priority: 1, // High
+    progress: 0,
+    createdAt: Date.now() - 300000,
+    startedAt: 0,
+    completedAt: 0,
+    errorMessage: null,
+  },
+  {
+    jobID: "8",
+    name: "Log Analysis",
+    status: 3, // Completed
+    priority: 0, // Regular
+    progress: 100,
+    createdAt: Date.now() - 6000000,
+    startedAt: Date.now() - 5800000,
+    completedAt: Date.now() - 5700000,
+    errorMessage: null,
+  },
 ];
 
 class JobService {
