@@ -14,42 +14,42 @@ const getStatusConfig = (status: JobStatus, language: string) => {
       color: "blue",
       icon: "⏳",
       bgColor: "blue.50",
-      borderColor: "blue.200",
+      borderColor: "orange.400",
     },
     [JobStatus.InQueue]: {
       label: language === "he" ? "בתור" : "In Queue",
       color: "purple",
       icon: "📋",
       bgColor: "purple.50",
-      borderColor: "purple.200",
+      borderColor: "purple.400",
     },
     [JobStatus.Running]: {
       label: language === "he" ? "רץ" : "Running",
       color: "blue",
       icon: "▶️",
       bgColor: "blue.50",
-      borderColor: "blue.200",
+      borderColor: "blue.400",
     },
     [JobStatus.Completed]: {
       label: language === "he" ? "הושלם" : "Completed",
       color: "green",
       icon: "✅",
       bgColor: "green.50",
-      borderColor: "green.200",
+      borderColor: "green.400",
     },
     [JobStatus.Failed]: {
       label: language === "he" ? "נכשל" : "Failed",
       color: "red",
       icon: "❌",
       bgColor: "red.50",
-      borderColor: "red.200",
+      borderColor: "red.400",
     },
     [JobStatus.Stopped]: {
       label: language === "he" ? "עצר" : "Stopped",
       color: "gray",
       icon: "⏹️",
       bgColor: "gray.50",
-      borderColor: "gray.200",
+      borderColor: "gray.400",
     },
   };
   return configs[status];
@@ -76,9 +76,11 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
             p={6}
             borderRadius="lg"
             boxShadow="md"
-            borderTop={`4px solid ${config.borderColor}`}
-            _hover={{ transform: "translateY(-2px)", boxShadow: "md" }}
+            borderTop="6px solid"
+            borderTopColor={config.borderColor}
+            _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
             transition="all 0.2s"
+            textAlign="center"
           >
             <VStack spacing={2}>
               <Text
