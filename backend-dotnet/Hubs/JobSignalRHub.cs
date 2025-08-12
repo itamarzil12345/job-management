@@ -3,11 +3,12 @@ using System.Text.Json;
 
 namespace JobManagementHub.Hubs;
 
-public class JobSignalRHub : Hub
+public class JobSignalRHub : Hub, IDisposable
 {
     private readonly ILogger<JobSignalRHub> _logger;
-    private readonly Timer _updateTimer;
+    private Timer? _updateTimer;
     private readonly Random _random = new Random();
+    private bool _isDisposed = false;
 
     // Sample jobs for testing
     private readonly List<Job> _jobs = new()
@@ -25,14 +26,18 @@ public class JobSignalRHub : Hub
     public JobSignalRHub(ILogger<JobSignalRHub> logger)
     {
         _logger = logger;
-        
-        // Start timer to send updates every 10 seconds
-        _updateTimer = new Timer(SendRandomUpdates, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
     }
 
     public override async Task OnConnectedAsync()
     {
         _logger.LogInformation("Client connected: {ConnectionId}", Context.ConnectionId);
+        
+        // Start timer when first client connects
+        if (_updateTimer == null && !_isDisposed)
+        {
+            _updateTimer = new Timer(SendRandomUpdates, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
+            _logger.LogInformation("Started update timer");
+        }
         
         // Send current jobs to newly connected client
         await Clients.Caller.SendAsync("JobsUpdated", _jobs);
@@ -43,13 +48,35 @@ public class JobSignalRHub : Hub
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _logger.LogInformation("Client disconnected: {ConnectionId}", Context.ConnectionId);
+        
+        // Stop timer when no clients are connected
+        if (Context.ConnectionId != null && _updateTimer != null)
+        {
+            _updateTimer.Dispose();
+            _updateTimer = null;
+            _logger.LogInformation("Stopped update timer - no clients connected");
+        }
+        
         await base.OnDisconnectedAsync(exception);
     }
 
-    private async void SendRandomUpdates(object? state)
+    public new void Dispose()
+    {
+        _isDisposed = true;
+        _updateTimer?.Dispose();
+        _updateTimer = null;
+    }
+
+    private void SendRandomUpdates(object? state)
     {
         try
         {
+            // Check if hub is disposed or no clients
+            if (_isDisposed || Clients == null)
+            {
+                return;
+            }
+
             // Select a random job to update
             var randomJob = _jobs[_random.Next(_jobs.Count)];
             
@@ -76,7 +103,7 @@ public class JobSignalRHub : Hub
                     randomJob.StartedAt = DateTimeOffset.UtcNow;
                 }
 
-                // Send update to all clients
+                // Send update to all clients (fire and forget)
                 var update = new JobProgressUpdate
                 {
                     JobID = randomJob.JobID,
@@ -84,21 +111,41 @@ public class JobSignalRHub : Hub
                     Progress = randomJob.Progress
                 };
 
-                await Clients.All.SendAsync("UpdateJobProgress", update);
-                _logger.LogInformation("Sent update for job {JobID}: Status={Status}, Progress={Progress}", 
+                _ = Clients.All.SendAsync("UpdateJobProgress", update)
+                    .ContinueWith(t => 
+                    {
+                        if (!_isDisposed)
+                        {
+                            if (t.IsCompletedSuccessfully)
+                            {
+                                _logger.LogInformation("Sent update for job {JobID}: Status={Status}, Progress={Progress}", 
+                                    update.JobID, update.Status, update.Progress);
+                            }
+                            else if (t.IsFaulted)
+                            {
+                                _logger.LogWarning("Failed to send update for job {JobID}: {Error}", 
+                                    update.JobID, t.Exception?.GetBaseException().Message);
+                            }
+                        }
+                    });
+
+                _logger.LogInformation("Scheduled update for job {JobID}: Status={Status}, Progress={Progress}", 
                     update.JobID, update.Status, update.Progress);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error sending random updates");
+            if (!_isDisposed)
+            {
+                _logger.LogError(ex, "Error sending random updates");
+            }
         }
     }
 
     // Method to get all jobs
-    public async Task<List<Job>> GetJobs()
+    public Task<List<Job>> GetJobs()
     {
-        return _jobs;
+        return Task.FromResult(_jobs);
     }
 
     // Method to create a new job

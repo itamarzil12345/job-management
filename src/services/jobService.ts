@@ -314,10 +314,11 @@ class JobService {
 
   // Get SignalR connection status
   getSignalRStatus() {
+    const connectionInfo = signalRService.getConnectionInfo();
     return {
-      isConnected: this.signalRConnected,
-      connectionState: signalRService.getConnectionState(),
-      connectionInfo: signalRService.getConnectionInfo(),
+      isConnected: connectionInfo.isConnected,
+      connectionState: connectionInfo.state,
+      connectionInfo: connectionInfo,
     };
   }
 
