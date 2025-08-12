@@ -5,6 +5,7 @@ A real-time job management dashboard built with React, TypeScript, and Chakra UI
 ## Features
 
 ### Core Features
+
 - **Status Cards**: Real-time display of job counts for each status (Pending, In Queue, Running, Completed, Failed, Stopped)
 - **Action Buttons**: Create new jobs and bulk delete jobs by status
 - **Job Table**: Sortable and filterable list of all jobs with real-time progress updates
@@ -14,6 +15,7 @@ A real-time job management dashboard built with React, TypeScript, and Chakra UI
 - **Internationalization**: Full support for English and Hebrew with RTL support
 
 ### Technical Features
+
 - React with TypeScript
 - Chakra UI for modern, accessible components
 - Real-time updates via SignalR (or mock simulation)
@@ -44,10 +46,12 @@ src/
 ## Setup Instructions
 
 ### Prerequisites
+
 - Node.js (v14 or higher)
 - npm or yarn
 
 ### Installation
+
 1. Clone the repository
 2. Install dependencies:
    ```bash
@@ -56,7 +60,7 @@ src/
 
 ### Configuration
 
-The application can be configured to use either mock data or real API services. Create a `.env` file in the root directory:
+The application can be configured to use either mock data or real API services. Create a `.env` file (or change env.example to .env) in the root directory:
 
 ```bash
 # Set to 'true' to use mock data, 'false' to use real API
@@ -73,30 +77,201 @@ REACT_APP_DEFAULT_LANGUAGE=en
 ### Running the Application
 
 #### Development Mode
+
 ```bash
 npm start
 ```
+
 The application will open at [http://localhost:3000](http://localhost:3000)
 
 #### Production Build
+
 ```bash
 npm run build
 ```
 
 #### Testing
+
 ```bash
 npm test
 ```
 
+## Backend Setup
+
+If you are in real mode (and not in mock mode) The application requires both backends to work together:
+
+- **Node.js/Express Backend**: Handles REST API operations (CRUD operations)
+- **.NET SignalR Backend**: Provides real-time updates via SignalR
+
+### Prerequisites
+
+#### For Node.js Backend
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+#### For .NET Backend
+
+- .NET 8.0 SDK or later
+- Visual Studio or VS Code with C# extension
+
+### Starting Both Backends
+
+You'll need two terminal windows/tabs to run both backends simultaneously.
+
+#### Terminal 1: Start Node.js Backend (REST API)
+
+```bash
+# Navigate to backend directory
+cd backend
+
+# Install dependencies
+npm install
+
+# Start the server
+npm start
+```
+
+**Expected Output:**
+
+```
+🚀 Job Management Backend Test Server running on http://localhost:5001
+📊 Initial job count: 8
+🔗 Health check: http://localhost:5001/health
+```
+
+#### Terminal 2: Start .NET Backend (SignalR)
+
+```bash
+# Navigate to backend directory
+cd backend-dotnet
+
+# Restore dependencies
+dotnet restore
+
+# Build the project
+dotnet build
+
+# Run the server
+dotnet run
+```
+
+**Expected Output:**
+
+```
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: https://localhost:5002
+info: Microsoft.Hosting.Lifetime[0]
+      Application started.
+```
+
+#### SSL Certificate (First Time Only)
+
+If you encounter SSL certificate issues with the .NET backend:
+
+```bash
+dotnet dev-certs https --trust
+```
+
+### Backend Architecture
+
+```
+React Frontend (localhost:3000)
+    ↓ HTTP Requests
+Node.js Backend (localhost:5001) - REST API
+    ↓ WebSocket Connection
+.NET SignalR Backend (localhost:5002) - Real-time Updates
+```
+
+### Backend Configuration
+
+#### Environment Variables
+
+Update your frontend `.env` file to use both backends:
+
+```bash
+REACT_APP_USE_MOCK_DATA=false
+REACT_APP_API_BASE_URL=http://localhost:5001
+REACT_APP_SIGNALR_HUB_URL=https://localhost:5002/JobSignalRHub
+```
+
+#### Port Configuration
+
+- **Node.js Backend**: Port 5001 (HTTP) - REST API
+- **.NET Backend**: Port 5002 (HTTPS) - SignalR Hub
+
+To change ports:
+
+```bash
+# Node.js - edit backend/server.js
+const PORT = process.env.PORT || 5003;
+
+# .NET - use command line
+dotnet run --urls "https://localhost:5004"
+```
+
+### Backend Responsibilities
+
+| Backend     | Purpose                     | Port | Protocol        |
+| ----------- | --------------------------- | ---- | --------------- |
+| **Node.js** | REST API (CRUD operations)  | 5001 | HTTP            |
+| **.NET**    | SignalR (Real-time updates) | 5002 | HTTPS/WebSocket |
+
+### Testing the Backends
+
+#### Test Node.js Backend (REST API)
+
+```bash
+# In a new terminal
+cd backend
+node test-api.js
+```
+
+#### Test .NET Backend (SignalR)
+
+The frontend will automatically connect to SignalR when both backends are running.
+
+### Troubleshooting Backend Issues
+
+#### Port Already in Use
+
+```bash
+# Change port in backend configuration
+# Then update frontend .env file accordingly
+```
+
+#### Dependencies Not Installed
+
+```bash
+# Node.js Backend
+cd backend
+rm -rf node_modules package-lock.json
+npm install
+
+# .NET Backend
+cd backend-dotnet
+dotnet restore
+dotnet build
+```
+
+#### Frontend Can't Connect
+
+- Verify backend is running on correct port
+- Check `.env` file has correct URLs
+- Ensure CORS is properly configured
+- Check browser console for connection errors
+
 ## Switching Between Mock and Real Services
 
 ### Mock Mode (Default)
+
 - Set `REACT_APP_USE_MOCK_DATA=true` in your `.env` file
 - Uses simulated job data and progress updates
 - No external API required
 - Perfect for development and testing
 
 ### Real API Mode
+
 - Set `REACT_APP_USE_MOCK_DATA=false` in your `.env` file
 - Configure `REACT_APP_API_BASE_URL` and `REACT_APP_SIGNALR_HUB_URL`
 - Requires a running backend service at the specified URLs
@@ -105,6 +280,7 @@ npm test
 ## API Specification
 
 ### REST Endpoints
+
 - `GET /Jobs` - Fetch all jobs
 - `POST /Jobs` - Create new job
 - `POST /Jobs/{jobID}/stop` - Stop running job
@@ -113,9 +289,11 @@ npm test
 - `DELETE /Jobs/status/{status}` - Bulk delete by status
 
 ### SignalR Events
+
 - `UpdateJobProgress` - Real-time job progress updates
 
 ### Data Models
+
 - **Job**: Complete job information with status, priority, progress, and timestamps
 - **CreateJobRequest**: Job creation payload
 - **JobProgressUpdate**: Real-time progress update payload
@@ -123,10 +301,12 @@ npm test
 ## Business Rules
 
 ### Job Lifecycle
+
 - New jobs start as Pending (0) → InQueue (1) → Running (2) → Completed (3) or Failed (4)
 - Progress updates from 0 to 100 during execution
 
 ### Operation Constraints
+
 - Only Running and InQueue jobs can be stopped
 - Only Failed and Stopped jobs can be restarted
 - Individual delete: Completed, Failed, and Stopped jobs only
@@ -135,6 +315,7 @@ npm test
 ## Internationalization
 
 The application supports both English and Hebrew:
+
 - **English**: Default language with LTR layout
 - **Hebrew**: Full RTL support with Hebrew translations
 - Language can be switched dynamically using the language switcher
@@ -144,6 +325,7 @@ The application supports both English and Hebrew:
 ## Responsive Design
 
 The dashboard is fully responsive and works on:
+
 - Desktop computers
 - Tablets
 - Mobile devices
@@ -152,6 +334,7 @@ The dashboard is fully responsive and works on:
 ## Error Handling
 
 The application includes comprehensive error handling:
+
 - API error responses
 - Network connectivity issues
 - SignalR disconnections
@@ -161,15 +344,18 @@ The application includes comprehensive error handling:
 ## Development
 
 ### Adding New Features
+
 1. Create new components in the `components/` directory
 2. Add new types to `types/job.ts`
 3. Extend the service layer in `services/jobService.ts`
 4. Update the main dashboard as needed
 
 ### Styling
+
 The application uses Chakra UI for consistent, accessible styling. Custom styles can be added using Chakra's theme system or inline styles.
 
 ### Testing
+
 - Unit tests for components and services
 - Integration tests for user workflows
 - Mock data for consistent testing scenarios
@@ -184,6 +370,7 @@ The application uses Chakra UI for consistent, accessible styling. Custom styles
 4. **Build errors**: Ensure all dependencies are installed with `npm install`
 
 ### Performance
+
 - The application is optimized for real-time updates
 - Large job lists are handled efficiently with proper React optimization
 - Progress updates are throttled to prevent excessive re-renders
