@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "HzBKRQIljZ9d9gZ5HEcropV2JuGGu6G/4O8cr+fTnGw=",
+  "Source": "JobManagementHub",
+  "BasePath": "_content/JobManagementHub",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
