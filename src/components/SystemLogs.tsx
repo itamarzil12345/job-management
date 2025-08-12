@@ -31,9 +31,13 @@ interface SystemLogsProps {
 }
 
 const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
-  const bgColor = useColorModeValue("gray.900", "gray.800");
-  const textColor = useColorModeValue("green.300", "green.200");
-  const borderColor = useColorModeValue("gray.600", "gray.700");
+  const bgColor = "#f8f9fa"; // Light gray background
+  const textColor = "#006400"; // Dark green
+  const borderColor = "#006400";
+  const accentColor = "#8b008b"; // Dark magenta
+  const warningColor = "#ff8c00"; // Dark orange
+  const errorColor = "#dc143c"; // Crimson red
+  const successColor = "#228b22"; // Forest green
 
   const getLogIcon = (level: LogEntry["level"]): IconType => {
     switch (level) {
@@ -51,13 +55,13 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
   const getLogColor = (level: LogEntry["level"]) => {
     switch (level) {
       case "success":
-        return "green.400";
+        return successColor; // Forest green
       case "warning":
-        return "yellow.400";
+        return warningColor;
       case "error":
-        return "red.400";
+        return errorColor;
       default:
-        return "blue.400";
+        return "#4169e1"; // Royal blue
     }
   };
 
@@ -76,13 +80,13 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
   const getSourceColor = (source?: LogEntry["source"]) => {
     switch (source) {
       case "signalr":
-        return "purple.400";
+        return accentColor; // Cyberpunk pink
       case "nodejs":
-        return "blue.400";
+        return "#0080ff"; // Cyberpunk blue
       case "dotnet":
-        return "green.400";
+        return "#00ff41"; // Matrix green
       default:
-        return "gray.400";
+        return "#808080"; // Gray
     }
   };
 
@@ -100,29 +104,62 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
   return (
     <Box
       bg={bgColor}
-      border="1px solid"
-      borderColor={borderColor}
-      borderRadius="md"
-      p={4}
-      h="calc(100vh - 32px)"
+      h="100%"
       overflow="hidden"
-      fontFamily="mono"
+      fontFamily="'Courier New', monospace"
       fontSize="sm"
       display="flex"
       flexDirection="column"
+      position="relative"
+      _before={{
+        content: '""',
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: "linear-gradient(45deg, transparent 49%, rgba(0, 255, 65, 0.03) 50%, transparent 51%)",
+        backgroundSize: "20px 20px",
+        pointerEvents: "none",
+        zIndex: 1,
+      }}
     >
-      <Flex mb={3} alignItems="center" gap={2}>
-        <Box as={FaCircle as any} color="red.400" boxSize={2} />
-        <Box as={FaCircle as any} color="yellow.400" boxSize={2} />
-        <Box as={FaCircle as any} color="green.400" boxSize={2} />
-        <Text color={textColor} ml={2} fontWeight="bold">
-          System Logs
+      <Flex 
+        mb={3} 
+        alignItems="center" 
+        gap={2} 
+        p={4} 
+        pb={2}
+        borderBottom="1px solid"
+        borderColor={borderColor}
+        position="relative"
+        zIndex={2}
+        _after={{
+          content: '""',
+          position: "absolute",
+          bottom: "-1px",
+          left: 0,
+          right: 0,
+          height: "2px",
+          background: `linear-gradient(90deg, ${borderColor}, ${accentColor}, ${borderColor})`,
+          animation: "scan 2s linear infinite",
+        }}
+      >
+        <Box as={FaCircle as any} color={errorColor} boxSize={2} />
+        <Box as={FaCircle as any} color={warningColor} boxSize={2} />
+        <Box as={FaCircle as any} color={textColor} boxSize={2} />
+        <Text color={textColor} ml={2} fontWeight="bold" textShadow={`0 0 10px ${textColor}`}>
+          [SYSTEM] TERMINAL_ACCESS_GRANTED
+        </Text>
+        <Text color={accentColor} ml="auto" fontSize="xs" fontFamily="mono">
+          {new Date().toLocaleTimeString()}
         </Text>
       </Flex>
 
       <Box
         flex={1}
         overflowY="auto"
+        px={4}
         css={{
           "&::-webkit-scrollbar": {
             width: "8px",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   VStack,
@@ -31,6 +31,9 @@ export const JobDashboard: React.FC = () => {
     jobService.getSignalRStatus()
   );
   const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [logsPanelHeight, setLogsPanelHeight] = useState(300);
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
 
   const {
@@ -79,6 +82,44 @@ export const JobDashboard: React.FC = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Handle resize functionality
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isResizing) {
+        e.preventDefault();
+        const newHeight = window.innerHeight - e.clientY - 16; // Distance from bottom (16px padding)
+        const minHeight = 200;
+        const maxHeight = window.innerHeight * 0.7; // Max 70% of screen height
+
+        if (newHeight >= minHeight && newHeight <= maxHeight) {
+          setLogsPanelHeight(newHeight);
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+
+    const handleMouseDown = () => {
+      setIsResizing(true);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    };
+
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
 
   const fetchJobs = async () => {
     try {
@@ -182,8 +223,15 @@ export const JobDashboard: React.FC = () => {
   }
 
   return (
-    <Grid templateColumns="1fr 600px" gap={4} h="100vh" p={4}>
-      <GridItem>
+    <Box
+      position="relative"
+      h="100vh"
+      p={4}
+      display="flex"
+      flexDirection="column"
+    >
+      {/* Main Content - Takes remaining space */}
+      <Box flex={1} overflow="auto" pb={2}>
         <VStack spacing={6} align="stretch">
           <HStack justify="space-between" align="center">
             <HStack spacing={4}>
@@ -226,11 +274,68 @@ export const JobDashboard: React.FC = () => {
             onDeleteJobs={handleDeleteJobsByStatus}
           />
         </VStack>
-      </GridItem>
+      </Box>
 
-      <GridItem>
+      {/* Bottom System Logs Panel - Full Width */}
+      <Box
+        h={`${logsPanelHeight}px`}
+        minH="200px"
+        maxH="70vh"
+        borderTop="1px solid"
+        borderColor="gray.200"
+        bg="white"
+        position="relative"
+        w="100%"
+        ml="-16px"
+        mr="-16px"
+        px="16px"
+      >
+        {/* Resize Handle - Top of the panel */}
+        <Box
+          ref={resizeRef}
+          position="absolute"
+          top="-4px"
+          left="0"
+          right="0"
+          h="8px"
+          bg={isResizing ? "blue.500" : "gray.200"}
+          cursor="row-resize"
+          _hover={{ bg: "blue.300" }}
+          _active={{ bg: "blue.500" }}
+          onMouseDown={() => {
+            setIsResizing(true);
+            document.body.style.cursor = "row-resize";
+            document.body.style.userSelect = "none";
+          }}
+          transition="background-color 0.2s"
+          _after={{
+            content: '""',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            h: "2px",
+            w: "40px",
+            bg: isResizing ? "white" : "gray.400",
+            borderRadius: "1px",
+            opacity: isResizing ? 0.9 : 0.6,
+          }}
+          _before={{
+            content: '""',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            h: "1px",
+            w: "20px",
+            bg: isResizing ? "white" : "gray.500",
+            borderRadius: "0.5px",
+            opacity: isResizing ? 1 : 0.8,
+          }}
+        />
+
         <SystemLogs logs={logs} maxLogs={200} />
-      </GridItem>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
