@@ -120,22 +120,22 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         </Text>
       </Flex>
 
-              <Box
-          flex={1}
-          overflowY="auto"
-          css={{
-            "&::-webkit-scrollbar": {
-              width: "8px",
-            },
-            "&::-webkit-scrollbar-track": {
-              background: "transparent",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              background: useColorModeValue("gray.600", "gray.500"),
-              borderRadius: "4px",
-            },
-          }}
-        >
+      <Box
+        flex={1}
+        overflowY="auto"
+        css={{
+          "&::-webkit-scrollbar": {
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: useColorModeValue("gray.600", "gray.500"),
+            borderRadius: "4px",
+          },
+        }}
+      >
         <VStack spacing={1} align="stretch">
           {displayLogs.map((log) => (
             <Flex key={log.id} alignItems="flex-start" gap={2}>

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Badge,
-  Text,
-  HStack,
-  Icon,
-} from "@chakra-ui/react";
+import { Box, Badge, Text, HStack, Icon } from "@chakra-ui/react";
 import { CheckCircleIcon, CloseIcon, WarningIcon } from "@chakra-ui/icons";
 import { useLanguage } from "../contexts/LanguageContext";
 
