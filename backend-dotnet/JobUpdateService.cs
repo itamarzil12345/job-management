@@ -42,40 +42,52 @@ public class JobUpdateService : BackgroundService
                 // Select a random job to update
                 var randomJob = _jobs[_random.Next(_jobs.Count)];
                 
-                // Only update jobs that are running or in queue
-                if (randomJob.Status == JobStatus.Running || randomJob.Status == JobStatus.InQueue)
+                // Handle different job statuses
+                if (randomJob.Status == JobStatus.Running)
                 {
-                    // Random progress update
-                    if (randomJob.Status == JobStatus.Running)
+                    // Update progress for running jobs
+                    randomJob.Progress += _random.Next(5, 15);
+                    
+                    // Complete job if progress reaches 100%
+                    if (randomJob.Progress >= 100)
                     {
-                        randomJob.Progress += _random.Next(5, 15);
+                        randomJob.Progress = 100;
+                        randomJob.Status = JobStatus.Completed;
+                        randomJob.CompletedAt = DateTimeOffset.UtcNow;
+                        _logger.LogInformation("Job {JobID} completed!", randomJob.JobID);
+                    }
+                    
+                    // Send progress update
+                    await SendJobUpdate(randomJob, stoppingToken);
+                }
+                else if (randomJob.Status == JobStatus.InQueue)
+                {
+                    // Move from queue to running
+                    randomJob.Status = JobStatus.Running;
+                    randomJob.StartedAt = DateTimeOffset.UtcNow;
+                    randomJob.Progress = 0; // Start from 0%
+                    _logger.LogInformation("Job {JobID} started running", randomJob.JobID);
+                    
+                    // Send status update
+                    await SendJobUpdate(randomJob, stoppingToken);
+                }
+                else if (randomJob.Status == JobStatus.Completed)
+                {
+                    // Occasionally reset completed jobs to pending to keep the system dynamic
+                    if (_random.Next(100) < 20) // 20% chance
+                    {
+                        randomJob.Status = JobStatus.Pending;
+                        randomJob.Progress = 0;
+                        randomJob.StartedAt = null;
+                        randomJob.CompletedAt = null;
+                        randomJob.ErrorMessage = null;
                         
-                        // Complete job if progress reaches 100%
-                        if (randomJob.Progress >= 100)
-                        {
-                            randomJob.Progress = 100;
-                            randomJob.Status = JobStatus.Completed;
-                            randomJob.CompletedAt = DateTimeOffset.UtcNow;
-                        }
+                        _logger.LogInformation("Job {JobID} reset to pending", randomJob.JobID);
+                        
+                        // Send the updated jobs list
+                        await _hubContext.Clients.All.SendAsync("JobsUpdated", _jobs, stoppingToken);
+                        _logger.LogInformation("Sent updated jobs list after reset with {Count} jobs", _jobs.Count);
                     }
-                    else if (randomJob.Status == JobStatus.InQueue)
-                    {
-                        // Move from queue to running
-                        randomJob.Status = JobStatus.Running;
-                        randomJob.StartedAt = DateTimeOffset.UtcNow;
-                    }
-
-                    // Send update to all clients
-                    var update = new JobProgressUpdate
-                    {
-                        JobID = randomJob.JobID,
-                        Status = (int)randomJob.Status,
-                        Progress = randomJob.Progress
-                    };
-
-                    await _hubContext.Clients.All.SendAsync("UpdateJobProgress", update, stoppingToken);
-                    _logger.LogInformation("Sent update for job {JobID}: Status={Status}, Progress={Progress}", 
-                        update.JobID, update.Status, update.Progress);
                 }
             }
             catch (OperationCanceledException)
@@ -91,6 +103,32 @@ public class JobUpdateService : BackgroundService
         }
 
         _logger.LogInformation("Job Update Service stopped");
+    }
+
+    private async Task SendJobUpdate(Job job, CancellationToken stoppingToken)
+    {
+        try
+        {
+            // Send progress update to all clients
+            var update = new JobProgressUpdate
+            {
+                JobID = job.JobID,
+                Status = (int)job.Status,
+                Progress = job.Progress
+            };
+
+            await _hubContext.Clients.All.SendAsync("UpdateJobProgress", update, stoppingToken);
+            _logger.LogInformation("Sent update for job {JobID}: Status={Status}, Progress={Progress}", 
+                update.JobID, update.Status, update.Progress);
+
+            // Also send the updated jobs list to refresh the table
+            await _hubContext.Clients.All.SendAsync("JobsUpdated", _jobs, stoppingToken);
+            _logger.LogInformation("Sent updated jobs list with {Count} jobs", _jobs.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error sending job update for job {JobID}", job.JobID);
+        }
     }
 }
 

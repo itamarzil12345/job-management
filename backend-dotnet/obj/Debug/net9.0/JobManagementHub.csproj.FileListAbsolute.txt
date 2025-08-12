@@ -28,3 +28,4 @@
 /Users/itamarsilverstein/dev/sqlink-test/job-management-dashboard/backend-dotnet/obj/Debug/net9.0/JobManagementHub.pdb
 /Users/itamarsilverstein/dev/sqlink-test/job-management-dashboard/backend-dotnet/obj/Debug/net9.0/JobManagementHub.genruntimeconfig.cache
 /Users/itamarsilverstein/dev/sqlink-test/job-management-dashboard/backend-dotnet/obj/Debug/net9.0/ref/JobManagementHub.dll
+/Users/itamarsilverstein/dev/sqlink-test/job-management-dashboard/backend-dotnet/obj/Debug/net9.0/JobManagementHub.sourcelink.json
