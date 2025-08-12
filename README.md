@@ -43,6 +43,117 @@ src/
 └── App.tsx             # Main application component
 ```
 
+## System Architecture
+
+The application uses a hybrid backend architecture with two specialized services:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           React Frontend (localhost:3000)                   │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────────────┐  │
+│  │   JobDashboard  │  │  SignalRStatus  │  │        JobTable             │  │
+│  │                 │  │                 │  │                             │  │
+│  │ • Status Cards  │  │ • Connection    │  │ • Real-time Updates        │  │
+│  │ • Action Buttons│  │ • Live Updates  │  │ • Progress Bars            │  │
+│  │ • Modals        │  │ • Job History   │  │ • Job Actions              │  │
+│  └─────────────────┘  └─────────────────┘  └─────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ HTTP Requests (REST API)
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Node.js Backend (localhost:5001)                        │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                         Express Server                              │   │
+│  │                                                                     │   │
+│  │  REST Endpoints:                                                    │   │
+│  │  • GET    /Jobs                    - Fetch all jobs                │   │
+│  │  • POST   /Jobs                    - Create new job                │   │
+│  │  • POST   /Jobs/{id}/stop          - Stop running job              │   │
+│  │  • POST   /Jobs/{id}/restart       - Restart failed/stopped job    │   │
+│  │  • DELETE /Jobs/{id}               - Delete specific job           │   │
+│  │  • DELETE /Jobs/status/{status}    - Bulk delete by status         │   │
+│  │                                                                     │   │
+│  │  Features:                                                          │   │
+│  │  • CRUD Operations                                                 │   │
+│  │  • Business Logic Validation                                       │   │
+│  │  • Error Handling                                                  │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ WebSocket Connection (SignalR)
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   .NET Backend (localhost:5002)                            │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                    ASP.NET Core SignalR                             │   │
+│  │                                                                     │   │
+│  │  SignalR Hub: /JobSignalRHub                                        │   │
+│  │                                                                     │   │
+│  │  Events Sent:                                                       │   │
+│  │  • UpdateJobProgress               - Real-time job progress        │   │
+│  │  • JobsUpdated                     - Complete jobs list update     │   │
+│  │                                                                     │   │
+│  │  Background Service:                                                │   │
+│  │  • JobUpdateService                - Automatic job updates         │   │
+│  │  • 10-second intervals             - Progress simulation           │   │
+│  │  • Dynamic job lifecycle           - Complete/reset jobs           │   │
+│  │                                                                     │   │
+│  │  Features:                                                          │   │
+│  │  • Real-time Updates                                               │   │
+│  │  • WebSocket Management                                            │   │
+│  │  • Connection State Management                                     │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Architecture Overview
+
+#### **Frontend (React + TypeScript)**
+
+- **Single Page Application** with real-time UI updates
+- **Chakra UI** for modern, responsive components
+- **SignalR Client** for real-time communication
+- **Service Layer** abstraction for backend switching
+
+#### **Node.js Backend (REST API)**
+
+- **Express.js** server handling HTTP requests
+- **CRUD Operations** for job management
+- **Business Logic** validation and error handling
+- **In-memory Storage** for job data
+
+#### **.NET Backend (SignalR)**
+
+- **ASP.NET Core** with SignalR hub
+- **Background Service** for automatic job updates
+- **WebSocket Management** for real-time communication
+- **Job Lifecycle Simulation** with dynamic progress
+
+#### **Communication Flow**
+
+1. **Frontend** connects to both backends simultaneously
+2. **REST API** handles all CRUD operations (Create, Read, Update, Delete)
+3. **SignalR** provides real-time updates and progress monitoring
+4. **Background Service** simulates job processing every 10 seconds
+5. **Frontend** receives updates and reflects changes in real-time
+
+#### **Data Flow**
+
+```
+User Action → REST API → Job Update → SignalR → Frontend UI Update
+     ↓
+Background Service → Job Progress → SignalR → Real-time Display
+```
+
+#### **Key Benefits**
+
+- **Separation of Concerns**: REST for operations, SignalR for real-time
+- **Scalability**: Independent services can be scaled separately
+- **Reliability**: Fallback mechanisms and error handling
+- **Real-time Experience**: Live updates without page refresh
+- **Flexibility**: Easy to switch between mock and real backends
+
 ## Setup Instructions
 
 ### Prerequisites
