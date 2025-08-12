@@ -420,12 +420,15 @@ export const JobTable: React.FC<JobTableProps> = ({
               {filteredAndSortedJobs.map((job, index) => (
                 <Tr
                   key={job.jobID}
-                  bg={index % 2 === 0 ? "gray.50" : "white"}
+                  bg={index % 2 === 0 ? "gray.100" : "white"}
+                  borderBottom="1px solid"
+                  borderColor="gray.200"
                   _dark={{
                     bg: index % 2 === 0 ? "#0a0a0a" : "#000000",
+                    borderColor: "#00ff41",
                   }}
                   _hover={{
-                    bg: "blue.50",
+                    bg: "blue.100",
                     _dark: {
                       bg: "#001a00",
                     },

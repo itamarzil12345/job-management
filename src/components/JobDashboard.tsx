@@ -346,7 +346,7 @@ export const JobDashboard: React.FC = () => {
       {/* Fixed System Logs Panel - Right Edge */}
       <Box
         position="fixed"
-        top="64px"
+        top="49px"
         right="0px"
         w={`${logsPanelWidth}px`}
         minW="300px"
