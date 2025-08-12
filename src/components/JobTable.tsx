@@ -272,9 +272,13 @@ export const JobTable: React.FC<JobTableProps> = ({
       {/* Table */}
       <Box overflowX="auto" bg="white" borderRadius="xl" boxShadow="lg">
         <Table variant="simple" size="md">
-          <Thead bg="blue.800" color="white">
+          <Thead bg="blue.800">
             <Tr>
-              <Th cursor="pointer" onClick={() => handleSort("name")}>
+              <Th
+                cursor="pointer"
+                onClick={() => handleSort("name")}
+                color="gray.100"
+              >
                 {language === "he" ? "שם העבודה" : "Job Name"}
                 {filters.sortBy === "name" && (
                   <Text
@@ -289,7 +293,11 @@ export const JobTable: React.FC<JobTableProps> = ({
                   </Text>
                 )}
               </Th>
-              <Th cursor="pointer" onClick={() => handleSort("priority")}>
+              <Th
+                cursor="pointer"
+                onClick={() => handleSort("priority")}
+                color="gray.100"
+              >
                 {language === "he" ? "עדיפות" : "Priority"}
                 {filters.sortBy === "priority" && (
                   <Text
@@ -304,7 +312,11 @@ export const JobTable: React.FC<JobTableProps> = ({
                   </Text>
                 )}
               </Th>
-              <Th cursor="pointer" onClick={() => handleSort("status")}>
+              <Th
+                cursor="pointer"
+                onClick={() => handleSort("status")}
+                color="gray.100"
+              >
                 {language === "he" ? "סטטוס" : "Status"}
                 {filters.sortBy === "status" && (
                   <Text
@@ -319,8 +331,14 @@ export const JobTable: React.FC<JobTableProps> = ({
                   </Text>
                 )}
               </Th>
-              <Th>{language === "he" ? "התקדמות" : "Progress"}</Th>
-              <Th cursor="pointer" onClick={() => handleSort("startedAt")}>
+              <Th color="gray.100">
+                {language === "he" ? "התקדמות" : "Progress"}
+              </Th>
+              <Th
+                cursor="pointer"
+                onClick={() => handleSort("startedAt")}
+                color="gray.100"
+              >
                 {language === "he" ? "זמן התחלה" : "Start Time"}
                 {filters.sortBy === "startedAt" && (
                   <Text
@@ -335,7 +353,11 @@ export const JobTable: React.FC<JobTableProps> = ({
                   </Text>
                 )}
               </Th>
-              <Th cursor="pointer" onClick={() => handleSort("completedAt")}>
+              <Th
+                cursor="pointer"
+                onClick={() => handleSort("completedAt")}
+                color="gray.100"
+              >
                 {language === "he" ? "זמן סיום" : "End Time"}
                 {filters.sortBy === "completedAt" && (
                   <Text
@@ -350,7 +372,9 @@ export const JobTable: React.FC<JobTableProps> = ({
                   </Text>
                 )}
               </Th>
-              <Th>{language === "he" ? "פעולות" : "Actions"}</Th>
+              <Th color="gray.100">
+                {language === "he" ? "פעולות" : "Actions"}
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
