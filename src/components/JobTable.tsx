@@ -270,7 +270,14 @@ export const JobTable: React.FC<JobTableProps> = ({
       </HStack>
 
       {/* Table */}
-      <Box overflowX="auto" bg="white" borderRadius="xl" boxShadow="lg">
+      <Box
+        overflowX="auto"
+        bg="white"
+        borderRadius="xl"
+        boxShadow="lg"
+        maxH="500px"
+        overflowY="auto"
+      >
         <Table variant="simple" size="md">
           <Thead bg="blue.800">
             <Tr>
