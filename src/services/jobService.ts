@@ -6,8 +6,9 @@ import {
 } from "../types/job";
 
 // Configuration
-const USE_MOCK_DATA = false; // Force to use backend API
-const API_BASE_URL = "http://localhost:5001"; // Use our test backend
+const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA === "true";
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
 
 // Mock data
 const mockJobs: Job[] = [
