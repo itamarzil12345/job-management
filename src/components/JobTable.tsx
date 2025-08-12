@@ -202,34 +202,9 @@ export const JobTable: React.FC<JobTableProps> = ({
     );
   }
 
-  if (filteredAndSortedJobs.length === 0) {
-    return (
-      <Box textAlign="center" py={10}>
-        <Text fontSize="lg" color="gray.500">
-          {language === "he"
-            ? "לא נמצאו תוצאות לסינון הנוכחי"
-            : "No results found for current filters"}
-        </Text>
-        <Button
-          mt={4}
-          onClick={() =>
-            setFilters({
-              status: "",
-              search: "",
-              sortBy: "createdAt",
-              sortDirection: "desc",
-            })
-          }
-        >
-          {language === "he" ? "נקה סינון" : "Clear Filters"}
-        </Button>
-      </Box>
-    );
-  }
-
   return (
     <VStack spacing={4} align="stretch">
-      {/* Filters */}
+      {/* Filters - Always visible */}
       <HStack spacing={4}>
         <Input
           placeholder={
@@ -269,184 +244,220 @@ export const JobTable: React.FC<JobTableProps> = ({
         </Button>
       </HStack>
 
-      {/* Table */}
-      <Box
-        overflowX="auto"
-        bg="white"
-        borderRadius="xl"
-        boxShadow="lg"
-        maxH="500px"
-        overflowY="auto"
-      >
-        <Table variant="simple" size="md">
-          <Thead bg="blue.800">
-            <Tr>
-              <Th
-                cursor="pointer"
-                onClick={() => handleSort("name")}
-                color="gray.100"
-              >
-                {language === "he" ? "שם העבודה" : "Job Name"}
-                {filters.sortBy === "name" && (
-                  <Text
-                    as="span"
-                    ml={2}
-                    fontSize="sm"
-                    color={
-                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
-                    }
-                  >
-                    {filters.sortDirection === "asc" ? "↑" : "↓"}
-                  </Text>
-                )}
-              </Th>
-              <Th
-                cursor="pointer"
-                onClick={() => handleSort("priority")}
-                color="gray.100"
-              >
-                {language === "he" ? "עדיפות" : "Priority"}
-                {filters.sortBy === "priority" && (
-                  <Text
-                    as="span"
-                    ml={2}
-                    fontSize="sm"
-                    color={
-                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
-                    }
-                  >
-                    {filters.sortDirection === "asc" ? "↑" : "↓"}
-                  </Text>
-                )}
-              </Th>
-              <Th
-                cursor="pointer"
-                onClick={() => handleSort("status")}
-                color="gray.100"
-              >
-                {language === "he" ? "סטטוס" : "Status"}
-                {filters.sortBy === "status" && (
-                  <Text
-                    as="span"
-                    ml={2}
-                    fontSize="sm"
-                    color={
-                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
-                    }
-                  >
-                    {filters.sortDirection === "asc" ? "↑" : "↓"}
-                  </Text>
-                )}
-              </Th>
-              <Th color="gray.100">
-                {language === "he" ? "התקדמות" : "Progress"}
-              </Th>
-              <Th
-                cursor="pointer"
-                onClick={() => handleSort("startedAt")}
-                color="gray.100"
-              >
-                {language === "he" ? "זמן התחלה" : "Start Time"}
-                {filters.sortBy === "startedAt" && (
-                  <Text
-                    as="span"
-                    ml={2}
-                    fontSize="sm"
-                    color={
-                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
-                    }
-                  >
-                    {filters.sortDirection === "asc" ? "↑" : "↓"}
-                  </Text>
-                )}
-              </Th>
-              <Th
-                cursor="pointer"
-                onClick={() => handleSort("completedAt")}
-                color="gray.100"
-              >
-                {language === "he" ? "זמן סיום" : "End Time"}
-                {filters.sortBy === "completedAt" && (
-                  <Text
-                    as="span"
-                    ml={2}
-                    fontSize="sm"
-                    color={
-                      filters.sortDirection === "asc" ? "blue.300" : "blue.100"
-                    }
-                  >
-                    {filters.sortDirection === "asc" ? "↑" : "↓"}
-                  </Text>
-                )}
-              </Th>
-              <Th color="gray.100">
-                {language === "he" ? "פעולות" : "Actions"}
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {filteredAndSortedJobs.map((job) => (
-              <Tr key={job.jobID}>
-                <Td fontWeight="medium">{job.name}</Td>
-                <Td>{getPriorityBadge(job.priority)}</Td>
-                <Td>{getStatusBadge(job.status)}</Td>
-                <Td>
-                  <VStack align="start" spacing={1}>
-                    <Progress
-                      value={job.progress}
-                      size="sm"
-                      width="100px"
-                      colorScheme={
-                        job.status === JobStatus.Completed
-                          ? "green"
-                          : job.status === JobStatus.Failed
-                          ? "red"
-                          : job.status === JobStatus.Stopped
-                          ? "gray"
-                          : "blue"
+      {/* No Results Message */}
+      {filteredAndSortedJobs.length === 0 && (
+        <Box textAlign="center" py={10}>
+          <Text fontSize="lg" color="gray.500">
+            {language === "he"
+              ? "לא נמצאו תוצאות לסינון הנוכחי"
+              : "No results found for current filters"}
+          </Text>
+          <Button
+            mt={4}
+            onClick={() =>
+              setFilters({
+                status: "",
+                search: "",
+                sortBy: "createdAt",
+                sortDirection: "desc",
+              })
+            }
+          >
+            {language === "he" ? "נקה סינון" : "Clear Filters"}
+          </Button>
+        </Box>
+      )}
+
+      {/* Table - Only show when there are results */}
+      {filteredAndSortedJobs.length > 0 && (
+        <Box
+          overflowX="auto"
+          bg="white"
+          borderRadius="xl"
+          boxShadow="lg"
+          maxH="500px"
+          overflowY="auto"
+        >
+          <Table variant="simple" size="md">
+            <Thead bg="blue.800">
+              <Tr>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleSort("name")}
+                  color="gray.100"
+                >
+                  {language === "he" ? "שם העבודה" : "Job Name"}
+                  {filters.sortBy === "name" && (
+                    <Text
+                      as="span"
+                      ml={2}
+                      fontSize="sm"
+                      color={
+                        filters.sortDirection === "asc"
+                          ? "blue.300"
+                          : "blue.100"
                       }
-                    />
-                    <Text fontSize="sm">{job.progress}%</Text>
-                  </VStack>
-                </Td>
-                <Td>{formatTimestamp(job.startedAt)}</Td>
-                <Td>{formatTimestamp(job.completedAt)}</Td>
-                <Td>
-                  <HStack spacing={2}>
-                    {canStop(job.status) && (
-                      <Button
-                        size="sm"
-                        colorScheme="orange"
-                        onClick={() => handleJobAction(job.jobID, "stop")}
-                      >
-                        {language === "he" ? "עצור" : "Stop"}
-                      </Button>
-                    )}
-                    {canRestart(job.status) && (
-                      <Button
-                        size="sm"
-                        colorScheme="blue"
-                        onClick={() => handleJobAction(job.jobID, "restart")}
-                      >
-                        {language === "he" ? "התחל מחדש" : "Restart"}
-                      </Button>
-                    )}
-                    {canDelete(job.status) && (
-                      <Button
-                        size="sm"
-                        colorScheme="red"
-                        onClick={() => handleJobAction(job.jobID, "delete")}
-                      >
-                        {language === "he" ? "מחק" : "Delete"}
-                      </Button>
-                    )}
-                  </HStack>
-                </Td>
+                    >
+                      {filters.sortDirection === "asc" ? "↑" : "↓"}
+                    </Text>
+                  )}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleSort("priority")}
+                  color="gray.100"
+                >
+                  {language === "he" ? "עדיפות" : "Priority"}
+                  {filters.sortBy === "priority" && (
+                    <Text
+                      as="span"
+                      ml={2}
+                      fontSize="sm"
+                      color={
+                        filters.sortDirection === "asc"
+                          ? "blue.300"
+                          : "blue.100"
+                      }
+                    >
+                      {filters.sortDirection === "asc" ? "↑" : "↓"}
+                    </Text>
+                  )}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleSort("status")}
+                  color="gray.100"
+                >
+                  {language === "he" ? "סטטוס" : "Status"}
+                  {filters.sortBy === "status" && (
+                    <Text
+                      as="span"
+                      ml={2}
+                      fontSize="sm"
+                      color={
+                        filters.sortDirection === "asc"
+                          ? "blue.300"
+                          : "blue.100"
+                      }
+                    >
+                      {filters.sortDirection === "asc" ? "↑" : "↓"}
+                    </Text>
+                  )}
+                </Th>
+                <Th color="gray.100">
+                  {language === "he" ? "התקדמות" : "Progress"}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleSort("startedAt")}
+                  color="gray.100"
+                >
+                  {language === "he" ? "זמן התחלה" : "Start Time"}
+                  {filters.sortBy === "startedAt" && (
+                    <Text
+                      as="span"
+                      ml={2}
+                      fontSize="sm"
+                      color={
+                        filters.sortDirection === "asc"
+                          ? "blue.300"
+                          : "blue.100"
+                      }
+                    >
+                      {filters.sortDirection === "asc" ? "↑" : "↓"}
+                    </Text>
+                  )}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleSort("completedAt")}
+                  color="gray.100"
+                >
+                  {language === "he" ? "זמן סיום" : "End Time"}
+                  {filters.sortBy === "completedAt" && (
+                    <Text
+                      as="span"
+                      ml={2}
+                      fontSize="sm"
+                      color={
+                        filters.sortDirection === "asc"
+                          ? "blue.300"
+                          : "blue.100"
+                      }
+                    >
+                      {filters.sortDirection === "asc" ? "↑" : "↓"}
+                    </Text>
+                  )}
+                </Th>
+                <Th color="gray.100">
+                  {language === "he" ? "פעולות" : "Actions"}
+                </Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+            </Thead>
+            <Tbody>
+              {filteredAndSortedJobs.map((job) => (
+                <Tr key={job.jobID}>
+                  <Td fontWeight="medium">{job.name}</Td>
+                  <Td>{getPriorityBadge(job.priority)}</Td>
+                  <Td>{getStatusBadge(job.status)}</Td>
+                  <Td>
+                    <VStack align="start" spacing={1}>
+                      <Progress
+                        value={job.progress}
+                        size="sm"
+                        width="100px"
+                        colorScheme={
+                          job.status === JobStatus.Completed
+                            ? "green"
+                            : job.status === JobStatus.Failed
+                            ? "red"
+                            : job.status === JobStatus.Stopped
+                            ? "gray"
+                            : "blue"
+                        }
+                      />
+                      <Text fontSize="sm">{job.progress}%</Text>
+                    </VStack>
+                  </Td>
+                  <Td>{formatTimestamp(job.startedAt)}</Td>
+                  <Td>{formatTimestamp(job.completedAt)}</Td>
+                  <Td>
+                    <HStack spacing={2}>
+                      {canStop(job.status) && (
+                        <Button
+                          size="sm"
+                          colorScheme="orange"
+                          onClick={() => handleJobAction(job.jobID, "stop")}
+                        >
+                          {language === "he" ? "עצור" : "Stop"}
+                        </Button>
+                      )}
+                      {canRestart(job.status) && (
+                        <Button
+                          size="sm"
+                          colorScheme="blue"
+                          onClick={() => handleJobAction(job.jobID, "restart")}
+                        >
+                          {language === "he" ? "התחל מחדש" : "Restart"}
+                        </Button>
+                      )}
+                      {canDelete(job.status) && (
+                        <Button
+                          size="sm"
+                          colorScheme="red"
+                          onClick={() => handleJobAction(job.jobID, "delete")}
+                        >
+                          {language === "he" ? "מחק" : "Delete"}
+                        </Button>
+                      )}
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
+      )}
 
       {/* Action Confirmation Dialog */}
       <AlertDialog
