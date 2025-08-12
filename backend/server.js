@@ -14,90 +14,90 @@ app.use(bodyParser.json());
 let jobs = [
   {
     jobID: "1",
-    name: "Real Data Processing Job 1",
+    name: "Data Processing Job 1",
     status: 2, // Running
     priority: 1, // High
     progress: 65,
-    createdAt: Date.now() - 3600000,
-    startedAt: Date.now() - 3000000,
+    createdAt: Date.now() - 3600000, // 1 hour ago
+    startedAt: Date.now() - 3000000, // 50 minutes ago
     completedAt: 0,
     errorMessage: null,
   },
   {
     jobID: "2",
-    name: "Real Backup Job",
+    name: "Backup Job",
     status: 3, // Completed
     priority: 0, // Regular
     progress: 100,
-    createdAt: Date.now() - 7200000,
-    startedAt: Date.now() - 7000000,
-    completedAt: Date.now() - 6000000,
+    createdAt: Date.now() - 7200000, // 2 hours ago
+    startedAt: Date.now() - 3600000, // 1 hour ago
+    completedAt: Date.now() - 1800000, // 30 minutes ago
     errorMessage: null,
   },
   {
     jobID: "3",
-    name: "Real Failed Job",
+    name: "Failed Job",
     status: 4, // Failed
     priority: 1, // High
     progress: 45,
-    createdAt: Date.now() - 1800000,
-    startedAt: Date.now() - 1500000,
+    createdAt: Date.now() - 1800000, // 30 minutes ago
+    startedAt: Date.now() - 1500000, // 25 minutes ago
     completedAt: 0,
     errorMessage: "Connection timeout",
   },
   {
     jobID: "4",
-    name: "Real Email Campaign Job",
+    name: "Email Campaign Job",
     status: 1, // In Queue
     priority: 0, // Regular
     progress: 0,
-    createdAt: Date.now() - 900000,
+    createdAt: Date.now() - 900000, // 15 minutes ago
     startedAt: 0,
     completedAt: 0,
     errorMessage: null,
   },
   {
     jobID: "5",
-    name: "Real Report Generation",
+    name: "Report Generation",
     status: 2, // Running
     priority: 1, // High
     progress: 30,
-    createdAt: Date.now() - 2400000,
-    startedAt: Date.now() - 2000000,
+    createdAt: Date.now() - 2400000, // 40 minutes ago
+    startedAt: Date.now() - 1200000, // 20 minutes ago
     completedAt: 0,
     errorMessage: null,
   },
   {
     jobID: "6",
-    name: "Real Database Cleanup",
+    name: "Database Cleanup",
     status: 5, // Stopped
     priority: 0, // Regular
     progress: 75,
-    createdAt: Date.now() - 5400000,
-    startedAt: Date.now() - 5000000,
+    createdAt: Date.now() - 5400000, // 90 minutes ago
+    startedAt: Date.now() - 4800000, // 80 minutes ago
     completedAt: 0,
     errorMessage: null,
   },
   {
     jobID: "7",
-    name: "Real File Sync Job",
+    name: "File Sync Job",
     status: 0, // Pending
     priority: 1, // High
     progress: 0,
-    createdAt: Date.now() - 300000,
+    createdAt: Date.now() - 300000, // 5 minutes ago
     startedAt: 0,
     completedAt: 0,
     errorMessage: null,
   },
   {
     jobID: "8",
-    name: "Real Log Analysis",
+    name: "Log Analysis",
     status: 3, // Completed
     priority: 0, // Regular
     progress: 100,
-    createdAt: Date.now() - 6000000,
-    startedAt: Date.now() - 5800000,
-    completedAt: Date.now() - 5700000,
+    createdAt: Date.now() - 6000000, // 100 minutes ago
+    startedAt: Date.now() - 4800000, // 80 minutes ago
+    completedAt: Date.now() - 4200000, // 70 minutes ago
     errorMessage: null,
   },
 ];

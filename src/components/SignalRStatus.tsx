@@ -176,7 +176,7 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
                               fontWeight="medium"
                               color="gray.600"
                             >
-                              Job {update.jobID}
+                              Job {update.name}
                             </Text>
                             <HStack spacing={2}>
                               <Badge colorScheme="blue" size="sm">

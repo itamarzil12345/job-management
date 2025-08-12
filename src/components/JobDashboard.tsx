@@ -38,6 +38,11 @@ export const JobDashboard: React.FC = () => {
     fetchJobs();
     setupRealTimeUpdates();
 
+    // Set up callback for real-time job updates from SignalR
+    jobService.setJobsUpdateCallback((updatedJobs) => {
+      setJobs(updatedJobs);
+    });
+
     // Cleanup SignalR connection on unmount
     return () => {
       if (!USE_MOCK_DATA) {
@@ -75,7 +80,7 @@ export const JobDashboard: React.FC = () => {
         setJobs((prevJobs) =>
           prevJobs.map((job) =>
             job.jobID === update.jobID
-              ? { ...job, status: update.status, progress: update.progress }
+              ? { ...job, name: update.name, status: update.status, progress: update.progress }
               : job
           )
         );

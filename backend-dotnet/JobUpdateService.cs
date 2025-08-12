@@ -113,6 +113,7 @@ public class JobUpdateService : BackgroundService
             var update = new JobProgressUpdate
             {
                 JobID = job.JobID,
+                Name = job.Name,
                 Status = (int)job.Status,
                 Progress = job.Progress
             };
@@ -149,6 +150,7 @@ public class Job
 public class JobProgressUpdate
 {
     public string JobID { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
     public int Status { get; set; }
     public int Progress { get; set; }
 }

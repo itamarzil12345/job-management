@@ -106,6 +106,7 @@ const mockJobs: Job[] = [
 class JobService {
   private jobs: Job[] = [...mockJobs];
   private signalRConnected = false;
+  private onJobsUpdateCallback?: (jobs: Job[]) => void;
 
   constructor() {
     console.log("🔧 JobService constructor - USE_MOCK_DATA:", USE_MOCK_DATA);
@@ -144,10 +145,21 @@ class JobService {
     if (jobIndex !== -1) {
       this.jobs[jobIndex] = {
         ...this.jobs[jobIndex],
+        name: update.name,
         status: update.status,
         progress: update.progress,
       };
       console.log("🔄 Updated job progress via SignalR:", update);
+
+      // Notify listeners that jobs have been updated
+      this.notifyJobsUpdated();
+    }
+  }
+
+  private notifyJobsUpdated(): void {
+    // This will be used to notify the frontend that jobs have changed
+    if (this.onJobsUpdateCallback) {
+      this.onJobsUpdateCallback([...this.jobs]);
     }
   }
 
@@ -322,6 +334,11 @@ class JobService {
     };
   }
 
+  // Set callback for job updates
+  setJobsUpdateCallback(callback: (jobs: Job[]) => void) {
+    this.onJobsUpdateCallback = callback;
+  }
+
   // Cleanup SignalR connection
   async cleanup(): Promise<void> {
     if (this.signalRConnected) {
@@ -411,6 +428,7 @@ class JobService {
           }
           callback({
             jobID: job.jobID,
+            name: job.name,
             status: job.status,
             progress: job.progress,
           });

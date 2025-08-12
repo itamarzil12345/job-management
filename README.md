@@ -153,6 +153,7 @@ Background Service → Job Progress → SignalR → Real-time Display
 - **Reliability**: Fallback mechanisms and error handling
 - **Real-time Experience**: Live updates without page refresh
 - **Flexibility**: Easy to switch between mock and real backends
+- **Data Consistency**: Identical mock jobs across both backends for seamless testing
 
 ## Setup Instructions
 
