@@ -3,15 +3,13 @@ using System.Text.Json;
 
 namespace JobManagementHub.Hubs;
 
-public class JobSignalRHub : Hub, IDisposable
+public class JobSignalRHub : Hub
 {
     private readonly ILogger<JobSignalRHub> _logger;
-    private Timer? _updateTimer;
-    private readonly Random _random = new Random();
-    private bool _isDisposed = false;
+    private static readonly Random _random = new Random();
 
     // Sample jobs for testing
-    private readonly List<Job> _jobs = new()
+    private static readonly List<Job> _jobs = new()
     {
         new Job { JobID = "1", Name = "Data Processing Job 1", Status = JobStatus.Running, Priority = JobPriority.High, Progress = 65, CreatedAt = DateTimeOffset.UtcNow.AddHours(-1), StartedAt = DateTimeOffset.UtcNow.AddMinutes(-50), CompletedAt = null, ErrorMessage = null },
         new Job { JobID = "2", Name = "Backup Job", Status = JobStatus.Completed, Priority = JobPriority.Regular, Progress = 100, CreatedAt = DateTimeOffset.UtcNow.AddHours(-2), StartedAt = DateTimeOffset.UtcNow.AddHours(-1), CompletedAt = DateTimeOffset.UtcNow.AddMinutes(-30), ErrorMessage = null },
@@ -32,13 +30,6 @@ public class JobSignalRHub : Hub, IDisposable
     {
         _logger.LogInformation("Client connected: {ConnectionId}", Context.ConnectionId);
         
-        // Start timer when first client connects
-        if (_updateTimer == null && !_isDisposed)
-        {
-            _updateTimer = new Timer(SendRandomUpdates, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
-            _logger.LogInformation("Started update timer");
-        }
-        
         // Send current jobs to newly connected client
         await Clients.Caller.SendAsync("JobsUpdated", _jobs);
         
@@ -48,35 +39,16 @@ public class JobSignalRHub : Hub, IDisposable
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _logger.LogInformation("Client disconnected: {ConnectionId}", Context.ConnectionId);
-        
-        // Stop timer when no clients are connected
-        if (Context.ConnectionId != null && _updateTimer != null)
-        {
-            _updateTimer.Dispose();
-            _updateTimer = null;
-            _logger.LogInformation("Stopped update timer - no clients connected");
-        }
-        
         await base.OnDisconnectedAsync(exception);
     }
 
-    public new void Dispose()
-    {
-        _isDisposed = true;
-        _updateTimer?.Dispose();
-        _updateTimer = null;
-    }
 
-    private void SendRandomUpdates(object? state)
+
+    // Method to manually trigger a job update (for testing)
+    public async Task TriggerJobUpdate()
     {
         try
         {
-            // Check if hub is disposed or no clients
-            if (_isDisposed || Clients == null)
-            {
-                return;
-            }
-
             // Select a random job to update
             var randomJob = _jobs[_random.Next(_jobs.Count)];
             
@@ -103,7 +75,7 @@ public class JobSignalRHub : Hub, IDisposable
                     randomJob.StartedAt = DateTimeOffset.UtcNow;
                 }
 
-                // Send update to all clients (fire and forget)
+                // Send update to all clients
                 var update = new JobProgressUpdate
                 {
                     JobID = randomJob.JobID,
@@ -111,34 +83,14 @@ public class JobSignalRHub : Hub, IDisposable
                     Progress = randomJob.Progress
                 };
 
-                _ = Clients.All.SendAsync("UpdateJobProgress", update)
-                    .ContinueWith(t => 
-                    {
-                        if (!_isDisposed)
-                        {
-                            if (t.IsCompletedSuccessfully)
-                            {
-                                _logger.LogInformation("Sent update for job {JobID}: Status={Status}, Progress={Progress}", 
-                                    update.JobID, update.Status, update.Progress);
-                            }
-                            else if (t.IsFaulted)
-                            {
-                                _logger.LogWarning("Failed to send update for job {JobID}: {Error}", 
-                                    update.JobID, t.Exception?.GetBaseException().Message);
-                            }
-                        }
-                    });
-
-                _logger.LogInformation("Scheduled update for job {JobID}: Status={Status}, Progress={Progress}", 
+                await Clients.All.SendAsync("UpdateJobProgress", update);
+                _logger.LogInformation("Sent update for job {JobID}: Status={Status}, Progress={Progress}", 
                     update.JobID, update.Status, update.Progress);
             }
         }
         catch (Exception ex)
         {
-            if (!_isDisposed)
-            {
-                _logger.LogError(ex, "Error sending random updates");
-            }
+            _logger.LogError(ex, "Error triggering job update");
         }
     }
 
