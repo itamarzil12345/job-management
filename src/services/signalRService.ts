@@ -118,7 +118,7 @@ export class SignalRService {
   }
 
   isHubConnected(): boolean {
-    return this.isConnected && this.connection?.state === "Connected";
+    return this.connection?.state === "Connected";
   }
 
   // Disconnect from hub
@@ -137,7 +137,7 @@ export class SignalRService {
   // Get connection statistics
   getConnectionInfo() {
     return {
-      isConnected: this.isConnected,
+      isConnected: this.connection?.state === "Connected",
       state: this.getConnectionState(),
       reconnectAttempts: this.reconnectAttempts,
       hubUrl: this.hubUrl,

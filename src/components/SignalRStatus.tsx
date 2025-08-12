@@ -16,6 +16,13 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
 }) => {
   const { language } = useLanguage();
 
+  // Debug logging
+  console.log("SignalR Status Props:", {
+    isConnected,
+    connectionState,
+    hubUrl,
+  });
+
   const getStatusColor = () => {
     if (isConnected && connectionState === "Connected") return "green";
     if (connectionState === "Connecting" || connectionState === "Reconnecting")

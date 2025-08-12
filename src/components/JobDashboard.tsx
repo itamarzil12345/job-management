@@ -17,6 +17,9 @@ export const JobDashboard: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [signalRStatus, setSignalRStatus] = useState(
+    jobService.getSignalRStatus()
+  );
   const { language } = useLanguage();
 
   const {
@@ -41,6 +44,15 @@ export const JobDashboard: React.FC = () => {
         jobService.cleanup();
       }
     };
+  }, []);
+
+  // Update SignalR status every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSignalRStatus(jobService.getSignalRStatus());
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchJobs = async () => {
@@ -158,9 +170,9 @@ export const JobDashboard: React.FC = () => {
       {/* SignalR Status - Only show when not using mock data */}
       {!USE_MOCK_DATA && (
         <SignalRStatus
-          isConnected={jobService.getSignalRStatus().isConnected}
-          connectionState={jobService.getSignalRStatus().connectionState}
-          hubUrl={jobService.getSignalRStatus().connectionInfo.hubUrl}
+          isConnected={signalRStatus.isConnected}
+          connectionState={signalRStatus.connectionState}
+          hubUrl={signalRStatus.connectionInfo.hubUrl}
         />
       )}
 
