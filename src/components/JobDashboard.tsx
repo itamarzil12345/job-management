@@ -226,13 +226,13 @@ export const JobDashboard: React.FC = () => {
     <Box position="relative" h="100vh" p={0}>
       {/* Main Content - Full width */}
       <Box h="calc(100vh - 32px)" overflow="auto" maxW="100vw" ml={0} pl={0}>
-        <VStack spacing={3} align="stretch" p={2} pl={0}>
+        <VStack spacing={2} align="stretch" p={1} pl={0}>
           <HStack justify="space-between" align="center">
-            <HStack spacing={3}>
-              <Button colorScheme="blue" onClick={onCreateOpen} size="md">
+            <HStack spacing={2}>
+              <Button colorScheme="blue" onClick={onCreateOpen} size="sm">
                 {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
               </Button>
-              <Button colorScheme="red" onClick={onDeleteOpen} size="md">
+              <Button colorScheme="red" onClick={onDeleteOpen} size="sm">
                 {language === "he" ? "מחק עבודות" : "Delete Jobs"}
               </Button>
             </HStack>

@@ -107,12 +107,29 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
       h="100%"
       overflow="hidden"
       fontFamily="'Courier New', monospace"
-      fontSize="sm"
+      fontSize="10px"
       display="flex"
       flexDirection="column"
       position="relative"
       border="1px solid"
       borderColor={borderColor}
+      css={{
+        "& *": {
+          fontSize: "10px !important",
+        },
+        "& .log-timestamp": {
+          fontSize: "9px !important",
+        },
+        "& .log-message": {
+          fontSize: "9px !important",
+        },
+        "& .log-header": {
+          fontSize: "11px !important",
+        },
+        "& .log-time": {
+          fontSize: "9px !important",
+        },
+      }}
       _before={{
         content: '""',
         position: "absolute",
@@ -120,18 +137,19 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         left: 0,
         right: 0,
         bottom: 0,
-        background: "linear-gradient(45deg, transparent 49%, rgba(0, 100, 0, 0.05) 50%, transparent 51%)",
+        background:
+          "linear-gradient(45deg, transparent 49%, rgba(0, 100, 0, 0.05) 50%, transparent 51%)",
         backgroundSize: "20px 20px",
         pointerEvents: "none",
         zIndex: 1,
       }}
     >
-      <Flex 
-        mb={3} 
-        alignItems="center" 
-        gap={2} 
-        p={4} 
-        pb={2}
+      <Flex
+        mb={2}
+        alignItems="center"
+        gap={2}
+        p={2}
+        pb={1}
         borderBottom="2px solid"
         borderColor={borderColor}
         position="relative"
@@ -151,10 +169,24 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         <Box as={FaCircle as any} color={errorColor} boxSize={2} />
         <Box as={FaCircle as any} color={warningColor} boxSize={2} />
         <Box as={FaCircle as any} color={successColor} boxSize={2} />
-        <Text color={textColor} ml={2} fontWeight="bold" textShadow={`0 0 5px rgba(0, 100, 0, 0.3)`}>
+        <Text
+          color={textColor}
+          ml={2}
+          fontWeight="bold"
+          fontSize="11px"
+          className="log-header"
+          textShadow={`0 0 5px rgba(0, 100, 0, 0.3)`}
+        >
           [SYSTEM] TERMINAL_ACCESS_GRANTED
         </Text>
-        <Text color={accentColor} ml="auto" fontSize="xs" fontFamily="mono" fontWeight="bold">
+        <Text
+          color={accentColor}
+          ml="auto"
+          fontSize="9px"
+          fontFamily="mono"
+          fontWeight="bold"
+          className="log-time"
+        >
           {new Date().toLocaleTimeString()}
         </Text>
       </Flex>
@@ -162,24 +194,37 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
       <Box
         flex={1}
         overflowY="auto"
-        px={4}
+        px={2}
         css={{
           "&::-webkit-scrollbar": {
-            width: "8px",
+            width: "6px",
           },
           "&::-webkit-scrollbar-track": {
             background: "transparent",
           },
           "&::-webkit-scrollbar-thumb": {
             background: useColorModeValue("gray.600", "gray.500"),
-            borderRadius: "4px",
+            borderRadius: "3px",
           },
         }}
       >
         <VStack spacing={1} align="stretch">
           {displayLogs.map((log) => (
-            <Flex key={log.id} alignItems="flex-start" gap={2} p={1} _hover={{ bg: "rgba(0, 100, 0, 0.05)" }}>
-              <Text color="#666" fontSize="xs" minW="70px" fontFamily="mono" fontWeight="bold">
+            <Flex
+              key={log.id}
+              alignItems="flex-start"
+              gap={2}
+              p={1}
+              _hover={{ bg: "rgba(0, 100, 0, 0.05)" }}
+            >
+              <Text
+                color="#666"
+                fontSize="9px"
+                minW="70px"
+                fontFamily="mono"
+                fontWeight="bold"
+                className="log-timestamp"
+              >
                 {formatTime(log.timestamp)}
               </Text>
               <Box
@@ -196,7 +241,13 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
                   mt={1}
                 />
               )}
-              <Text color={textColor} flex={1} fontFamily="mono" fontSize="xs">
+              <Text
+                color={textColor}
+                flex={1}
+                fontFamily="mono"
+                fontSize="9px"
+                className="log-message"
+              >
                 {log.message}
               </Text>
             </Flex>
