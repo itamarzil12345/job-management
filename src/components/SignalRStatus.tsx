@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Badge, Text, HStack, Icon } from "@chakra-ui/react";
+import {
+  Box,
+  Badge,
+  Text,
+  HStack,
+  Icon,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { CheckCircleIcon, CloseIcon, WarningIcon } from "@chakra-ui/icons";
 import { useLanguage } from "../contexts/LanguageContext";
 
@@ -51,6 +58,11 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
       boxShadow="sm"
       border="1px solid"
       borderColor="gray.200"
+      _dark={{
+        bg: "#0f0f23",
+        borderColor: "#8a2be2",
+        boxShadow: "0 0 20px rgba(138, 43, 226, 0.1)",
+      }}
     >
       <HStack spacing={3} align="center">
         <Icon
@@ -59,14 +71,27 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
           boxSize={4}
         />
         <Box>
-          <Text fontSize="sm" fontWeight="medium" color="gray.700">
+          <Text
+            fontSize="sm"
+            fontWeight="medium"
+            color="gray.700"
+            _dark={{
+              color: "#8a2be2",
+            }}
+          >
             {language === "he" ? "סטטוס SignalR" : "SignalR Status"}
           </Text>
           <HStack spacing={2} align="center">
             <Badge colorScheme={getStatusColor()} size="sm">
               {getStatusText()}
             </Badge>
-            <Text fontSize="xs" color="gray.500">
+            <Text
+              fontSize="xs"
+              color="gray.500"
+              _dark={{
+                color: "#00bfff",
+              }}
+            >
               {hubUrl}
             </Text>
           </HStack>

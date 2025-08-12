@@ -200,10 +200,7 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
             fontFamily: "'Courier New', monospace",
           }}
         >
-          {useColorModeValue(
-            "[SYSTEM] TERMINAL_ACCESS_GRANTED",
-            "[SYSTEM] TERMINAL_ACCESS_GRANTED"
-          )}
+          {useColorModeValue("SYSTEM LOGS", "SYSTEM LOGS")}
         </Text>
         <Text
           color={accentColor}
