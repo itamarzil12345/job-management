@@ -277,9 +277,31 @@ export const JobTable: React.FC<JobTableProps> = ({
           boxShadow="lg"
           maxH="500px"
           overflowY="auto"
+          css={{
+            "@keyframes gradient": {
+              "0%": {
+                backgroundPosition: "0% 50%",
+              },
+              "50%": {
+                backgroundPosition: "100% 50%",
+              },
+              "100%": {
+                backgroundPosition: "0% 50%",
+              },
+            },
+          }}
         >
           <Table variant="simple" size="md">
-            <Thead bg="blue.800">
+            <Thead
+              bg="blue.800"
+              _dark={{
+                bg: "transparent",
+                background:
+                  "linear-gradient(135deg, #000000 0%, #00ff41 50%, #000000 100%)",
+                backgroundSize: "200% 200%",
+                animation: "gradient 3s ease infinite",
+              }}
+            >
               <Tr>
                 <Th
                   cursor="pointer"
@@ -395,8 +417,21 @@ export const JobTable: React.FC<JobTableProps> = ({
               </Tr>
             </Thead>
             <Tbody>
-              {filteredAndSortedJobs.map((job) => (
-                <Tr key={job.jobID}>
+              {filteredAndSortedJobs.map((job, index) => (
+                <Tr
+                  key={job.jobID}
+                  bg={index % 2 === 0 ? "gray.50" : "white"}
+                  _dark={{
+                    bg: index % 2 === 0 ? "#0a0a0a" : "#000000",
+                  }}
+                  _hover={{
+                    bg: "blue.50",
+                    _dark: {
+                      bg: "#001a00",
+                    },
+                  }}
+                  transition="all 0.2s"
+                >
                   <Td fontWeight="medium">{job.name}</Td>
                   <Td>{getPriorityBadge(job.priority)}</Td>
                   <Td>{getStatusBadge(job.status)}</Td>

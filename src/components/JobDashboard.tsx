@@ -240,35 +240,94 @@ export const JobDashboard: React.FC = () => {
         _dark={{ bg: "#0a0a0a" }}
         pt={4}
       >
-        <VStack spacing={2} align="stretch" p={1} pl={0}>
-          <HStack justify="space-between" align="center">
-            <HStack spacing={2}>
-              <Button colorScheme="blue" onClick={onCreateOpen} size="sm">
-                {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
-              </Button>
-              <Button colorScheme="red" onClick={onDeleteOpen} size="sm">
-                {language === "he" ? "מחק עבודות" : "Delete Jobs"}
-              </Button>
+        <VStack spacing={6} align="stretch" p={4} pl={0}>
+          {/* Action Buttons Section */}
+          <Box
+            bg="white"
+            p={4}
+            borderRadius="lg"
+            boxShadow="sm"
+            border="1px solid"
+            borderColor="gray.200"
+            _dark={{
+              bg: "#000000",
+              borderColor: "#00ff41",
+              boxShadow: "0 0 20px rgba(0, 255, 65, 0.1)",
+            }}
+          >
+            <HStack justify="space-between" align="center">
+              <HStack spacing={3}>
+                <Button colorScheme="blue" onClick={onCreateOpen} size="sm">
+                  {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
+                </Button>
+                <Button colorScheme="red" onClick={onDeleteOpen} size="sm">
+                  {language === "he" ? "מחק עבודות" : "Delete Jobs"}
+                </Button>
+              </HStack>
+              <LanguageSwitcher />
             </HStack>
-            <LanguageSwitcher />
-          </HStack>
+          </Box>
 
-          <StatusCards counts={getStatusCounts()} />
+          {/* Status Cards Section */}
+          <Box
+            bg="white"
+            p={4}
+            borderRadius="lg"
+            boxShadow="sm"
+            border="1px solid"
+            borderColor="gray.200"
+            _dark={{
+              bg: "#000000",
+              borderColor: "#00ff41",
+              boxShadow: "0 0 20px rgba(0, 255, 65, 0.1)",
+            }}
+          >
+            <StatusCards counts={getStatusCounts()} />
+          </Box>
 
-          {/* SignalR Status - Only show when not using mock data */}
+          {/* SignalR Status Section - Only show when not using mock data */}
           {!USE_MOCK_DATA && (
-            <SignalRStatus
-              isConnected={signalRStatus.isConnected}
-              connectionState={signalRStatus.connectionState}
-              hubUrl={signalRStatus.connectionInfo.hubUrl}
-            />
+            <Box
+              bg="white"
+              p={4}
+              borderRadius="lg"
+              boxShadow="sm"
+              border="1px solid"
+              borderColor="gray.200"
+              _dark={{
+                bg: "#000000",
+                borderColor: "#00ff41",
+                boxShadow: "0 0 20px rgba(0, 255, 65, 0.1)",
+              }}
+            >
+              <SignalRStatus
+                isConnected={signalRStatus.isConnected}
+                connectionState={signalRStatus.connectionState}
+                hubUrl={signalRStatus.connectionInfo.hubUrl}
+              />
+            </Box>
           )}
 
-          <JobTable
-            jobs={jobs}
-            onJobAction={handleJobAction}
-            onRefresh={fetchJobs}
-          />
+          {/* Job Table Section */}
+          <Box
+            bg="white"
+            p={4}
+            borderRadius="lg"
+            boxShadow="sm"
+            border="1px solid"
+            borderColor="gray.200"
+            _dark={{
+              bg: "#000000",
+              borderColor: "#00ff41",
+              boxShadow: "0 0 20px rgba(0, 255, 65, 0.1)",
+            }}
+          >
+            <JobTable
+              jobs={jobs}
+              onJobAction={handleJobAction}
+              onRefresh={fetchJobs}
+            />
+          </Box>
 
           <CreateJobModal
             isOpen={isCreateOpen}
