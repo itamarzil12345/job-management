@@ -15,7 +15,7 @@ const API_BASE_URL =
 const mockJobs: Job[] = [
   {
     jobID: "1",
-    name: "Data Processing Job 1",
+    name: "Mock Data Processing Job 1",
     status: 2, // Running
     priority: 1, // High
     progress: 65,
@@ -26,7 +26,7 @@ const mockJobs: Job[] = [
   },
   {
     jobID: "2",
-    name: "Backup Job",
+    name: "Mock Backup Job",
     status: 3, // Completed
     priority: 0, // Regular
     progress: 100,
@@ -37,7 +37,7 @@ const mockJobs: Job[] = [
   },
   {
     jobID: "3",
-    name: "Failed Job",
+    name: "Mock Failed Job",
     status: 4, // Failed
     priority: 1, // High
     progress: 45,
@@ -48,7 +48,7 @@ const mockJobs: Job[] = [
   },
   {
     jobID: "4",
-    name: "Email Campaign Job",
+    name: "Mock Email Campaign Job",
     status: 1, // In Queue
     priority: 0, // Regular
     progress: 0,
@@ -59,7 +59,7 @@ const mockJobs: Job[] = [
   },
   {
     jobID: "5",
-    name: "Report Generation",
+    name: "Mock Report Generation",
     status: 2, // Running
     priority: 1, // High
     progress: 30,
@@ -70,7 +70,7 @@ const mockJobs: Job[] = [
   },
   {
     jobID: "6",
-    name: "Database Cleanup",
+    name: "Mock Database Cleanup",
     status: 5, // Stopped
     priority: 0, // Regular
     progress: 75,
@@ -81,7 +81,7 @@ const mockJobs: Job[] = [
   },
   {
     jobID: "7",
-    name: "File Sync Job",
+    name: "Mock File Sync Job",
     status: 0, // Pending
     priority: 1, // High
     progress: 0,
@@ -92,7 +92,7 @@ const mockJobs: Job[] = [
   },
   {
     jobID: "8",
-    name: "Log Analysis",
+    name: "Mock Log Analysis",
     status: 3, // Completed
     priority: 0, // Regular
     progress: 100,
