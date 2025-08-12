@@ -55,8 +55,8 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
 
   return (
     <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing={4}>
-      {Object.values(JobStatus).map((status) => {
-        const config = getStatusConfig(status as JobStatus, language);
+      {[JobStatus.Pending, JobStatus.InQueue, JobStatus.Running, JobStatus.Completed, JobStatus.Failed, JobStatus.Stopped].map((status) => {
+        const config = getStatusConfig(status, language);
         return (
           <Box
             key={status}

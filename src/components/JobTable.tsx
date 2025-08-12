@@ -128,7 +128,7 @@ export const JobTable: React.FC<JobTableProps> = ({
   };
 
   const getStatusBadge = (status: JobStatus) => {
-    const statusConfig = {
+    const statusConfig: Record<JobStatus, { color: string; text: string }> = {
       [JobStatus.Pending]: {
         color: "blue",
         text: language === "he" ? "ממתין" : "Pending",
@@ -156,11 +156,15 @@ export const JobTable: React.FC<JobTableProps> = ({
     };
 
     const config = statusConfig[status];
+    if (!config) {
+      console.warn(`Unknown status: ${status}`);
+      return <Badge colorScheme="gray">Unknown</Badge>;
+    }
     return <Badge colorScheme={config.color}>{config.text}</Badge>;
   };
 
   const getPriorityBadge = (priority: JobPriority) => {
-    const priorityConfig = {
+    const priorityConfig: Record<JobPriority, { color: string; text: string }> = {
       [JobPriority.Regular]: {
         color: "gray",
         text: language === "he" ? "רגיל" : "Regular",
@@ -172,6 +176,10 @@ export const JobTable: React.FC<JobTableProps> = ({
     };
 
     const config = priorityConfig[priority];
+    if (!config) {
+      console.warn(`Unknown priority: ${priority}`);
+      return <Badge colorScheme="gray">Unknown</Badge>;
+    }
     return <Badge colorScheme={config.color}>{config.text}</Badge>;
   };
 
@@ -246,9 +254,9 @@ export const JobTable: React.FC<JobTableProps> = ({
           <option value="">
             {language === "he" ? "כל הסטטוסים" : "All Statuses"}
           </option>
-          {Object.values(JobStatus).map((status) => (
+          {[JobStatus.Pending, JobStatus.InQueue, JobStatus.Running, JobStatus.Completed, JobStatus.Failed, JobStatus.Stopped].map((status) => (
             <option key={status} value={status}>
-              {getStatusBadge(status as JobStatus).props.children}
+              {getStatusBadge(status).props.children}
             </option>
           ))}
         </Select>

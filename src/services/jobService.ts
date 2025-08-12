@@ -185,12 +185,9 @@ class JobService {
   // Public API methods
   async fetchJobs(): Promise<Job[]> {
     try {
-      console.log("USE_MOCK_DATA:", USE_MOCK_DATA);
       if (USE_MOCK_DATA) {
-        console.log("Using mock data");
         return this.mockFetchJobs();
       } else {
-        console.log("Using real API");
         return this.realFetchJobs();
       }
     } catch (error) {
