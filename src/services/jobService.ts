@@ -6,9 +6,8 @@ import {
 } from "../types/job";
 
 // Configuration
-const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA !== "false";
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "https://localhost:5001";
+const USE_MOCK_DATA = false; // Force to use backend API
+const API_BASE_URL = "http://localhost:5001"; // Use our test backend
 
 // Mock data
 const mockJobs: Job[] = [
@@ -107,11 +106,20 @@ class JobService {
 
   // Real API methods
   private async realFetchJobs(): Promise<Job[]> {
-    const response = await fetch(`${API_BASE_URL}/Jobs`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch jobs: ${response.statusText}`);
+    try {
+      console.log("🔗 Fetching jobs from:", `${API_BASE_URL}/Jobs`);
+      const response = await fetch(`${API_BASE_URL}/Jobs`);
+      console.log("📡 Response status:", response.status);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch jobs: ${response.statusText}`);
+      }
+      const jobs = await response.json();
+      console.log("✅ Fetched jobs:", jobs.length);
+      return jobs;
+    } catch (error) {
+      console.error("❌ Error fetching jobs from API:", error);
+      throw new Error("Failed to fetch jobs from API");
     }
-    return response.json();
   }
 
   private async realCreateJob(request: CreateJobRequest): Promise<Job> {
