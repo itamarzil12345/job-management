@@ -4,6 +4,7 @@ import {
   ApiResponse,
   JobProgressUpdate,
 } from "../types/job";
+import { signalRService } from "./signalRService";
 
 // Configuration
 const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA === "true";
@@ -104,6 +105,51 @@ const mockJobs: Job[] = [
 
 class JobService {
   private jobs: Job[] = [...mockJobs];
+  private signalRConnected = false;
+
+  constructor() {
+    console.log("🔧 JobService constructor - USE_MOCK_DATA:", USE_MOCK_DATA);
+    // Initialize SignalR connection if not using mock data
+    if (!USE_MOCK_DATA) {
+      console.log("🚀 Initializing SignalR connection...");
+      this.initializeSignalR();
+    } else {
+      console.log("🎭 Using mock data - SignalR not initialized");
+    }
+  }
+
+  private async initializeSignalR(): Promise<void> {
+    try {
+      await signalRService.connect();
+      this.signalRConnected = true;
+
+      // Subscribe to real-time updates
+      signalRService.onJobProgressUpdate((update) => {
+        this.updateJobProgress(update);
+      });
+
+      signalRService.onJobsUpdated((jobs) => {
+        this.jobs = [...jobs];
+      });
+
+      console.log("✅ SignalR initialized successfully");
+    } catch (error) {
+      console.error("❌ Failed to initialize SignalR:", error);
+      this.signalRConnected = false;
+    }
+  }
+
+  private updateJobProgress(update: JobProgressUpdate): void {
+    const jobIndex = this.jobs.findIndex((job) => job.jobID === update.jobID);
+    if (jobIndex !== -1) {
+      this.jobs[jobIndex] = {
+        ...this.jobs[jobIndex],
+        status: update.status,
+        progress: update.progress,
+      };
+      console.log("🔄 Updated job progress via SignalR:", update);
+    }
+  }
 
   // Real API methods
   private async realFetchJobs(): Promise<Job[]> {
@@ -252,11 +298,34 @@ class JobService {
       if (USE_MOCK_DATA) {
         return this.mockFetchJobs();
       } else {
+        // If SignalR is connected, return current jobs (they're updated in real-time)
+        if (this.signalRConnected && signalRService.isHubConnected()) {
+          console.log("📡 Returning jobs from SignalR real-time data");
+          return Promise.resolve([...this.jobs]);
+        }
+        // Otherwise, fetch from API
         return this.realFetchJobs();
       }
     } catch (error) {
       console.error("Error fetching jobs:", error);
       throw error;
+    }
+  }
+
+  // Get SignalR connection status
+  getSignalRStatus() {
+    return {
+      isConnected: this.signalRConnected,
+      connectionState: signalRService.getConnectionState(),
+      connectionInfo: signalRService.getConnectionInfo(),
+    };
+  }
+
+  // Cleanup SignalR connection
+  async cleanup(): Promise<void> {
+    if (this.signalRConnected) {
+      await signalRService.disconnect();
+      this.signalRConnected = false;
     }
   }
 

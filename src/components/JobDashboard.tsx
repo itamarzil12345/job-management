@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Box, VStack, HStack, Button, useDisclosure } from "@chakra-ui/react";
-import { StatusCards } from "./StatusCards";
-import { JobTable } from "./JobTable";
-import { CreateJobModal } from "./CreateJobModal";
-import { DeleteJobsModal } from "./DeleteJobsModal";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { SignalRStatus } from "./SignalRStatus";
 import { jobService } from "../services/jobService";
 import { Job, JobProgressUpdate } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
+import { CreateJobModal } from "./CreateJobModal";
+import { DeleteJobsModal } from "./DeleteJobsModal";
+import { JobTable } from "./JobTable";
+import { StatusCards } from "./StatusCards";
+
+// Import the USE_MOCK_DATA constant
+const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA === "true";
 
 export const JobDashboard: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -30,6 +34,13 @@ export const JobDashboard: React.FC = () => {
   useEffect(() => {
     fetchJobs();
     setupRealTimeUpdates();
+
+    // Cleanup SignalR connection on unmount
+    return () => {
+      if (!USE_MOCK_DATA) {
+        jobService.cleanup();
+      }
+    };
   }, []);
 
   const fetchJobs = async () => {
@@ -46,15 +57,18 @@ export const JobDashboard: React.FC = () => {
   };
 
   const setupRealTimeUpdates = () => {
-    jobService.startMockProgressUpdates((update: JobProgressUpdate) => {
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job.jobID === update.jobID
-            ? { ...job, status: update.status, progress: update.progress }
-            : job
-        )
-      );
-    });
+    // Only setup mock updates when using mock data
+    if (USE_MOCK_DATA) {
+      jobService.startMockProgressUpdates((update: JobProgressUpdate) => {
+        setJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job.jobID === update.jobID
+              ? { ...job, status: update.status, progress: update.progress }
+              : job
+          )
+        );
+      });
+    }
   };
 
   const handleCreateJob = async (name: string, priority: number) => {
@@ -140,6 +154,15 @@ export const JobDashboard: React.FC = () => {
       </HStack>
 
       <StatusCards counts={getStatusCounts()} />
+
+      {/* SignalR Status - Only show when not using mock data */}
+      {!USE_MOCK_DATA && (
+        <SignalRStatus
+          isConnected={jobService.getSignalRStatus().isConnected}
+          connectionState={jobService.getSignalRStatus().connectionState}
+          hubUrl={jobService.getSignalRStatus().connectionInfo.hubUrl}
+        />
+      )}
 
       <JobTable
         jobs={jobs}
