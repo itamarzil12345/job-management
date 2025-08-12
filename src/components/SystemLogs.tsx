@@ -31,13 +31,13 @@ interface SystemLogsProps {
 }
 
 const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
-  const bgColor = "#f8f9fa"; // Light gray background
-  const textColor = "#006400"; // Dark green
-  const borderColor = "#006400";
-  const accentColor = "#8b008b"; // Dark magenta
-  const warningColor = "#ff8c00"; // Dark orange
-  const errorColor = "#dc143c"; // Crimson red
-  const successColor = "#228b22"; // Forest green
+  const bgColor = useColorModeValue("#f8f9fa", "#000000"); // Light gray / Pure black
+  const textColor = useColorModeValue("#006400", "#00ff41"); // Dark green / Bright green
+  const borderColor = useColorModeValue("#006400", "#00ff41"); // Dark green / Bright green
+  const accentColor = useColorModeValue("#8b008b", "#ff0080"); // Dark magenta / Bright magenta
+  const warningColor = useColorModeValue("#ff8c00", "#ffaa00"); // Dark orange / Bright orange
+  const errorColor = useColorModeValue("#dc143c", "#ff0040"); // Crimson red / Bright red
+  const successColor = useColorModeValue("#228b22", "#00ff00"); // Forest green / Bright green
 
   const getLogIcon = (level: LogEntry["level"]): IconType => {
     switch (level) {
@@ -129,6 +129,14 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         "& .log-time": {
           fontSize: "9px !important",
         },
+        "@keyframes scan": {
+          "0%": {
+            transform: "translateX(-100%)",
+          },
+          "100%": {
+            transform: "translateX(100%)",
+          },
+        },
       }}
       _before={{
         content: '""',
@@ -137,8 +145,10 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         left: 0,
         right: 0,
         bottom: 0,
-        background:
+        background: useColorModeValue(
           "linear-gradient(45deg, transparent 49%, rgba(0, 100, 0, 0.05) 50%, transparent 51%)",
+          "linear-gradient(45deg, transparent 49%, rgba(0, 255, 65, 0.08) 50%, transparent 51%)"
+        ),
         backgroundSize: "20px 20px",
         pointerEvents: "none",
         zIndex: 1,
@@ -154,7 +164,12 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         borderColor={borderColor}
         position="relative"
         zIndex={2}
-        bg="white"
+        bg={useColorModeValue("white", "rgba(0, 0, 0, 0.8)")}
+        _dark={{
+          bg: "rgba(0, 0, 0, 0.8)",
+          borderColor: "#00ff41",
+          boxShadow: "0 0 20px rgba(0, 255, 65, 0.3)",
+        }}
         _after={{
           content: '""',
           position: "absolute",
@@ -175,9 +190,20 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
           fontWeight="bold"
           fontSize="11px"
           className="log-header"
-          textShadow={`0 0 5px rgba(0, 100, 0, 0.3)`}
+          textShadow={useColorModeValue(
+            "0 0 5px rgba(0, 100, 0, 0.3)",
+            "0 0 8px rgba(0, 255, 65, 0.6)"
+          )}
+          _dark={{
+            textShadow: "0 0 8px rgba(0, 255, 65, 0.6)",
+            letterSpacing: "0.1em",
+            fontFamily: "'Courier New', monospace",
+          }}
         >
-          [SYSTEM] TERMINAL_ACCESS_GRANTED
+          {useColorModeValue(
+            "[SYSTEM] TERMINAL_ACCESS_GRANTED",
+            "[SYSTEM] TERMINAL_ACCESS_GRANTED"
+          )}
         </Text>
         <Text
           color={accentColor}

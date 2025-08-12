@@ -1,5 +1,5 @@
 import React from "react";
-import { ChakraProvider, Box, Container, Heading } from "@chakra-ui/react";
+import { ChakraProvider, Box, Container, Text } from "@chakra-ui/react";
 import { JobDashboard } from "./components/JobDashboard";
 import { LanguageProvider } from "./contexts/LanguageContext";
 
@@ -7,17 +7,24 @@ function App() {
   return (
     <ChakraProvider>
       <LanguageProvider>
-        <Box bg="gray.100" minH="100vh" color="gray.800">
+        <Box
+          bg="white"
+          minH="100vh"
+          color="gray.800"
+          _dark={{ bg: "#000000", color: "#00ff41" }}
+        >
           <Container maxW="container.xl" py={8}>
-            <Heading
-              as="h1"
-              size="2xl"
-              textAlign="center"
-              mb={8}
-              color="blue.600"
-            >
-              Job Dashboard
-            </Heading>
+            <Box textAlign="center" mb={8}>
+              <Text
+                fontSize="2xl"
+                fontWeight="bold"
+                color="blue.600"
+                _dark={{ color: "#00ff41" }}
+                textShadow="0 0 10px rgba(0, 255, 65, 0.3)"
+              >
+                Job Dashboard
+              </Text>
+            </Box>
             <JobDashboard />
           </Container>
         </Box>

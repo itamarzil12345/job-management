@@ -4,6 +4,7 @@ import {
   VStack,
   HStack,
   Button,
+  Text,
   useDisclosure,
   Grid,
   GridItem,
@@ -11,6 +12,7 @@ import {
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { SignalRStatus } from "./SignalRStatus";
 import SystemLogs, { LogEntry } from "./SystemLogs";
+import TopBar from "./TopBar";
 import { jobService } from "../services/jobService";
 import { loggingService } from "../services/loggingService";
 import { Job, JobProgressUpdate } from "../types/job";
@@ -224,8 +226,20 @@ export const JobDashboard: React.FC = () => {
 
   return (
     <Box position="relative" h="100vh" p={0}>
+      {/* Top Bar */}
+      <TopBar />
+
       {/* Main Content - Full width */}
-      <Box h="calc(100vh - 32px)" overflow="auto" maxW="100vw" ml={0} pl={0}>
+      <Box
+        h="calc(100vh - 64px)"
+        overflow="auto"
+        maxW="100vw"
+        ml={0}
+        pl={0}
+        bg="gray.50"
+        _dark={{ bg: "#0a0a0a" }}
+        pt={4}
+      >
         <VStack spacing={2} align="stretch" p={1} pl={0}>
           <HStack justify="space-between" align="center">
             <HStack spacing={2}>
@@ -273,15 +287,22 @@ export const JobDashboard: React.FC = () => {
       {/* Fixed System Logs Panel - Right Edge */}
       <Box
         position="fixed"
-        top="0px"
+        top="64px"
         right="0px"
         w={`${logsPanelWidth}px`}
         minW="300px"
-        h="calc(100vh - 2px)"
+        h="calc(100vh - 64px)"
         borderLeft="1px solid"
         borderColor="gray.200"
         overflow="hidden"
         zIndex={1000}
+        bg="white"
+        _dark={{
+          bg: "#000000",
+          borderColor: "#00ff41",
+          boxShadow: "0 0 30px rgba(0, 255, 65, 0.2)",
+        }}
+        boxShadow="lg"
       >
         {/* Resize Handle - Left side of the panel */}
         <Box
@@ -301,6 +322,17 @@ export const JobDashboard: React.FC = () => {
             bg: "blue.600",
             boxShadow: "0 0 15px rgba(59, 130, 246, 0.7)",
           }}
+          _dark={{
+            bg: isResizing ? "#00ff41" : "#1a1a1a",
+            _hover: {
+              bg: "#00ff41",
+              boxShadow: "0 0 15px rgba(0, 255, 65, 0.6)",
+            },
+            _active: {
+              bg: "#00ff41",
+              boxShadow: "0 0 20px rgba(0, 255, 65, 0.8)",
+            },
+          }}
           onMouseDown={() => {
             setIsResizing(true);
             document.body.style.cursor = "col-resize";
@@ -319,6 +351,10 @@ export const JobDashboard: React.FC = () => {
             bg: isResizing ? "white" : "gray.500",
             borderRadius: "2px",
             opacity: isResizing ? 1 : 0.8,
+            _dark: {
+              bg: isResizing ? "#00ff41" : "#00ff41",
+              opacity: isResizing ? 1 : 0.6,
+            },
           }}
           _before={{
             content: '""',
@@ -331,6 +367,10 @@ export const JobDashboard: React.FC = () => {
             bg: isResizing ? "white" : "gray.600",
             borderRadius: "1px",
             opacity: isResizing ? 1 : 0.9,
+            _dark: {
+              bg: isResizing ? "#00ff41" : "#00ff41",
+              opacity: isResizing ? 1 : 0.8,
+            },
           }}
         />
 
