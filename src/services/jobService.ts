@@ -5,6 +5,7 @@ import {
   JobProgressUpdate,
 } from "../types/job";
 import { signalRService } from "./signalRService";
+import { loggingService } from "./loggingService";
 
 // Configuration
 const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA === "true";
@@ -166,16 +167,32 @@ class JobService {
   // Real API methods
   private async realFetchJobs(): Promise<Job[]> {
     try {
+      loggingService.addInfo(
+        `Fetching jobs from: ${API_BASE_URL}/Jobs`,
+        "nodejs"
+      );
       console.log("🔗 Fetching jobs from:", `${API_BASE_URL}/Jobs`);
       const response = await fetch(`${API_BASE_URL}/Jobs`);
       console.log("📡 Response status:", response.status);
       if (!response.ok) {
+        loggingService.addError(
+          `Failed to fetch jobs: ${response.statusText}`,
+          "nodejs"
+        );
         throw new Error(`Failed to fetch jobs: ${response.statusText}`);
       }
       const jobs = await response.json();
+      loggingService.addSuccess(
+        `Fetched ${jobs.length} jobs from Node.js backend`,
+        "nodejs"
+      );
       console.log("✅ Fetched jobs:", jobs.length);
       return jobs;
     } catch (error) {
+      loggingService.addError(
+        `Error fetching jobs from API: ${error}`,
+        "nodejs"
+      );
       console.error("❌ Error fetching jobs from API:", error);
       throw new Error("Failed to fetch jobs from API");
     }
@@ -307,18 +324,26 @@ class JobService {
   // Public API methods
   async fetchJobs(): Promise<Job[]> {
     try {
+      loggingService.addInfo("Fetching jobs...", "frontend");
       if (USE_MOCK_DATA) {
+        loggingService.addInfo("Using mock data", "frontend");
         return this.mockFetchJobs();
       } else {
         // If SignalR is connected, return current jobs (they're updated in real-time)
         if (this.signalRConnected && signalRService.isHubConnected()) {
+          loggingService.addInfo(
+            "Returning jobs from SignalR real-time data",
+            "frontend"
+          );
           console.log("📡 Returning jobs from SignalR real-time data");
           return Promise.resolve([...this.jobs]);
         }
         // Otherwise, fetch from API
+        loggingService.addInfo("Fetching jobs from Node.js API", "frontend");
         return this.realFetchJobs();
       }
     } catch (error) {
+      loggingService.addError(`Error fetching jobs: ${error}`, "frontend");
       console.error("Error fetching jobs:", error);
       throw error;
     }

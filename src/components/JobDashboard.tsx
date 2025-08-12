@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Box, VStack, HStack, Button, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  VStack,
+  HStack,
+  Button,
+  useDisclosure,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { SignalRStatus } from "./SignalRStatus";
+import SystemLogs, { LogEntry } from "./SystemLogs";
 import { jobService } from "../services/jobService";
+import { loggingService } from "../services/loggingService";
 import { Job, JobProgressUpdate } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
 import { CreateJobModal } from "./CreateJobModal";
@@ -20,6 +30,7 @@ export const JobDashboard: React.FC = () => {
   const [signalRStatus, setSignalRStatus] = useState(
     jobService.getSignalRStatus()
   );
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const { language } = useLanguage();
 
   const {
@@ -43,8 +54,17 @@ export const JobDashboard: React.FC = () => {
       setJobs(updatedJobs);
     });
 
+    // Set up logging service subscription
+    const unsubscribe = loggingService.subscribe((updatedLogs) => {
+      setLogs(updatedLogs);
+    });
+
+    // Add initial log entry
+    loggingService.addInfo("Job Management Dashboard started", "frontend");
+
     // Cleanup SignalR connection on unmount
     return () => {
+      unsubscribe();
       if (!USE_MOCK_DATA) {
         jobService.cleanup();
       }
@@ -80,7 +100,12 @@ export const JobDashboard: React.FC = () => {
         setJobs((prevJobs) =>
           prevJobs.map((job) =>
             job.jobID === update.jobID
-              ? { ...job, name: update.name, status: update.status, progress: update.progress }
+              ? {
+                  ...job,
+                  name: update.name,
+                  status: update.status,
+                  progress: update.progress,
+                }
               : job
           )
         );
@@ -157,47 +182,55 @@ export const JobDashboard: React.FC = () => {
   }
 
   return (
-    <VStack spacing={8} align="stretch">
-      <HStack justify="space-between" align="center">
-        <HStack spacing={4}>
-          <Button colorScheme="blue" onClick={onCreateOpen} size="lg">
-            {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
-          </Button>
-          <Button colorScheme="red" onClick={onDeleteOpen} size="lg">
-            {language === "he" ? "מחק עבודות" : "Delete Jobs"}
-          </Button>
-        </HStack>
-        <LanguageSwitcher />
-      </HStack>
+    <Grid templateColumns="1fr 600px" gap={4} h="100vh" p={4}>
+      <GridItem>
+        <VStack spacing={6} align="stretch">
+          <HStack justify="space-between" align="center">
+            <HStack spacing={4}>
+              <Button colorScheme="blue" onClick={onCreateOpen} size="lg">
+                {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
+              </Button>
+              <Button colorScheme="red" onClick={onDeleteOpen} size="lg">
+                {language === "he" ? "מחק עבודות" : "Delete Jobs"}
+              </Button>
+            </HStack>
+            <LanguageSwitcher />
+          </HStack>
 
-      <StatusCards counts={getStatusCounts()} />
+          <StatusCards counts={getStatusCounts()} />
 
-      {/* SignalR Status - Only show when not using mock data */}
-      {!USE_MOCK_DATA && (
-        <SignalRStatus
-          isConnected={signalRStatus.isConnected}
-          connectionState={signalRStatus.connectionState}
-          hubUrl={signalRStatus.connectionInfo.hubUrl}
-        />
-      )}
+          {/* SignalR Status - Only show when not using mock data */}
+          {!USE_MOCK_DATA && (
+            <SignalRStatus
+              isConnected={signalRStatus.isConnected}
+              connectionState={signalRStatus.connectionState}
+              hubUrl={signalRStatus.connectionInfo.hubUrl}
+            />
+          )}
 
-      <JobTable
-        jobs={jobs}
-        onJobAction={handleJobAction}
-        onRefresh={fetchJobs}
-      />
+          <JobTable
+            jobs={jobs}
+            onJobAction={handleJobAction}
+            onRefresh={fetchJobs}
+          />
 
-      <CreateJobModal
-        isOpen={isCreateOpen}
-        onClose={onCreateClose}
-        onCreateJob={handleCreateJob}
-      />
+          <CreateJobModal
+            isOpen={isCreateOpen}
+            onClose={onCreateClose}
+            onCreateJob={handleCreateJob}
+          />
 
-      <DeleteJobsModal
-        isOpen={isDeleteOpen}
-        onClose={onDeleteClose}
-        onDeleteJobs={handleDeleteJobsByStatus}
-      />
-    </VStack>
+          <DeleteJobsModal
+            isOpen={isDeleteOpen}
+            onClose={onDeleteClose}
+            onDeleteJobs={handleDeleteJobsByStatus}
+          />
+        </VStack>
+      </GridItem>
+
+      <GridItem>
+        <SystemLogs logs={logs} maxLogs={200} />
+      </GridItem>
+    </Grid>
   );
 };

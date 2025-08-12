@@ -4,6 +4,7 @@ import {
   LogLevel,
 } from "@microsoft/signalr";
 import { Job, JobProgressUpdate } from "../types/job";
+import { loggingService } from './loggingService';
 
 export class SignalRService {
   private connection: HubConnection | null = null;
@@ -16,6 +17,7 @@ export class SignalRService {
 
   async connect(): Promise<void> {
     try {
+      loggingService.addInfo(`Connecting to SignalR hub: ${this.hubUrl}`, 'signalr');
       console.log("🔌 Connecting to SignalR hub:", this.hubUrl);
 
       this.connection = new HubConnectionBuilder()
@@ -32,8 +34,10 @@ export class SignalRService {
       this.isConnected = true;
       this.reconnectAttempts = 0;
 
+      loggingService.addSuccess(`Connected to SignalR hub successfully`, 'signalr');
       console.log("✅ Connected to SignalR hub successfully");
     } catch (error) {
+      loggingService.addError(`Failed to connect to SignalR hub: ${error}`, 'signalr');
       console.error("❌ Failed to connect to SignalR hub:", error);
       this.isConnected = false;
       throw error;
@@ -45,28 +49,33 @@ export class SignalRService {
 
     // Handle connection state changes
     this.connection.onreconnecting((error) => {
+      loggingService.addWarning(`Reconnecting to SignalR hub... ${error}`, 'signalr');
       console.log("🔄 Reconnecting to SignalR hub...", error);
       this.isConnected = false;
     });
 
     this.connection.onreconnected((connectionId) => {
+      loggingService.addSuccess(`Reconnected to SignalR hub: ${connectionId}`, 'signalr');
       console.log("✅ Reconnected to SignalR hub:", connectionId);
       this.isConnected = true;
       this.reconnectAttempts = 0;
     });
 
     this.connection.onclose((error) => {
+      loggingService.addWarning(`Disconnected from SignalR hub: ${error}`, 'signalr');
       console.log("🔌 Disconnected from SignalR hub:", error);
       this.isConnected = false;
 
       // Attempt manual reconnection
       if (this.reconnectAttempts < this.maxReconnectAttempts) {
         this.reconnectAttempts++;
+        loggingService.addInfo(`Attempting reconnection ${this.reconnectAttempts}/${this.maxReconnectAttempts}...`, 'signalr');
         console.log(
           `🔄 Attempting reconnection ${this.reconnectAttempts}/${this.maxReconnectAttempts}...`
         );
         setTimeout(() => this.connect(), this.reconnectDelay);
       } else {
+        loggingService.addError(`Max reconnection attempts reached`, 'signalr');
         console.error("❌ Max reconnection attempts reached");
       }
     });
@@ -75,11 +84,13 @@ export class SignalRService {
   // Subscribe to job progress updates
   onJobProgressUpdate(callback: (update: JobProgressUpdate) => void): void {
     if (!this.connection) {
+      loggingService.addWarning("SignalR connection not established", 'signalr');
       console.warn("⚠️ SignalR connection not established");
       return;
     }
 
     this.connection.on("UpdateJobProgress", (update: JobProgressUpdate) => {
+      loggingService.addInfo(`Received job progress update: ${update.jobID} - ${update.name} (${update.progress}%)`, 'signalr');
       console.log("📡 Received job progress update:", update);
       callback(update);
     });
@@ -88,11 +99,13 @@ export class SignalRService {
   // Subscribe to jobs list updates
   onJobsUpdated(callback: (jobs: Job[]) => void): void {
     if (!this.connection) {
+      loggingService.addWarning("SignalR connection not established", 'signalr');
       console.warn("⚠️ SignalR connection not established");
       return;
     }
 
     this.connection.on("JobsUpdated", (jobs: Job[]) => {
+      loggingService.addInfo(`Received jobs update: ${jobs.length} jobs`, 'signalr');
       console.log("📡 Received jobs update:", jobs.length, "jobs");
       callback(jobs);
     });
