@@ -6,7 +6,7 @@ import {
 } from "../types/job";
 
 // Configuration
-const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA === "true";
+const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA !== "false";
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "https://localhost:5001";
 
@@ -185,9 +185,12 @@ class JobService {
   // Public API methods
   async fetchJobs(): Promise<Job[]> {
     try {
+      console.log("USE_MOCK_DATA:", USE_MOCK_DATA);
       if (USE_MOCK_DATA) {
+        console.log("Using mock data");
         return this.mockFetchJobs();
       } else {
+        console.log("Using real API");
         return this.realFetchJobs();
       }
     } catch (error) {
