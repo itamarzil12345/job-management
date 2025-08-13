@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
 import { BaseModal } from "./common/BaseModal";
 import { InputField, SelectField } from "./common/FormField";
 import { useForm } from "../hooks/useForm";
 import { useToastNotification } from "../hooks/useToastNotification";
+import { useKeyboardNavigation } from "../hooks/useKeyboardNavigation";
 import { getPriorityLabel } from "../utils/statusLabels";
+import { validateJobName } from "../utils/validation";
+import { getErrorMessage } from "../utils/validation";
 
 interface CreateJobModalProps {
   isOpen: boolean;
@@ -26,53 +29,67 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
   const { language } = useLanguage();
   const { showSuccess, showError } = useToastNotification();
 
-  const { values, errors, isSubmitting, setValue, handleSubmit, reset } =
-    useForm<FormData>({
-      initialValues: {
-        name: "",
-        priority: JobPriority.Regular,
-      },
-      validate: (values) => {
-        const errors: Partial<Record<keyof FormData, string>> = {};
+  const {
+    values,
+    errors,
+    isSubmitting,
+    setValue,
+    handleSubmit,
+    reset,
+    cleanup,
+  } = useForm<FormData>({
+    initialValues: {
+      name: "",
+      priority: JobPriority.Regular,
+    },
+    validate: (values) => {
+      const errors: Partial<Record<keyof FormData, string>> = {};
 
-        if (!values.name.trim()) {
-          errors.name =
-            language === "he"
-              ? "שם העבודה הוא שדה חובה"
-              : "Job name is required";
-        } else if (values.name.trim().length < 3) {
-          errors.name =
-            language === "he"
-              ? "שם העבודה חייב להיות לפחות 3 תווים"
-              : "Job name must be at least 3 characters";
-        }
+      const nameValidation = validateJobName(values.name);
+      if (!nameValidation.isValid && nameValidation.errorKey) {
+        errors.name = getErrorMessage(
+          nameValidation.errorKey,
+          language === "he" ? "he" : "en"
+        );
+      }
 
-        return errors;
-      },
-      onSubmit: async (values) => {
-        try {
-          await onCreateJob(values.name.trim(), values.priority);
-          showSuccess({
-            en: { success: "Job created successfully", error: "" },
-            he: { success: "העבודה נוצרה בהצלחה", error: "" },
-          });
-          handleClose();
-        } catch (error) {
-          showError(
-            {
-              en: { success: "", error: "Error creating job" },
-              he: { success: "", error: "שגיאה ביצירת העבודה" },
-            },
-            error instanceof Error ? error : undefined
-          );
-        }
-      },
-    });
+      return errors;
+    },
+    onSubmit: async (values) => {
+      await onCreateJob(values.name.trim(), values.priority);
+      showSuccess({
+        en: { success: "Job created successfully", error: "" },
+        he: { success: "העבודה נוצרה בהצלחה", error: "" },
+      });
+      handleClose();
+    },
+    onError: (error) => {
+      showError(
+        {
+          en: { success: "", error: "Error creating job" },
+          he: { success: "", error: "שגיאה ביצירת העבודה" },
+        },
+        error
+      );
+    },
+  });
 
   const handleClose = () => {
     reset();
     onClose();
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return cleanup;
+  }, [cleanup]);
+
+  // Keyboard navigation
+  useKeyboardNavigation({
+    onEscape: handleClose,
+    onEnter: handleSubmit,
+    enabled: isOpen,
+  });
 
   const priorityOptions = [
     {

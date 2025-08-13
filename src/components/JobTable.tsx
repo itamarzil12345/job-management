@@ -24,6 +24,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { useTheme } from "../hooks/useTheme";
+import { useDebounce } from "../hooks/useDebounce";
 
 import { Job, JobStatus, JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -55,6 +56,9 @@ export const JobTable: React.FC<JobTableProps> = ({
     sortDirection: "desc" as "asc" | "desc",
   });
 
+  // Debounce search to improve performance
+  const debouncedSearch = useDebounce(filters.search, 300);
+
   const [actionJob, setActionJob] = useState<{
     id: string;
     action: string;
@@ -76,10 +80,10 @@ export const JobTable: React.FC<JobTableProps> = ({
       );
     }
 
-    // Filter by search
-    if (filters.search) {
+    // Filter by search (using debounced value)
+    if (debouncedSearch) {
       filtered = filtered.filter((job) =>
-        job.name.toLowerCase().includes(filters.search.toLowerCase())
+        job.name.toLowerCase().includes(debouncedSearch.toLowerCase())
       );
     }
 
@@ -104,7 +108,13 @@ export const JobTable: React.FC<JobTableProps> = ({
     });
 
     return filtered;
-  }, [jobs, filters]);
+  }, [
+    jobs,
+    filters.status,
+    debouncedSearch,
+    filters.sortBy,
+    filters.sortDirection,
+  ]);
 
   const handleSort = (column: keyof Job) => {
     setFilters((prev) => ({

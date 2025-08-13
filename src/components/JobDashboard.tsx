@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Box, VStack, HStack, Button, useDisclosure } from "@chakra-ui/react";
 import { useTheme } from "../hooks/useTheme";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { LoadingSpinner } from "./common/LoadingSpinner";
+import { ErrorBoundary } from "./common/ErrorBoundary";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { SignalRStatus } from "./SignalRStatus";
 import SystemLogs, { LogEntry } from "./SystemLogs";
@@ -34,7 +37,10 @@ export const JobDashboard: React.FC = () => {
     jobService.getSignalRStatus()
   );
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [logsPanelWidth, setLogsPanelWidth] = useState(250);
+  const [logsPanelWidth, setLogsPanelWidth] = useLocalStorage(
+    "logsPanelWidth",
+    250
+  );
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
@@ -117,7 +123,7 @@ export const JobDashboard: React.FC = () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isResizing]);
+  }, [isResizing, setLogsPanelWidth]);
 
   const fetchJobs = async () => {
     try {
@@ -196,19 +202,21 @@ export const JobDashboard: React.FC = () => {
     }
   };
 
-  const getStatusCounts = () => {
+  const statusCounts = useMemo(() => {
     const counts = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     jobs.forEach((job) => {
       counts[job.status as keyof typeof counts]++;
     });
     return counts;
-  };
+  }, [jobs]);
 
   if (loading) {
     return (
-      <Box textAlign="center" py={10}>
-        Loading...
-      </Box>
+      <LoadingSpinner
+        fullScreen
+        message={language === "he" ? "טוען..." : "Loading..."}
+        size="lg"
+      />
     );
   }
 
@@ -221,75 +229,23 @@ export const JobDashboard: React.FC = () => {
   }
 
   return (
-    <Box position="relative" h="100vh" p={0}>
-      {/* Top Bar */}
-      <TopBar />
+    <ErrorBoundary>
+      <Box position="relative" h="100vh" p={0}>
+        {/* Top Bar */}
+        <TopBar />
 
-      {/* Main Content - Full width */}
-      <Box
-        h="calc(100vh - 64px)"
-        overflow="auto"
-        maxW="100vw"
-        ml={0}
-        pl={0}
-        bg={isDark ? getBackgroundColor(isDark) : getGrayColor("50", isDark)}
-        pt={4}
-      >
-        <VStack spacing={6} align="stretch" p={4} pl={0}>
-          {/* Action Buttons Section */}
-          <Box
-            bg={
-              isDark
-                ? getCardBackgroundColor(isDark)
-                : getAdditionalColor("white", isDark)
-            }
-            p={4}
-            borderRadius="lg"
-            boxShadow="sm"
-            border="1px solid"
-            borderColor={getGrayColor("200", isDark)}
-            _dark={{
-              bg: getCardBackgroundColor(isDark),
-              borderColor: getBorderColor(isDark),
-              boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
-            }}
-          >
-            <HStack justify="space-between" align="center">
-              <HStack spacing={3}>
-                <Button colorScheme="blue" onClick={onCreateOpen} size="sm">
-                  {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
-                </Button>
-                <Button colorScheme="red" onClick={onDeleteOpen} size="sm">
-                  {language === "he" ? "מחק עבודות" : "Delete Jobs"}
-                </Button>
-              </HStack>
-              <LanguageSwitcher />
-            </HStack>
-          </Box>
-
-          {/* Status Cards Section */}
-          <Box
-            bg={
-              isDark
-                ? getCardBackgroundColor(isDark)
-                : getAdditionalColor("white", isDark)
-            }
-            p={4}
-            borderRadius="lg"
-            boxShadow="sm"
-            border="1px solid"
-            borderColor={getGrayColor("200", isDark)}
-            _dark={{
-              bg: getCardBackgroundColor(isDark),
-              borderColor: getBorderColor(isDark),
-              boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
-            }}
-          >
-            <StatusCards counts={getStatusCounts()} />
-          </Box>
-
-          {/* SignalR Status Section - Only show when not using mock data */}
-          {!USE_MOCK_DATA && (
+        {/* Main Content - Full width */}
+        <Box
+          h="calc(100vh - 64px)"
+          overflow="auto"
+          maxW="100vw"
+          ml={0}
+          pl={0}
+          bg={isDark ? getBackgroundColor(isDark) : getGrayColor("50", isDark)}
+          pt={4}
+        >
+          <VStack spacing={6} align="stretch" p={4} pl={0}>
+            {/* Action Buttons Section */}
             <Box
               bg={
                 isDark
@@ -307,159 +263,213 @@ export const JobDashboard: React.FC = () => {
                 boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
               }}
             >
-              <SignalRStatus
-                isConnected={signalRStatus.isConnected}
-                connectionState={signalRStatus.connectionState}
-                hubUrl={signalRStatus.connectionInfo.hubUrl}
+              <HStack justify="space-between" align="center">
+                <HStack spacing={3}>
+                  <Button colorScheme="blue" onClick={onCreateOpen} size="sm">
+                    {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
+                  </Button>
+                  <Button colorScheme="red" onClick={onDeleteOpen} size="sm">
+                    {language === "he" ? "מחק עבודות" : "Delete Jobs"}
+                  </Button>
+                </HStack>
+                <LanguageSwitcher />
+              </HStack>
+            </Box>
+
+            {/* Status Cards Section */}
+            <Box
+              bg={
+                isDark
+                  ? getCardBackgroundColor(isDark)
+                  : getAdditionalColor("white", isDark)
+              }
+              p={4}
+              borderRadius="lg"
+              boxShadow="sm"
+              border="1px solid"
+              borderColor={getGrayColor("200", isDark)}
+              _dark={{
+                bg: getCardBackgroundColor(isDark),
+                borderColor: getBorderColor(isDark),
+                boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
+              }}
+            >
+              <StatusCards counts={statusCounts} />
+            </Box>
+
+            {/* SignalR Status Section - Only show when not using mock data */}
+            {!USE_MOCK_DATA && (
+              <Box
+                bg={
+                  isDark
+                    ? getCardBackgroundColor(isDark)
+                    : getAdditionalColor("white", isDark)
+                }
+                p={4}
+                borderRadius="lg"
+                boxShadow="sm"
+                border="1px solid"
+                borderColor={getGrayColor("200", isDark)}
+                _dark={{
+                  bg: getCardBackgroundColor(isDark),
+                  borderColor: getBorderColor(isDark),
+                  boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
+                }}
+              >
+                <SignalRStatus
+                  isConnected={signalRStatus.isConnected}
+                  connectionState={signalRStatus.connectionState}
+                  hubUrl={signalRStatus.connectionInfo.hubUrl}
+                />
+              </Box>
+            )}
+
+            {/* Job Table Section */}
+            <Box
+              bg={
+                isDark
+                  ? getCardBackgroundColor(isDark)
+                  : getAdditionalColor("white", isDark)
+              }
+              p={4}
+              borderRadius="lg"
+              boxShadow="sm"
+              border="1px solid"
+              borderColor={getGrayColor("200", isDark)}
+              _dark={{
+                bg: getCardBackgroundColor(isDark),
+                borderColor: getBorderColor(isDark),
+                boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
+              }}
+            >
+              <JobTable
+                jobs={jobs}
+                onJobAction={handleJobAction}
+                onRefresh={fetchJobs}
               />
             </Box>
-          )}
 
-          {/* Job Table Section */}
-          <Box
-            bg={
-              isDark
-                ? getCardBackgroundColor(isDark)
-                : getAdditionalColor("white", isDark)
-            }
-            p={4}
-            borderRadius="lg"
-            boxShadow="sm"
-            border="1px solid"
-            borderColor={getGrayColor("200", isDark)}
-            _dark={{
-              bg: getCardBackgroundColor(isDark),
-              borderColor: getBorderColor(isDark),
-              boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
-            }}
-          >
-            <JobTable
-              jobs={jobs}
-              onJobAction={handleJobAction}
-              onRefresh={fetchJobs}
+            <CreateJobModal
+              isOpen={isCreateOpen}
+              onClose={onCreateClose}
+              onCreateJob={handleCreateJob}
             />
-          </Box>
 
-          <CreateJobModal
-            isOpen={isCreateOpen}
-            onClose={onCreateClose}
-            onCreateJob={handleCreateJob}
-          />
+            <DeleteJobsModal
+              isOpen={isDeleteOpen}
+              onClose={onDeleteClose}
+              onDeleteJobs={handleDeleteJobsByStatus}
+            />
+          </VStack>
+        </Box>
 
-          <DeleteJobsModal
-            isOpen={isDeleteOpen}
-            onClose={onDeleteClose}
-            onDeleteJobs={handleDeleteJobsByStatus}
-          />
-        </VStack>
-      </Box>
-
-      {/* Fixed System Logs Panel - Right Edge */}
-      <Box
-        position="fixed"
-        top="49px"
-        right="0px"
-        w={`${logsPanelWidth}px`}
-        minW="300px"
-        h="calc(100vh - 64px)"
-        borderLeft="1px solid"
-        borderColor={getGrayColor("200", isDark)}
-        overflow="hidden"
-        zIndex={1000}
-        bg={getAdditionalColor("white", isDark)}
-        _dark={{
-          bg: getCardBackgroundColor(isDark),
-          borderColor: getBorderColor(isDark),
-          boxShadow: "0 0 30px rgba(138, 43, 226, 0.3)",
-        }}
-        boxShadow="lg"
-      >
-        {/* Resize Handle - Left side of the panel */}
+        {/* Fixed System Logs Panel - Right Edge */}
         <Box
-          ref={resizeRef}
-          position="absolute"
-          left="-6px"
-          top="0"
-          bottom="0"
-          w="12px"
-          bg={
-            isResizing
-              ? getBlueColor("500", isDark)
-              : getGrayColor("300", isDark)
-          }
-          cursor="col-resize"
-          _hover={{
-            bg: getBlueColor("400", isDark),
-            boxShadow: "0 0 10px rgba(59, 130, 246, 0.5)",
-          }}
-          _active={{
-            bg: getBlueColor("600", isDark),
-            boxShadow: "0 0 15px rgba(59, 130, 246, 0.7)",
-          }}
+          position="fixed"
+          top="49px"
+          right="0px"
+          w={`${logsPanelWidth}px`}
+          minW="300px"
+          h="calc(100vh - 64px)"
+          borderLeft="1px solid"
+          borderColor={getGrayColor("200", isDark)}
+          overflow="hidden"
+          zIndex={1000}
+          bg={getAdditionalColor("white", isDark)}
           _dark={{
-            bg: isResizing
-              ? getBorderColor(isDark)
-              : getCardBackgroundColor(isDark),
-            _hover: {
-              bg: getBorderColor(isDark),
-              boxShadow: "0 0 15px rgba(138, 43, 226, 0.6)",
-            },
-            _active: {
-              bg: getBorderColor(isDark),
-              boxShadow: "0 0 20px rgba(138, 43, 226, 0.8)",
-            },
+            bg: getCardBackgroundColor(isDark),
+            borderColor: getBorderColor(isDark),
+            boxShadow: "0 0 30px rgba(138, 43, 226, 0.3)",
           }}
-          onMouseDown={() => {
-            setIsResizing(true);
-            document.body.style.cursor = "col-resize";
-            document.body.style.userSelect = "none";
-          }}
-          transition="all 0.2s ease"
-          zIndex={1001}
-          _after={{
-            content: '""',
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            w: "3px",
-            h: "60px",
-            bg: isResizing
-              ? getAdditionalColor("white", isDark)
-              : getGrayColor("500", isDark),
-            borderRadius: "2px",
-            opacity: isResizing ? 1 : 0.8,
-            _dark: {
+          boxShadow="lg"
+        >
+          {/* Resize Handle - Left side of the panel */}
+          <Box
+            ref={resizeRef}
+            position="absolute"
+            left="-6px"
+            top="0"
+            bottom="0"
+            w="12px"
+            bg={
+              isResizing
+                ? getBlueColor("500", isDark)
+                : getGrayColor("300", isDark)
+            }
+            cursor="col-resize"
+            _hover={{
+              bg: getBlueColor("400", isDark),
+              boxShadow: "0 0 10px rgba(59, 130, 246, 0.5)",
+            }}
+            _active={{
+              bg: getBlueColor("600", isDark),
+              boxShadow: "0 0 15px rgba(59, 130, 246, 0.7)",
+            }}
+            _dark={{
+              bg: isResizing
+                ? getBorderColor(isDark)
+                : getCardBackgroundColor(isDark),
+              _hover: {
+                bg: getBorderColor(isDark),
+                boxShadow: "0 0 15px rgba(138, 43, 226, 0.6)",
+              },
+              _active: {
+                bg: getBorderColor(isDark),
+                boxShadow: "0 0 20px rgba(138, 43, 226, 0.8)",
+              },
+            }}
+            onMouseDown={() => {
+              setIsResizing(true);
+              document.body.style.cursor = "col-resize";
+              document.body.style.userSelect = "none";
+            }}
+            transition="all 0.2s ease"
+            zIndex={1001}
+            _after={{
+              content: '""',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              w: "3px",
+              h: "60px",
               bg: isResizing
                 ? getAdditionalColor("white", isDark)
-                : getAdditionalColor("brightPurple", isDark),
-              opacity: isResizing ? 1 : 0.6,
-            },
-          }}
-          _before={{
-            content: '""',
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            w: "1px",
-            h: "30px",
-            bg: isResizing
-              ? getAdditionalColor("white", isDark)
-              : getGrayColor("600", isDark),
-            borderRadius: "1px",
-            opacity: isResizing ? 1 : 0.9,
-            _dark: {
-              bg: isResizing
-                ? getAdditionalColor("white", isDark)
-                : getAdditionalColor("brightPurple", isDark),
+                : getGrayColor("500", isDark),
+              borderRadius: "2px",
               opacity: isResizing ? 1 : 0.8,
-            },
-          }}
-        />
+              _dark: {
+                bg: isResizing
+                  ? getAdditionalColor("white", isDark)
+                  : getAdditionalColor("brightPurple", isDark),
+                opacity: isResizing ? 1 : 0.6,
+              },
+            }}
+            _before={{
+              content: '""',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              w: "1px",
+              h: "30px",
+              bg: isResizing
+                ? getAdditionalColor("white", isDark)
+                : getGrayColor("600", isDark),
+              borderRadius: "1px",
+              opacity: isResizing ? 1 : 0.9,
+              _dark: {
+                bg: isResizing
+                  ? getAdditionalColor("white", isDark)
+                  : getAdditionalColor("brightPurple", isDark),
+                opacity: isResizing ? 1 : 0.8,
+              },
+            }}
+          />
 
-        <SystemLogs logs={logs} maxLogs={200} />
+          <SystemLogs logs={logs} maxLogs={200} />
+        </Box>
       </Box>
-    </Box>
+    </ErrorBoundary>
   );
 };
