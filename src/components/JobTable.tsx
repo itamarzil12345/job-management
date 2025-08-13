@@ -32,6 +32,8 @@ import {
   getBackgroundColor,
   getCardBackgroundColor,
   getAdditionalColor,
+  getGrayColor,
+  getBlueColor,
 } from "../theme";
 
 interface JobTableProps {
@@ -203,7 +205,7 @@ export const JobTable: React.FC<JobTableProps> = ({
   if (jobs.length === 0) {
     return (
       <Box textAlign="center" py={10}>
-        <Text fontSize="lg" color="gray.500">
+        <Text fontSize="lg" color={getGrayColor("500", isDark)}>
           {language === "he" ? "אין עבודות זמינות" : "No jobs available"}
         </Text>
       </Box>
@@ -255,7 +257,7 @@ export const JobTable: React.FC<JobTableProps> = ({
       {/* No Results Message */}
       {filteredAndSortedJobs.length === 0 && (
         <Box textAlign="center" py={10}>
-          <Text fontSize="lg" color="gray.500">
+          <Text fontSize="lg" color={getGrayColor("500", isDark)}>
             {language === "he"
               ? "לא נמצאו תוצאות לסינון הנוכחי"
               : "No results found for current filters"}
@@ -280,7 +282,11 @@ export const JobTable: React.FC<JobTableProps> = ({
       {filteredAndSortedJobs.length > 0 && (
         <Box
           overflowX="auto"
-          bg="white"
+          bg={
+            isDark
+              ? getCardBackgroundColor(isDark)
+              : getAdditionalColor("white", isDark)
+          }
           borderRadius="xl"
           boxShadow="lg"
           maxH="500px"
@@ -288,13 +294,17 @@ export const JobTable: React.FC<JobTableProps> = ({
         >
           <Table variant="simple" size="md">
             <Thead
-              bg={isDark ? getAdditionalColor("black", isDark) : "blue.800"}
+              bg={
+                isDark
+                  ? getAdditionalColor("black", isDark)
+                  : getBlueColor("800", isDark)
+              }
             >
               <Tr>
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("name")}
-                  color="gray.100"
+                  color={getGrayColor("100", isDark)}
                 >
                   {language === "he" ? "שם העבודה" : "Job Name"}
                   {filters.sortBy === "name" && (
@@ -304,8 +314,8 @@ export const JobTable: React.FC<JobTableProps> = ({
                       fontSize="sm"
                       color={
                         filters.sortDirection === "asc"
-                          ? "blue.300"
-                          : "blue.100"
+                          ? getBlueColor("300", isDark)
+                          : getBlueColor("100", isDark)
                       }
                     >
                       {filters.sortDirection === "asc" ? "↑" : "↓"}
@@ -315,7 +325,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("priority")}
-                  color="gray.100"
+                  color={getGrayColor("100", isDark)}
                 >
                   {language === "he" ? "עדיפות" : "Priority"}
                   {filters.sortBy === "priority" && (
@@ -325,8 +335,8 @@ export const JobTable: React.FC<JobTableProps> = ({
                       fontSize="sm"
                       color={
                         filters.sortDirection === "asc"
-                          ? "blue.300"
-                          : "blue.100"
+                          ? getBlueColor("300", isDark)
+                          : getBlueColor("100", isDark)
                       }
                     >
                       {filters.sortDirection === "asc" ? "↑" : "↓"}
@@ -336,7 +346,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("status")}
-                  color="gray.100"
+                  color={getGrayColor("100", isDark)}
                 >
                   {language === "he" ? "סטטוס" : "Status"}
                   {filters.sortBy === "status" && (
@@ -346,21 +356,21 @@ export const JobTable: React.FC<JobTableProps> = ({
                       fontSize="sm"
                       color={
                         filters.sortDirection === "asc"
-                          ? "blue.300"
-                          : "blue.100"
+                          ? getBlueColor("300", isDark)
+                          : getBlueColor("100", isDark)
                       }
                     >
                       {filters.sortDirection === "asc" ? "↑" : "↓"}
                     </Text>
                   )}
                 </Th>
-                <Th color="gray.100">
+                <Th color={getGrayColor("100", isDark)}>
                   {language === "he" ? "התקדמות" : "Progress"}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("startedAt")}
-                  color="gray.100"
+                  color={getGrayColor("100", isDark)}
                 >
                   {language === "he" ? "זמן התחלה" : "Start Time"}
                   {filters.sortBy === "startedAt" && (
@@ -370,8 +380,8 @@ export const JobTable: React.FC<JobTableProps> = ({
                       fontSize="sm"
                       color={
                         filters.sortDirection === "asc"
-                          ? "blue.300"
-                          : "blue.100"
+                          ? getBlueColor("300", isDark)
+                          : getBlueColor("100", isDark)
                       }
                     >
                       {filters.sortDirection === "asc" ? "↑" : "↓"}
@@ -381,7 +391,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("completedAt")}
-                  color="gray.100"
+                  color={getGrayColor("100", isDark)}
                 >
                   {language === "he" ? "זמן סיום" : "End Time"}
                   {filters.sortBy === "completedAt" && (
@@ -391,15 +401,15 @@ export const JobTable: React.FC<JobTableProps> = ({
                       fontSize="sm"
                       color={
                         filters.sortDirection === "asc"
-                          ? "blue.300"
-                          : "blue.100"
+                          ? getBlueColor("300", isDark)
+                          : getBlueColor("100", isDark)
                       }
                     >
                       {filters.sortDirection === "asc" ? "↑" : "↓"}
                     </Text>
                   )}
                 </Th>
-                <Th color="gray.100">
+                <Th color={getGrayColor("100", isDark)}>
                   {language === "he" ? "פעולות" : "Actions"}
                 </Th>
               </Tr>
@@ -412,21 +422,21 @@ export const JobTable: React.FC<JobTableProps> = ({
                     index % 2 === 0
                       ? isDark
                         ? getCardBackgroundColor(isDark)
-                        : "gray.100"
+                        : getGrayColor("100", isDark)
                       : isDark
                       ? getBackgroundColor(isDark)
-                      : "white"
+                      : getAdditionalColor("white", isDark)
                   }
                   borderBottom="1px solid"
                   borderColor={
                     isDark
                       ? getAdditionalColor("brightPurple", isDark)
-                      : "gray.200"
+                      : getGrayColor("200", isDark)
                   }
                   _hover={{
                     bg: isDark
                       ? getAdditionalColor("mediumBluePurple", isDark)
-                      : "blue.100",
+                      : getBlueColor("100", isDark),
                   }}
                   transition="all 0.2s"
                 >

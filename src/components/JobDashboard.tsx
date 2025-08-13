@@ -27,6 +27,9 @@ import {
   getCardBackgroundColor,
   getBorderColor,
   getAdditionalColor,
+  getGrayColor,
+  getBlueColor,
+  getRedColor,
 } from "../theme";
 
 // Import the USE_MOCK_DATA constant
@@ -227,7 +230,7 @@ export const JobDashboard: React.FC = () => {
 
   if (error) {
     return (
-      <Box textAlign="center" py={10} color="red.500">
+      <Box textAlign="center" py={10} color={getRedColor("500", isDark)}>
         Error: {error}
       </Box>
     );
@@ -245,18 +248,22 @@ export const JobDashboard: React.FC = () => {
         maxW="100vw"
         ml={0}
         pl={0}
-        bg={isDark ? getBackgroundColor(isDark) : "gray.50"}
+        bg={isDark ? getBackgroundColor(isDark) : getGrayColor("50", isDark)}
         pt={4}
       >
         <VStack spacing={6} align="stretch" p={4} pl={0}>
           {/* Action Buttons Section */}
           <Box
-            bg="white"
+            bg={
+              isDark
+                ? getCardBackgroundColor(isDark)
+                : getAdditionalColor("white", isDark)
+            }
             p={4}
             borderRadius="lg"
             boxShadow="sm"
             border="1px solid"
-            borderColor="gray.200"
+            borderColor={getGrayColor("200", isDark)}
             _dark={{
               bg: getCardBackgroundColor(isDark),
               borderColor: getBorderColor(isDark),
@@ -278,12 +285,16 @@ export const JobDashboard: React.FC = () => {
 
           {/* Status Cards Section */}
           <Box
-            bg="white"
+            bg={
+              isDark
+                ? getCardBackgroundColor(isDark)
+                : getAdditionalColor("white", isDark)
+            }
             p={4}
             borderRadius="lg"
             boxShadow="sm"
             border="1px solid"
-            borderColor="gray.200"
+            borderColor={getGrayColor("200", isDark)}
             _dark={{
               bg: getCardBackgroundColor(isDark),
               borderColor: getBorderColor(isDark),
@@ -296,12 +307,16 @@ export const JobDashboard: React.FC = () => {
           {/* SignalR Status Section - Only show when not using mock data */}
           {!USE_MOCK_DATA && (
             <Box
-              bg="white"
+              bg={
+                isDark
+                  ? getCardBackgroundColor(isDark)
+                  : getAdditionalColor("white", isDark)
+              }
               p={4}
               borderRadius="lg"
               boxShadow="sm"
               border="1px solid"
-              borderColor="gray.200"
+              borderColor={getGrayColor("200", isDark)}
               _dark={{
                 bg: getCardBackgroundColor(isDark),
                 borderColor: getBorderColor(isDark),
@@ -318,12 +333,16 @@ export const JobDashboard: React.FC = () => {
 
           {/* Job Table Section */}
           <Box
-            bg="white"
+            bg={
+              isDark
+                ? getCardBackgroundColor(isDark)
+                : getAdditionalColor("white", isDark)
+            }
             p={4}
             borderRadius="lg"
             boxShadow="sm"
             border="1px solid"
-            borderColor="gray.200"
+            borderColor={getGrayColor("200", isDark)}
             _dark={{
               bg: getCardBackgroundColor(isDark),
               borderColor: getBorderColor(isDark),
@@ -360,7 +379,7 @@ export const JobDashboard: React.FC = () => {
         minW="300px"
         h="calc(100vh - 64px)"
         borderLeft="1px solid"
-        borderColor="gray.200"
+        borderColor={getGrayColor("200", isDark)}
         overflow="hidden"
         zIndex={1000}
         bg="white"
@@ -379,14 +398,18 @@ export const JobDashboard: React.FC = () => {
           top="0"
           bottom="0"
           w="12px"
-          bg={isResizing ? "blue.500" : "gray.300"}
+          bg={
+            isResizing
+              ? getBlueColor("500", isDark)
+              : getGrayColor("300", isDark)
+          }
           cursor="col-resize"
           _hover={{
-            bg: "blue.400",
+            bg: getBlueColor("400", isDark),
             boxShadow: "0 0 10px rgba(59, 130, 246, 0.5)",
           }}
           _active={{
-            bg: "blue.600",
+            bg: getBlueColor("600", isDark),
             boxShadow: "0 0 15px rgba(59, 130, 246, 0.7)",
           }}
           _dark={{
@@ -417,7 +440,9 @@ export const JobDashboard: React.FC = () => {
             transform: "translate(-50%, -50%)",
             w: "3px",
             h: "60px",
-            bg: isResizing ? "white" : "gray.500",
+            bg: isResizing
+              ? getAdditionalColor("white", isDark)
+              : getGrayColor("500", isDark),
             borderRadius: "2px",
             opacity: isResizing ? 1 : 0.8,
             _dark: {
@@ -435,7 +460,9 @@ export const JobDashboard: React.FC = () => {
             transform: "translate(-50%, -50%)",
             w: "1px",
             h: "30px",
-            bg: isResizing ? "white" : "gray.600",
+            bg: isResizing
+              ? getAdditionalColor("white", isDark)
+              : getGrayColor("600", isDark),
             borderRadius: "1px",
             opacity: isResizing ? 1 : 0.9,
             _dark: {

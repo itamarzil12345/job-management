@@ -16,9 +16,11 @@ import {
   Alert,
   AlertIcon,
   useToast,
+  useColorMode,
 } from "@chakra-ui/react";
 import { JobStatus } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
+import { getGrayColor, getRedColor } from "../theme";
 
 interface DeleteJobsModalProps {
   isOpen: boolean;
@@ -32,6 +34,8 @@ export const DeleteJobsModal: React.FC<DeleteJobsModalProps> = ({
   onDeleteJobs,
 }) => {
   const { language } = useLanguage();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
   const toast = useToast();
 
   const [selectedStatus, setSelectedStatus] = useState<number | "">("");
@@ -132,7 +136,7 @@ export const DeleteJobsModal: React.FC<DeleteJobsModalProps> = ({
             </FormControl>
 
             {selectedStatus !== "" && (
-              <Text fontSize="sm" color="gray.600">
+              <Text fontSize="sm" color={getGrayColor("600", isDark)}>
                 {language === "he"
                   ? `כל העבודות עם הסטטוס "${getStatusLabel(
                       selectedStatus as JobStatus

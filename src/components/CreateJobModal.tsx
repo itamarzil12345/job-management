@@ -15,9 +15,11 @@ import {
   VStack,
   FormErrorMessage,
   useToast,
+  useColorMode,
 } from "@chakra-ui/react";
 import { JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
+import { getBlueColor } from "../theme";
 
 interface CreateJobModalProps {
   isOpen: boolean;
@@ -31,6 +33,8 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
   onCreateJob,
 }) => {
   const { language } = useLanguage();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
   const toast = useToast();
 
   const [formData, setFormData] = useState({
@@ -154,7 +158,7 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
             {language === "he" ? "ביטול" : "Cancel"}
           </Button>
           <Button
-            colorScheme="blue"
+            colorScheme={isDark ? "blue" : "blue"}
             onClick={handleSubmit}
             isLoading={isSubmitting}
             loadingText={language === "he" ? "יוצר..." : "Creating..."}

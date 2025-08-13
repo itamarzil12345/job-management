@@ -15,6 +15,7 @@ import {
   getTextColor,
   getBorderColor,
   getAdditionalColor,
+  getGrayColor,
 } from "../theme";
 
 interface SignalRStatusProps {
@@ -62,11 +63,17 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
   return (
     <Box
       p={3}
-      bg={isDark ? getBackgroundColor(isDark) : "white"}
+      bg={
+        isDark
+          ? getBackgroundColor(isDark)
+          : getAdditionalColor("white", isDark)
+      }
       borderRadius="md"
       boxShadow={isDark ? "0 0 20px rgba(138, 43, 226, 0.1)" : "sm"}
       border="1px solid"
-      borderColor={isDark ? getBorderColor(isDark) : "gray.200"}
+      borderColor={
+        isDark ? getBorderColor(isDark) : getGrayColor("200", isDark)
+      }
     >
       <HStack spacing={3} align="center">
         <Icon
@@ -78,7 +85,7 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
           <Text
             fontSize="sm"
             fontWeight="medium"
-            color={isDark ? getTextColor(isDark) : "gray.700"}
+            color={isDark ? getTextColor(isDark) : getGrayColor("700", isDark)}
           >
             {language === "he" ? "סטטוס SignalR" : "SignalR Status"}
           </Text>
@@ -89,7 +96,9 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
             <Text
               fontSize="xs"
               color={
-                isDark ? getAdditionalColor("deepSkyBlue", isDark) : "gray.500"
+                isDark
+                  ? getAdditionalColor("deepSkyBlue", isDark)
+                  : getGrayColor("500", isDark)
               }
             >
               {hubUrl}

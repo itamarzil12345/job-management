@@ -23,6 +23,7 @@ import {
   getBorderColor,
   getStatusColor,
   getAdditionalColor,
+  getGrayColor,
 } from "../theme";
 
 export interface LogEntry {
@@ -179,7 +180,10 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         borderColor={borderColor}
         position="relative"
         zIndex={2}
-        bg={useColorModeValue("white", "rgba(15, 15, 35, 0.9)")}
+        bg={useColorModeValue(
+          getAdditionalColor("white", isDark),
+          "rgba(15, 15, 35, 0.9)"
+        )}
         _dark={{
           bg: "rgba(15, 15, 35, 0.9)",
           borderColor: getAdditionalColor("brightPurple", isDark),
@@ -241,7 +245,10 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
             background: "transparent",
           },
           "&::-webkit-scrollbar-thumb": {
-            background: useColorModeValue("gray.600", "gray.500"),
+            background: useColorModeValue(
+              getGrayColor("600", isDark),
+              getGrayColor("500", isDark)
+            ),
             borderRadius: "3px",
           },
         }}

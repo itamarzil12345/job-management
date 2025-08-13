@@ -17,6 +17,8 @@ import {
   getTextColor,
   getBorderColor,
   getAdditionalColor,
+  getGrayColor,
+  getBlueColor,
 } from "../theme";
 
 const TopBar: React.FC = () => {
@@ -27,9 +29,18 @@ const TopBar: React.FC = () => {
     "rgba(255, 255, 255, 0.95)",
     `rgba(15, 15, 35, 0.95)`
   );
-  const borderColor = useColorModeValue("gray.200", getBorderColor(true));
-  const textColor = useColorModeValue("gray.800", getTextColor(true));
-  const logoColor = useColorModeValue("blue.600", getTextColor(true));
+  const borderColor = useColorModeValue(
+    getGrayColor("200", false),
+    getBorderColor(true)
+  );
+  const textColor = useColorModeValue(
+    getGrayColor("800", false),
+    getTextColor(true)
+  );
+  const logoColor = useColorModeValue(
+    getBlueColor("600", false),
+    getTextColor(true)
+  );
 
   return (
     <Box
@@ -80,7 +91,7 @@ const TopBar: React.FC = () => {
         <HStack spacing={3}>
           <Box
             bg={logoColor}
-            color="white"
+            color={getAdditionalColor("white", isDark)}
             p={1.5}
             borderRadius="md"
             display="flex"
@@ -118,7 +129,10 @@ const TopBar: React.FC = () => {
           colorScheme="blue"
           size="sm"
           _hover={{
-            bg: useColorModeValue("blue.50", "blue.900"),
+            bg: useColorModeValue(
+              getBlueColor("50", false),
+              getBlueColor("900", false)
+            ),
           }}
         />
       </Flex>

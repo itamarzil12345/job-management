@@ -8,7 +8,12 @@ import {
 } from "@chakra-ui/react";
 import { JobDashboard } from "./components/JobDashboard";
 import { LanguageProvider } from "./contexts/LanguageContext";
-import { getBackgroundColor, getTextColor, getAdditionalColor } from "./theme";
+import {
+  getBackgroundColor,
+  getTextColor,
+  getAdditionalColor,
+  getBlueColor,
+} from "./theme";
 
 function App() {
   const { colorMode } = useColorMode();
@@ -30,7 +35,7 @@ function App() {
                 color={
                   isDark
                     ? getAdditionalColor("brightGreen", isDark)
-                    : "blue.600"
+                    : getBlueColor("600", isDark)
                 }
                 textShadow={isDark ? "0 0 10px rgba(0, 255, 65, 0.3)" : "none"}
               >
