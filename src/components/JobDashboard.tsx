@@ -382,7 +382,7 @@ export const JobDashboard: React.FC = () => {
         borderColor={getGrayColor("200", isDark)}
         overflow="hidden"
         zIndex={1000}
-        bg="white"
+        bg={getAdditionalColor("white", isDark)}
         _dark={{
           bg: getCardBackgroundColor(isDark),
           borderColor: getBorderColor(isDark),
@@ -447,7 +447,7 @@ export const JobDashboard: React.FC = () => {
             opacity: isResizing ? 1 : 0.8,
             _dark: {
               bg: isResizing
-                ? "white"
+                ? getAdditionalColor("white", isDark)
                 : getAdditionalColor("brightPurple", isDark),
               opacity: isResizing ? 1 : 0.6,
             },
@@ -467,7 +467,7 @@ export const JobDashboard: React.FC = () => {
             opacity: isResizing ? 1 : 0.9,
             _dark: {
               bg: isResizing
-                ? "white"
+                ? getAdditionalColor("white", isDark)
                 : getAdditionalColor("brightPurple", isDark),
               opacity: isResizing ? 1 : 0.8,
             },
