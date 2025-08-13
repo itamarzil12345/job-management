@@ -14,6 +14,12 @@ import {
   getTextColor,
   getBorderColor,
   getAdditionalColor,
+  getGrayColor,
+  getBlueColor,
+  getRedColor,
+  getGreenColor,
+  getPurpleColor,
+  getOrangeColor,
 } from "../theme";
 
 interface StatusCardsProps {
@@ -30,8 +36,8 @@ const getStatusConfig = (
       label: language === "he" ? "ממתין" : "Pending",
       color: "blue",
       icon: "⏳",
-      bgColor: "blue.50",
-      borderColor: "orange.400",
+      bgColor: getBlueColor("50", isDark),
+      borderColor: getOrangeColor("400", isDark),
       darkBgColor: getCardBackgroundColor(true),
       darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
@@ -39,8 +45,8 @@ const getStatusConfig = (
       label: language === "he" ? "בתור" : "In Queue",
       color: "purple",
       icon: "📋",
-      bgColor: "purple.50",
-      borderColor: "purple.400",
+      bgColor: getPurpleColor("50", isDark),
+      borderColor: getPurpleColor("400", isDark),
       darkBgColor: getCardBackgroundColor(true),
       darkTextColor: getAdditionalColor("brightPurple", true),
     },
@@ -48,8 +54,8 @@ const getStatusConfig = (
       label: language === "he" ? "רץ" : "Running",
       color: "blue",
       icon: "▶️",
-      bgColor: "blue.50",
-      borderColor: "blue.400",
+      bgColor: getBlueColor("50", isDark),
+      borderColor: getBlueColor("400", isDark),
       darkBgColor: getCardBackgroundColor(true),
       darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
@@ -57,8 +63,8 @@ const getStatusConfig = (
       label: language === "he" ? "הושלם" : "Completed",
       color: "green",
       icon: "✅",
-      bgColor: "green.50",
-      borderColor: "green.400",
+      bgColor: getGreenColor("50", isDark),
+      borderColor: getGreenColor("400", isDark),
       darkBgColor: getCardBackgroundColor(true),
       darkTextColor: getAdditionalColor("brightGreenLight", true),
     },
@@ -66,8 +72,8 @@ const getStatusConfig = (
       label: language === "he" ? "נכשל" : "Failed",
       color: "red",
       icon: "❌",
-      bgColor: "red.50",
-      borderColor: "red.400",
+      bgColor: getRedColor("50", isDark),
+      borderColor: getRedColor("400", isDark),
       darkBgColor: getCardBackgroundColor(true),
       darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
@@ -75,8 +81,8 @@ const getStatusConfig = (
       label: language === "he" ? "עצר" : "Stopped",
       color: "gray",
       icon: "⏹️",
-      bgColor: "gray.50",
-      borderColor: "gray.400",
+      bgColor: getGrayColor("50", isDark),
+      borderColor: getGrayColor("400", isDark),
       darkBgColor: getCardBackgroundColor(true),
       darkTextColor: getAdditionalColor("brightPurple", true),
     },
@@ -103,7 +109,9 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
         return (
           <Box
             key={status}
-            bg={isDark ? config.darkBgColor : "white"}
+            bg={
+              isDark ? config.darkBgColor : getAdditionalColor("white", isDark)
+            }
             p={6}
             borderRadius="lg"
             borderTop="6px solid"
@@ -129,7 +137,7 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
                 color={
                   isDark
                     ? getAdditionalColor("brightPurple", isDark)
-                    : "gray.600"
+                    : getGrayColor("600", isDark)
                 }
                 fontWeight="medium"
               >
