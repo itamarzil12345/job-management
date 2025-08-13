@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Box,
-  VStack,
-  HStack,
-  Button,
-  useDisclosure,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Box, VStack, HStack, Button, useDisclosure } from "@chakra-ui/react";
+import { useTheme } from "../hooks/useTheme";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { SignalRStatus } from "./SignalRStatus";
 import SystemLogs, { LogEntry } from "./SystemLogs";
@@ -44,8 +38,7 @@ export const JobDashboard: React.FC = () => {
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { isDark } = useTheme();
 
   const {
     isOpen: isCreateOpen,

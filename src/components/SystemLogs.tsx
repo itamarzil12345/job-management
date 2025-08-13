@@ -1,12 +1,6 @@
 import React from "react";
-import {
-  Box,
-  VStack,
-  Text,
-  Flex,
-  useColorModeValue,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Box, VStack, Text, Flex, useColorModeValue } from "@chakra-ui/react";
+import { useTheme } from "../hooks/useTheme";
 import {
   FaCircle,
   FaServer,
@@ -38,8 +32,7 @@ interface SystemLogsProps {
 }
 
 const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { isDark } = useTheme();
 
   const bgColor = getBackgroundColor(isDark);
   const textColor = getTextColor(isDark);

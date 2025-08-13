@@ -1,12 +1,12 @@
 import React from "react";
-import { Button, HStack, Text, useColorMode } from "@chakra-ui/react";
+import { Button, HStack, Text } from "@chakra-ui/react";
 import { useLanguage } from "../contexts/LanguageContext";
 import { getGrayColor } from "../theme";
+import { useTheme } from "../hooks/useTheme";
 
 export const LanguageSwitcher: React.FC = () => {
   const { language, setLanguage } = useLanguage();
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { isDark } = useTheme();
 
   return (
     <HStack spacing={2}>

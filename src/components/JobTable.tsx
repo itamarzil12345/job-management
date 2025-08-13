@@ -22,8 +22,8 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  useColorMode,
 } from "@chakra-ui/react";
+import { useTheme } from "../hooks/useTheme";
 
 import { Job, JobStatus, JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -47,8 +47,7 @@ export const JobTable: React.FC<JobTableProps> = ({
   onRefresh,
 }) => {
   const { language } = useLanguage();
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { isDark } = useTheme();
   const [filters, setFilters] = useState({
     status: "",
     search: "",

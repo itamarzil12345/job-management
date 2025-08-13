@@ -1,29 +1,21 @@
-import React, { useState } from "react";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  VStack,
-  FormErrorMessage,
-  useToast,
-  useColorMode,
-} from "@chakra-ui/react";
+import React from "react";
 import { JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
+import { BaseModal } from "./common/BaseModal";
+import { InputField, SelectField } from "./common/FormField";
+import { useForm } from "../hooks/useForm";
+import { useToastNotification } from "../hooks/useToastNotification";
+import { getPriorityLabel } from "../utils/statusLabels";
 
 interface CreateJobModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreateJob: (name: string, priority: number) => void;
+}
+
+interface FormData {
+  name: string;
+  priority: JobPriority;
 }
 
 export const CreateJobModal: React.FC<CreateJobModalProps> = ({
@@ -32,140 +24,96 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
   onCreateJob,
 }) => {
   const { language } = useLanguage();
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
-  const toast = useToast();
+  const { showSuccess, showError } = useToastNotification();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    priority: JobPriority.Regular,
-  });
+  const { values, errors, isSubmitting, setValue, handleSubmit, reset } =
+    useForm<FormData>({
+      initialValues: {
+        name: "",
+        priority: JobPriority.Regular,
+      },
+      validate: (values) => {
+        const errors: Partial<Record<keyof FormData, string>> = {};
 
-  const [errors, setErrors] = useState({
-    name: "",
-  });
+        if (!values.name.trim()) {
+          errors.name =
+            language === "he"
+              ? "שם העבודה הוא שדה חובה"
+              : "Job name is required";
+        } else if (values.name.trim().length < 3) {
+          errors.name =
+            language === "he"
+              ? "שם העבודה חייב להיות לפחות 3 תווים"
+              : "Job name must be at least 3 characters";
+        }
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const validateForm = () => {
-    const newErrors = { name: "" };
-
-    if (!formData.name.trim()) {
-      newErrors.name =
-        language === "he" ? "שם העבודה הוא שדה חובה" : "Job name is required";
-    } else if (formData.name.trim().length < 3) {
-      newErrors.name =
-        language === "he"
-          ? "שם העבודה חייב להיות לפחות 3 תווים"
-          : "Job name must be at least 3 characters";
-    }
-
-    setErrors(newErrors);
-    return !newErrors.name;
-  };
-
-  const handleSubmit = async () => {
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-    try {
-      await onCreateJob(formData.name.trim(), formData.priority);
-      toast({
-        title:
-          language === "he"
-            ? "העבודה נוצרה בהצלחה"
-            : "Job created successfully",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-      handleClose();
-    } catch (error) {
-      toast({
-        title: language === "he" ? "שגיאה ביצירת העבודה" : "Error creating job",
-        description: error instanceof Error ? error.message : "Unknown error",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        return errors;
+      },
+      onSubmit: async (values) => {
+        try {
+          await onCreateJob(values.name.trim(), values.priority);
+          showSuccess({
+            en: { success: "Job created successfully", error: "" },
+            he: { success: "העבודה נוצרה בהצלחה", error: "" },
+          });
+          handleClose();
+        } catch (error) {
+          showError(
+            {
+              en: { success: "", error: "Error creating job" },
+              he: { success: "", error: "שגיאה ביצירת העבודה" },
+            },
+            error instanceof Error ? error : undefined
+          );
+        }
+      },
+    });
 
   const handleClose = () => {
-    setFormData({ name: "", priority: JobPriority.Regular });
-    setErrors({ name: "" });
+    reset();
     onClose();
   };
 
-  const handleInputChange = (field: string, value: string | number) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
-    if (field === "name" && errors.name) {
-      setErrors((prev) => ({ ...prev, name: "" }));
-    }
-  };
+  const priorityOptions = [
+    {
+      value: JobPriority.Regular,
+      label: getPriorityLabel(JobPriority.Regular, language),
+    },
+    {
+      value: JobPriority.High,
+      label: getPriorityLabel(JobPriority.High, language),
+    },
+  ];
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} isCentered>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
-        </ModalHeader>
-        <ModalCloseButton />
+    <BaseModal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title={language === "he" ? "צור עבודה חדשה" : "Create New Job"}
+      onSubmit={handleSubmit}
+      isSubmitting={isSubmitting}
+      submitText={language === "he" ? "צור" : "Create"}
+      submitColorScheme="blue"
+    >
+      <InputField
+        label={language === "he" ? "שם העבודה" : "Job Name"}
+        value={values.name}
+        onChange={(value) => setValue("name", value)}
+        placeholder={
+          language === "he" ? "הכנס שם עבודה..." : "Enter job name..."
+        }
+        error={errors.name}
+        isRequired
+        autoFocus
+      />
 
-        <ModalBody>
-          <VStack spacing={4}>
-            <FormControl isInvalid={!!errors.name}>
-              <FormLabel>
-                {language === "he" ? "שם העבודה" : "Job Name"}
-              </FormLabel>
-              <Input
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                placeholder={
-                  language === "he" ? "הכנס שם עבודה..." : "Enter job name..."
-                }
-                autoFocus
-              />
-              <FormErrorMessage>{errors.name}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>{language === "he" ? "עדיפות" : "Priority"}</FormLabel>
-              <Select
-                value={formData.priority}
-                onChange={(e) =>
-                  handleInputChange("priority", parseInt(e.target.value))
-                }
-              >
-                <option value={JobPriority.Regular}>
-                  {language === "he" ? "רגיל" : "Regular"}
-                </option>
-                <option value={JobPriority.High}>
-                  {language === "he" ? "גבוה" : "High"}
-                </option>
-              </Select>
-            </FormControl>
-          </VStack>
-        </ModalBody>
-
-        <ModalFooter>
-          <Button variant="ghost" mr={3} onClick={handleClose}>
-            {language === "he" ? "ביטול" : "Cancel"}
-          </Button>
-          <Button
-            colorScheme={isDark ? "blue" : "blue"}
-            onClick={handleSubmit}
-            isLoading={isSubmitting}
-            loadingText={language === "he" ? "יוצר..." : "Creating..."}
-          >
-            {language === "he" ? "צור" : "Create"}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+      <SelectField
+        label={language === "he" ? "עדיפות" : "Priority"}
+        value={values.priority}
+        onChange={(value) => setValue("priority", parseInt(value))}
+        options={priorityOptions}
+        error={errors.priority}
+      />
+    </BaseModal>
   );
 };

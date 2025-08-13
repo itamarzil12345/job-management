@@ -4,7 +4,6 @@ import {
   Flex,
   Text,
   IconButton,
-  useColorMode,
   useColorModeValue,
   HStack,
   Spacer,
@@ -19,10 +18,10 @@ import {
   getGrayColor,
   getBlueColor,
 } from "../theme";
+import { useTheme } from "../hooks/useTheme";
 
 const TopBar: React.FC = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { toggleColorMode, isDark } = useTheme();
 
   const bgColor = useColorModeValue(
     "rgba(255, 255, 255, 0.95)",

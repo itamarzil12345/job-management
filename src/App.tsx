@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  ChakraProvider,
-  Box,
-  Container,
-  Text,
-  useColorMode,
-} from "@chakra-ui/react";
+import { ChakraProvider, Box, Container, Text } from "@chakra-ui/react";
+import { useTheme } from "./hooks/useTheme";
 import { JobDashboard } from "./components/JobDashboard";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import {
@@ -16,8 +11,7 @@ import {
 } from "./theme";
 
 function App() {
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { isDark } = useTheme();
 
   return (
     <ChakraProvider>

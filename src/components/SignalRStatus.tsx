@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Badge, Text, HStack, Icon, useColorMode } from "@chakra-ui/react";
+import { Box, Badge, Text, HStack, Icon } from "@chakra-ui/react";
 import { CheckCircleIcon, CloseIcon, WarningIcon } from "@chakra-ui/icons";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
@@ -9,6 +9,7 @@ import {
   getAdditionalColor,
   getGrayColor,
 } from "../theme";
+import { useTheme } from "../hooks/useTheme";
 
 interface SignalRStatusProps {
   isConnected: boolean;
@@ -22,8 +23,7 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
   hubUrl,
 }) => {
   const { language } = useLanguage();
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { isDark } = useTheme();
 
   const getStatusColor = () => {
     if (isConnected && connectionState === "Connected") return "green";

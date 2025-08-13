@@ -1,7 +1,9 @@
 import React from "react";
-import { SimpleGrid, Box, VStack, Text, useColorMode } from "@chakra-ui/react";
+import { SimpleGrid, Box, VStack, Text } from "@chakra-ui/react";
 import { JobStatus } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useTheme } from "../hooks/useTheme";
+import { getStatusLabel } from "../utils/statusLabels";
 import {
   getCardBackgroundColor,
   getAdditionalColor,
@@ -24,7 +26,7 @@ const getStatusConfig = (
 ) => {
   const configs = {
     [JobStatus.Pending]: {
-      label: language === "he" ? "ממתין" : "Pending",
+      label: getStatusLabel(JobStatus.Pending, language === "he" ? "he" : "en"),
       color: "blue",
       icon: "⏳",
       bgColor: getBlueColor("50", isDark),
@@ -33,7 +35,7 @@ const getStatusConfig = (
       darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
     [JobStatus.InQueue]: {
-      label: language === "he" ? "בתור" : "In Queue",
+      label: getStatusLabel(JobStatus.InQueue, language === "he" ? "he" : "en"),
       color: "purple",
       icon: "📋",
       bgColor: getPurpleColor("50", isDark),
@@ -42,7 +44,7 @@ const getStatusConfig = (
       darkTextColor: getAdditionalColor("brightPurple", true),
     },
     [JobStatus.Running]: {
-      label: language === "he" ? "רץ" : "Running",
+      label: getStatusLabel(JobStatus.Running, language === "he" ? "he" : "en"),
       color: "blue",
       icon: "▶️",
       bgColor: getBlueColor("50", isDark),
@@ -51,7 +53,10 @@ const getStatusConfig = (
       darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
     [JobStatus.Completed]: {
-      label: language === "he" ? "הושלם" : "Completed",
+      label: getStatusLabel(
+        JobStatus.Completed,
+        language === "he" ? "he" : "en"
+      ),
       color: "green",
       icon: "✅",
       bgColor: getGreenColor("50", isDark),
@@ -60,7 +65,7 @@ const getStatusConfig = (
       darkTextColor: getAdditionalColor("brightGreenLight", true),
     },
     [JobStatus.Failed]: {
-      label: language === "he" ? "נכשל" : "Failed",
+      label: getStatusLabel(JobStatus.Failed, language === "he" ? "he" : "en"),
       color: "red",
       icon: "❌",
       bgColor: getRedColor("50", isDark),
@@ -69,7 +74,7 @@ const getStatusConfig = (
       darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
     [JobStatus.Stopped]: {
-      label: language === "he" ? "עצר" : "Stopped",
+      label: getStatusLabel(JobStatus.Stopped, language === "he" ? "he" : "en"),
       color: "gray",
       icon: "⏹️",
       bgColor: getGrayColor("50", isDark),
@@ -83,8 +88,7 @@ const getStatusConfig = (
 
 export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
   const { language } = useLanguage();
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { isDark } = useTheme();
 
   return (
     <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing={4}>
