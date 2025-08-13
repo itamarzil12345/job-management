@@ -106,7 +106,7 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
             p={6}
             borderRadius="lg"
             borderTop="6px solid"
-            borderTopColor={isDark ? config.darkTextColor : config.borderColor}
+            borderTopColor={config.borderColor}
             boxShadow={isDark ? "0 0 20px rgba(138, 43, 226, 0.1)" : "md"}
             _hover={{
               transform: "translateY(-2px)",

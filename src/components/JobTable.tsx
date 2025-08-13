@@ -315,7 +315,9 @@ export const JobTable: React.FC<JobTableProps> = ({
                       ml={2}
                       fontSize="sm"
                       color={
-                        filters.sortDirection === "asc"
+                        isDark
+                          ? "#8b949e" // muted gray for dark mode
+                          : filters.sortDirection === "asc"
                           ? getBlueColor("300", isDark)
                           : getBlueColor("100", isDark)
                       }
@@ -336,7 +338,9 @@ export const JobTable: React.FC<JobTableProps> = ({
                       ml={2}
                       fontSize="sm"
                       color={
-                        filters.sortDirection === "asc"
+                        isDark
+                          ? "#8b949e" // muted gray for dark mode
+                          : filters.sortDirection === "asc"
                           ? getBlueColor("300", isDark)
                           : getBlueColor("100", isDark)
                       }
@@ -357,7 +361,9 @@ export const JobTable: React.FC<JobTableProps> = ({
                       ml={2}
                       fontSize="sm"
                       color={
-                        filters.sortDirection === "asc"
+                        isDark
+                          ? "#8b949e" // muted gray for dark mode
+                          : filters.sortDirection === "asc"
                           ? getBlueColor("300", isDark)
                           : getBlueColor("100", isDark)
                       }
@@ -379,7 +385,9 @@ export const JobTable: React.FC<JobTableProps> = ({
                       ml={2}
                       fontSize="sm"
                       color={
-                        filters.sortDirection === "asc"
+                        isDark
+                          ? "#8b949e" // muted gray for dark mode
+                          : filters.sortDirection === "asc"
                           ? getBlueColor("300", isDark)
                           : getBlueColor("100", isDark)
                       }
@@ -400,7 +408,9 @@ export const JobTable: React.FC<JobTableProps> = ({
                       ml={2}
                       fontSize="sm"
                       color={
-                        filters.sortDirection === "asc"
+                        isDark
+                          ? "#8b949e" // muted gray for dark mode
+                          : filters.sortDirection === "asc"
                           ? getBlueColor("300", isDark)
                           : getBlueColor("100", isDark)
                       }
