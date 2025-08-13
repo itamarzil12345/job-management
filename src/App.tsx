@@ -37,7 +37,11 @@ function App() {
                     ? getAdditionalColor("brightGreen", isDark)
                     : getBlueColor("600", isDark)
                 }
-                textShadow={isDark ? "0 0 10px rgba(0, 255, 65, 0.3)" : "none"}
+                textShadow={
+                  isDark
+                    ? `0 0 10px ${getAdditionalColor("brightGreen", isDark)}4D`
+                    : "none"
+                }
               >
                 Job Dashboard
               </Text>
