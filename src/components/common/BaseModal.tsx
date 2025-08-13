@@ -10,7 +10,7 @@ import {
   Button,
   VStack,
 } from "@chakra-ui/react";
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useI18n } from "../../hooks/useI18n";
 
 export interface BaseModalProps {
   isOpen: boolean;
@@ -43,10 +43,10 @@ export const BaseModal: React.FC<BaseModalProps> = ({
   submitColorScheme = "blue",
   size = "md",
 }) => {
-  const { language } = useLanguage();
+  const { t } = useI18n();
 
-  const defaultCancelText = language === "he" ? "ביטול" : "Cancel";
-  const defaultSubmitText = language === "he" ? "אישור" : "Submit";
+  const defaultCancelText = t("modals.createJob.cancel");
+  const defaultSubmitText = t("common.submit");
 
   const handleCancel = onCancel || onClose;
 
@@ -73,7 +73,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
                 colorScheme={submitColorScheme}
                 onClick={onSubmit}
                 isLoading={isSubmitting}
-                loadingText={language === "he" ? "מעבד..." : "Processing..."}
+                loadingText={t("common.processing")}
               >
                 {submitText || defaultSubmitText}
               </Button>

@@ -11,7 +11,7 @@ import TopBar from "./TopBar";
 import { jobService } from "../services/jobService";
 import { loggingService } from "../services/loggingService";
 import { Job, JobProgressUpdate } from "../types/job";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useI18n } from "../hooks/useI18n";
 import { CreateJobModal } from "./CreateJobModal";
 import { DeleteJobsModal } from "./DeleteJobsModal";
 import { JobTable } from "./JobTable";
@@ -43,7 +43,7 @@ export const JobDashboard: React.FC = () => {
   );
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef<HTMLDivElement>(null);
-  const { language } = useLanguage();
+  const { t } = useI18n();
   const { isDark } = useTheme();
 
   const {
@@ -211,13 +211,7 @@ export const JobDashboard: React.FC = () => {
   }, [jobs]);
 
   if (loading) {
-    return (
-      <LoadingSpinner
-        fullScreen
-        message={language === "he" ? "טוען..." : "Loading..."}
-        size="lg"
-      />
-    );
+    return <LoadingSpinner fullScreen message={t("app.loading")} size="lg" />;
   }
 
   if (error) {
@@ -266,10 +260,10 @@ export const JobDashboard: React.FC = () => {
               <HStack justify="space-between" align="center">
                 <HStack spacing={3}>
                   <Button colorScheme="blue" onClick={onCreateOpen} size="sm">
-                    {language === "he" ? "צור עבודה חדשה" : "Create New Job"}
+                    {t("jobs.createNew")}
                   </Button>
                   <Button colorScheme="red" onClick={onDeleteOpen} size="sm">
-                    {language === "he" ? "מחק עבודות" : "Delete Jobs"}
+                    {t("jobs.deleteJobs")}
                   </Button>
                 </HStack>
                 <LanguageSwitcher />

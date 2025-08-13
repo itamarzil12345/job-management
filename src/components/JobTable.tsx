@@ -27,7 +27,7 @@ import { useTheme } from "../hooks/useTheme";
 import { useDebounce } from "../hooks/useDebounce";
 
 import { Job, JobStatus, JobPriority } from "../types/job";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useI18n } from "../hooks/useI18n";
 import {
   getBackgroundColor,
   getCardBackgroundColor,
@@ -47,7 +47,7 @@ export const JobTable: React.FC<JobTableProps> = ({
   onJobAction,
   onRefresh,
 }) => {
-  const { language } = useLanguage();
+  const { t } = useI18n();
   const { isDark } = useTheme();
   const [filters, setFilters] = useState({
     status: "",
@@ -145,27 +145,27 @@ export const JobTable: React.FC<JobTableProps> = ({
     const statusConfig: Record<JobStatus, { color: string; text: string }> = {
       [JobStatus.Pending]: {
         color: "blue",
-        text: language === "he" ? "ממתין" : "Pending",
+        text: t("jobStatus.pending"),
       },
       [JobStatus.InQueue]: {
         color: "purple",
-        text: language === "he" ? "בתור" : "In Queue",
+        text: t("jobStatus.inQueue"),
       },
       [JobStatus.Running]: {
         color: "blue",
-        text: language === "he" ? "רץ" : "Running",
+        text: t("jobStatus.running"),
       },
       [JobStatus.Completed]: {
         color: "green",
-        text: language === "he" ? "הושלם" : "Completed",
+        text: t("jobStatus.completed"),
       },
       [JobStatus.Failed]: {
         color: "red",
-        text: language === "he" ? "נכשל" : "Failed",
+        text: t("jobStatus.failed"),
       },
       [JobStatus.Stopped]: {
         color: "gray",
-        text: language === "he" ? "עצר" : "Stopped",
+        text: t("jobStatus.stopped"),
       },
     };
 
@@ -182,11 +182,11 @@ export const JobTable: React.FC<JobTableProps> = ({
       {
         [JobPriority.Regular]: {
           color: "blue",
-          text: language === "he" ? "רגיל" : "Regular",
+          text: t("jobPriority.regular"),
         },
         [JobPriority.High]: {
           color: "red",
-          text: language === "he" ? "גבוה" : "High",
+          text: t("jobPriority.high"),
         },
       };
 
@@ -214,7 +214,7 @@ export const JobTable: React.FC<JobTableProps> = ({
     return (
       <Box textAlign="center" py={10}>
         <Text fontSize="lg" color={getGrayColor("500", isDark)}>
-          {language === "he" ? "אין עבודות זמינות" : "No jobs available"}
+          {t("jobs.noJobs")}
         </Text>
       </Box>
     );
@@ -225,9 +225,7 @@ export const JobTable: React.FC<JobTableProps> = ({
       {/* Filters - Always visible */}
       <HStack spacing={4}>
         <Input
-          placeholder={
-            language === "he" ? "חיפוש לפי שם..." : "Search by name..."
-          }
+          placeholder={t("jobs.search")}
           value={filters.search}
           onChange={(e) =>
             setFilters((prev) => ({ ...prev, search: e.target.value }))
@@ -241,9 +239,7 @@ export const JobTable: React.FC<JobTableProps> = ({
           }
           maxW="200px"
         >
-          <option value="">
-            {language === "he" ? "כל הסטטוסים" : "All Statuses"}
-          </option>
+          <option value="">{t("jobs.filters.allStatuses")}</option>
           {[
             JobStatus.Pending,
             JobStatus.InQueue,
@@ -258,7 +254,7 @@ export const JobTable: React.FC<JobTableProps> = ({
           ))}
         </Select>
         <Button onClick={onRefresh} size="sm">
-          {language === "he" ? "רענן" : "Refresh"}
+          {t("jobs.refresh")}
         </Button>
       </HStack>
 
@@ -266,9 +262,7 @@ export const JobTable: React.FC<JobTableProps> = ({
       {filteredAndSortedJobs.length === 0 && (
         <Box textAlign="center" py={10}>
           <Text fontSize="lg" color={getGrayColor("500", isDark)}>
-            {language === "he"
-              ? "לא נמצאו תוצאות לסינון הנוכחי"
-              : "No results found for current filters"}
+            {t("jobs.noResults", "No results found for current filters")}
           </Text>
           <Button
             mt={4}
@@ -281,7 +275,7 @@ export const JobTable: React.FC<JobTableProps> = ({
               })
             }
           >
-            {language === "he" ? "נקה סינון" : "Clear Filters"}
+            {"Clear Filters"}
           </Button>
         </Box>
       )}
@@ -314,7 +308,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                   onClick={() => handleSort("name")}
                   color={getGrayColor("100", isDark)}
                 >
-                  {language === "he" ? "שם העבודה" : "Job Name"}
+                  {"Job Name"}
                   {filters.sortBy === "name" && (
                     <Text
                       as="span"
@@ -335,7 +329,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                   onClick={() => handleSort("priority")}
                   color={getGrayColor("100", isDark)}
                 >
-                  {language === "he" ? "עדיפות" : "Priority"}
+                  {"Priority"}
                   {filters.sortBy === "priority" && (
                     <Text
                       as="span"
@@ -356,7 +350,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                   onClick={() => handleSort("status")}
                   color={getGrayColor("100", isDark)}
                 >
-                  {language === "he" ? "סטטוס" : "Status"}
+                  {"Status"}
                   {filters.sortBy === "status" && (
                     <Text
                       as="span"
@@ -372,15 +366,13 @@ export const JobTable: React.FC<JobTableProps> = ({
                     </Text>
                   )}
                 </Th>
-                <Th color={getGrayColor("100", isDark)}>
-                  {language === "he" ? "התקדמות" : "Progress"}
-                </Th>
+                <Th color={getGrayColor("100", isDark)}>{"Progress"}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("startedAt")}
                   color={getGrayColor("100", isDark)}
                 >
-                  {language === "he" ? "זמן התחלה" : "Start Time"}
+                  {"Start Time"}
                   {filters.sortBy === "startedAt" && (
                     <Text
                       as="span"
@@ -401,7 +393,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                   onClick={() => handleSort("completedAt")}
                   color={getGrayColor("100", isDark)}
                 >
-                  {language === "he" ? "זמן סיום" : "End Time"}
+                  {"End Time"}
                   {filters.sortBy === "completedAt" && (
                     <Text
                       as="span"
@@ -417,9 +409,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                     </Text>
                   )}
                 </Th>
-                <Th color={getGrayColor("100", isDark)}>
-                  {language === "he" ? "פעולות" : "Actions"}
-                </Th>
+                <Th color={getGrayColor("100", isDark)}>{"Actions"}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -480,7 +470,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                           colorScheme="orange"
                           onClick={() => handleJobAction(job.jobID, "stop")}
                         >
-                          {language === "he" ? "עצור" : "Stop"}
+                          {"Stop"}
                         </Button>
                       )}
                       {canRestart(job.status) && (
@@ -489,7 +479,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                           colorScheme="blue"
                           onClick={() => handleJobAction(job.jobID, "restart")}
                         >
-                          {language === "he" ? "התחל מחדש" : "Restart"}
+                          {"Restart"}
                         </Button>
                       )}
                       {canDelete(job.status) && (
@@ -498,7 +488,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                           colorScheme="red"
                           onClick={() => handleJobAction(job.jobID, "delete")}
                         >
-                          {language === "he" ? "מחק" : "Delete"}
+                          {"Delete"}
                         </Button>
                       )}
                     </HStack>
@@ -518,30 +508,20 @@ export const JobTable: React.FC<JobTableProps> = ({
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader>
-              {language === "he" ? "אישור פעולה" : "Confirm Action"}
-            </AlertDialogHeader>
+            <AlertDialogHeader>{"Confirm Action"}</AlertDialogHeader>
             <AlertDialogBody>
               {actionJob && (
                 <Text>
-                  {language === "he"
-                    ? `האם אתה בטוח שברצונך ${
-                        actionJob.action === "delete"
-                          ? "למחוק"
-                          : actionJob.action === "restart"
-                          ? "להתחיל מחדש"
-                          : "לעצור"
-                      } עבודה זו?`
-                    : `Are you sure you want to ${actionJob.action} this job?`}
+                  {`Are you sure you want to ${actionJob.action} this job?`}
                 </Text>
               )}
             </AlertDialogBody>
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onAlertClose}>
-                {language === "he" ? "ביטול" : "Cancel"}
+                {"Cancel"}
               </Button>
               <Button colorScheme="red" ml={3} onClick={confirmAction}>
-                {language === "he" ? "אישור" : "Confirm"}
+                {"Confirm"}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

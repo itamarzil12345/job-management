@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useI18n } from "./useI18n";
 
 export interface ToastMessage {
   success: string;
@@ -17,7 +17,7 @@ export interface BilingualToastMessage {
  */
 export const useToastNotification = () => {
   const toast = useToast();
-  const { language } = useLanguage();
+  const { language } = useI18n();
 
   const showToast = (
     messages: BilingualToastMessage,

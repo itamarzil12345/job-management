@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Badge, Text, HStack, Icon } from "@chakra-ui/react";
 import { CheckCircleIcon, CloseIcon, WarningIcon } from "@chakra-ui/icons";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useI18n } from "../hooks/useI18n";
 import {
   getBackgroundColor,
   getTextColor,
@@ -22,7 +22,7 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
   connectionState,
   hubUrl,
 }) => {
-  const { language } = useLanguage();
+  const { t } = useI18n();
   const { isDark } = useTheme();
 
   const getStatusColor = () => {
@@ -41,15 +41,15 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
 
   const getStatusText = () => {
     if (isConnected && connectionState === "Connected") {
-      return language === "he" ? "מחובר" : "Connected";
+      return t("signalr.connected");
     }
     if (connectionState === "Connecting") {
-      return language === "he" ? "מתחבר..." : "Connecting...";
+      return t("signalr.connecting");
     }
     if (connectionState === "Reconnecting") {
-      return language === "he" ? "מתחבר מחדש..." : "Reconnecting...";
+      return t("signalr.reconnecting");
     }
-    return language === "he" ? "מנותק" : "Disconnected";
+    return t("signalr.disconnected");
   };
 
   return (
@@ -79,7 +79,7 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
             fontWeight="medium"
             color={isDark ? getTextColor(isDark) : getGrayColor("700", isDark)}
           >
-            {language === "he" ? "סטטוס SignalR" : "SignalR Status"}
+            {t("signalr.status")}
           </Text>
           <HStack spacing={2} align="center">
             <Badge colorScheme={getStatusColor()} size="sm">

@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import { JobPriority } from "../types/job";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useI18n } from "../hooks/useI18n";
 import { BaseModal } from "./common/BaseModal";
 import { InputField, SelectField } from "./common/FormField";
 import { useForm } from "../hooks/useForm";
 import { useToastNotification } from "../hooks/useToastNotification";
 import { useKeyboardNavigation } from "../hooks/useKeyboardNavigation";
-import { getPriorityLabel } from "../utils/statusLabels";
 import { validateJobName } from "../utils/validation";
-import { getErrorMessage } from "../utils/validation";
 
 interface CreateJobModalProps {
   isOpen: boolean;
@@ -26,7 +24,7 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
   onClose,
   onCreateJob,
 }) => {
-  const { language } = useLanguage();
+  const { t } = useI18n();
   const { showSuccess, showError } = useToastNotification();
 
   const {
@@ -47,10 +45,7 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
 
       const nameValidation = validateJobName(values.name);
       if (!nameValidation.isValid && nameValidation.errorKey) {
-        errors.name = getErrorMessage(
-          nameValidation.errorKey,
-          language === "he" ? "he" : "en"
-        );
+        errors.name = t(`validation.${nameValidation.errorKey}`);
       }
 
       return errors;
@@ -58,16 +53,16 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
     onSubmit: async (values) => {
       await onCreateJob(values.name.trim(), values.priority);
       showSuccess({
-        en: { success: "Job created successfully", error: "" },
-        he: { success: "העבודה נוצרה בהצלחה", error: "" },
+        en: { success: t("notifications.jobCreated"), error: "" },
+        he: { success: t("notifications.jobCreated"), error: "" },
       });
       handleClose();
     },
     onError: (error) => {
       showError(
         {
-          en: { success: "", error: "Error creating job" },
-          he: { success: "", error: "שגיאה ביצירת העבודה" },
+          en: { success: "", error: t("notifications.errorCreatingJob") },
+          he: { success: "", error: t("notifications.errorCreatingJob") },
         },
         error
       );
@@ -94,11 +89,11 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
   const priorityOptions = [
     {
       value: JobPriority.Regular,
-      label: getPriorityLabel(JobPriority.Regular, language),
+      label: t("jobPriority.regular"),
     },
     {
       value: JobPriority.High,
-      label: getPriorityLabel(JobPriority.High, language),
+      label: t("jobPriority.high"),
     },
   ];
 
@@ -106,26 +101,24 @@ export const CreateJobModal: React.FC<CreateJobModalProps> = ({
     <BaseModal
       isOpen={isOpen}
       onClose={handleClose}
-      title={language === "he" ? "צור עבודה חדשה" : "Create New Job"}
+      title={t("modals.createJob.title")}
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
-      submitText={language === "he" ? "צור" : "Create"}
+      submitText={t("modals.createJob.create")}
       submitColorScheme="blue"
     >
       <InputField
-        label={language === "he" ? "שם העבודה" : "Job Name"}
+        label={t("modals.createJob.jobName")}
         value={values.name}
         onChange={(value) => setValue("name", value)}
-        placeholder={
-          language === "he" ? "הכנס שם עבודה..." : "Enter job name..."
-        }
+        placeholder={t("modals.createJob.jobNamePlaceholder")}
         error={errors.name}
         isRequired
         autoFocus
       />
 
       <SelectField
-        label={language === "he" ? "עדיפות" : "Priority"}
+        label={t("modals.createJob.priority")}
         value={values.priority}
         onChange={(value) => setValue("priority", parseInt(value))}
         options={priorityOptions}

@@ -1,0 +1,124 @@
+{
+  "app": {
+    "title": "לוח ניהול עבודות",
+    "loading": "טוען...",
+    "error": "שגיאה: {{message}}"
+  },
+  "language": {
+    "label": "שפה:",
+    "english": "EN",
+    "hebrew": "עברית"
+  },
+  "jobStatus": {
+    "pending": "ממתין",
+    "inQueue": "בתור",
+    "running": "רץ",
+    "completed": "הושלמו",
+    "failed": "נכשלו",
+    "stopped": "עצר"
+  },
+  "jobPriority": {
+    "regular": "רגיל",
+    "high": "גבוה"
+  },
+  "jobs": {
+    "createNew": "צור עבודה חדשה",
+    "deleteJobs": "מחק עבודות",
+    "refresh": "רענן",
+    "search": "חפש עבודות...",
+    "noJobs": "לא נמצאו עבודות",
+    "actions": {
+      "delete": "מחק",
+      "restart": "הפעל מחדש",
+      "stop": "עצור"
+    },
+    "table": {
+      "name": "שם",
+      "status": "סטטוס",
+      "priority": "עדיפות",
+      "progress": "התקדמות",
+      "createdAt": "נוצר",
+      "actions": "פעולות"
+    },
+    "filters": {
+      "allStatuses": "כל הסטטוסים",
+      "sortBy": "מיין לפי"
+    }
+  },
+  "modals": {
+    "createJob": {
+      "title": "צור עבודה חדשה",
+      "jobName": "שם העבודה",
+      "jobNamePlaceholder": "הכנס שם עבודה...",
+      "priority": "עדיפות",
+      "create": "צור",
+      "cancel": "ביטול"
+    },
+    "deleteJobs": {
+      "title": "מחק עבודות לפי סטטוס",
+      "warning": "פעולה זו תמחק את כל העבודות עם הסטטוס הנבחר. פעולה זו אינה הפיכה.",
+      "selectStatus": "בחר סטטוס למחיקה",
+      "selectPlaceholder": "בחר סטטוס...",
+      "confirmationText": "זה ימחק את כל העבודות עם סטטוס \"{{status}}\".",
+      "delete": "מחק",
+      "cancel": "ביטול"
+    },
+    "confirmAction": {
+      "title": "אשר פעולה",
+      "deleteJob": "האם אתה בטוח שברצונך למחוק את העבודה הזו?",
+      "restartJob": "האם אתה בטוח שברצונך להפעיל מחדש את העבודה הזו?",
+      "stopJob": "האם אתה בטוח שברצונך לעצור את העבודה הזו?",
+      "confirm": "אשר",
+      "cancel": "ביטול"
+    }
+  },
+  "validation": {
+    "jobNameRequired": "שם העבודה הוא שדה חובה",
+    "jobNameTooShort": "שם העבודה חייב להיות לפחות 3 תווים",
+    "jobNameTooLong": "שם העבודה חייב להיות פחות מ-100 תווים",
+    "jobNameInvalidChars": "שם העבודה מכיל תווים לא חוקיים",
+    "statusRequired": "חובה לבחור סטטוס",
+    "networkError": "שגיאת רשת",
+    "unknownError": "שגיאה לא ידועה"
+  },
+  "notifications": {
+    "jobCreated": "העבודה נוצרה בהצלחה",
+    "jobDeleted": "העבודה נמחקה בהצלחה",
+    "jobsDeleted": "העבודות נמחקו בהצלחה",
+    "jobRestarted": "העבודה הופעלה מחדש בהצלחה",
+    "jobStopped": "העבודה נעצרה בהצלחה",
+    "errorCreatingJob": "שגיאה ביצירת העבודה",
+    "errorDeletingJob": "שגיאה במחיקת העבודה",
+    "errorDeletingJobs": "שגיאה במחיקת העבודות",
+    "errorRestartingJob": "שגיאה בהפעלה מחדש של העבודה",
+    "errorStoppingJob": "שגיאה בעצירת העבודה"
+  },
+  "signalr": {
+    "connected": "מחובר",
+    "connecting": "מתחבר",
+    "disconnected": "מנותק",
+    "reconnecting": "מתחבר מחדש",
+    "status": "סטטוס SignalR",
+    "hubUrl": "כתובת Hub"
+  },
+  "logs": {
+    "title": "לוגי המערכת",
+    "noLogs": "אין לוגים זמינים",
+    "level": {
+      "info": "מידע",
+      "warning": "אזהרה",
+      "error": "שגיאה",
+      "success": "הצלחה"
+    }
+  },
+  "common": {
+    "processing": "מעבד...",
+    "creating": "יוצר...",
+    "deleting": "מוחק...",
+    "restarting": "מפעיל מחדש...",
+    "stopping": "עוצר...",
+    "submit": "אישור",
+    "close": "סגור",
+    "retry": "נסה שוב"
+  }
+}

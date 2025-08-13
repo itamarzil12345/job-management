@@ -1,12 +1,11 @@
 import React from "react";
 import { Text, Alert, AlertIcon } from "@chakra-ui/react";
 import { JobStatus } from "../types/job";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useI18n } from "../hooks/useI18n";
 import { BaseModal } from "./common/BaseModal";
 import { SelectField } from "./common/FormField";
 import { useForm } from "../hooks/useForm";
 import { useToastNotification } from "../hooks/useToastNotification";
-import { getStatusLabel } from "../utils/statusLabels";
 import { useTheme } from "../hooks/useTheme";
 import { getGrayColor } from "../theme";
 
@@ -25,7 +24,7 @@ export const DeleteJobsModal: React.FC<DeleteJobsModalProps> = ({
   onClose,
   onDeleteJobs,
 }) => {
-  const { language } = useLanguage();
+  const { t } = useI18n();
   const { isDark } = useTheme();
   const { showSuccess, showError } = useToastNotification();
 
@@ -37,8 +36,7 @@ export const DeleteJobsModal: React.FC<DeleteJobsModalProps> = ({
       validate: (values) => {
         const errors: Partial<Record<keyof FormData, string>> = {};
         if (values.selectedStatus === "") {
-          errors.selectedStatus =
-            language === "he" ? "חובה לבחור סטטוס" : "Status is required";
+          errors.selectedStatus = t("validation.statusRequired");
         }
         return errors;
       },
@@ -48,15 +46,15 @@ export const DeleteJobsModal: React.FC<DeleteJobsModalProps> = ({
         try {
           await onDeleteJobs(values.selectedStatus as number);
           showSuccess({
-            en: { success: "Jobs deleted successfully", error: "" },
-            he: { success: "העבודות נמחקו בהצלחה", error: "" },
+            en: { success: t("notifications.jobsDeleted"), error: "" },
+            he: { success: t("notifications.jobsDeleted"), error: "" },
           });
           handleClose();
         } catch (error) {
           showError(
             {
-              en: { success: "", error: "Error deleting jobs" },
-              he: { success: "", error: "שגיאה במחיקת העבודות" },
+              en: { success: "", error: t("notifications.errorDeletingJobs") },
+              he: { success: "", error: t("notifications.errorDeletingJobs") },
             },
             error instanceof Error ? error : undefined
           );
@@ -72,7 +70,9 @@ export const DeleteJobsModal: React.FC<DeleteJobsModalProps> = ({
   const statusOptions = [JobStatus.Completed, JobStatus.Failed].map(
     (status) => ({
       value: status,
-      label: getStatusLabel(status, language === "he" ? "he" : "en"),
+      label: t(
+        `jobStatus.${status === JobStatus.Completed ? "completed" : "failed"}`
+      ),
     })
   );
 
@@ -80,32 +80,24 @@ export const DeleteJobsModal: React.FC<DeleteJobsModalProps> = ({
     <BaseModal
       isOpen={isOpen}
       onClose={handleClose}
-      title={
-        language === "he" ? "מחק עבודות לפי סטטוס" : "Delete Jobs by Status"
-      }
+      title={t("modals.deleteJobs.title")}
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
-      submitText={language === "he" ? "מחק" : "Delete"}
+      submitText={t("modals.deleteJobs.delete")}
       submitColorScheme="red"
     >
       <Alert status="warning">
         <AlertIcon />
-        <Text fontSize="sm">
-          {language === "he"
-            ? "פעולה זו תמחק את כל העבודות עם הסטטוס הנבחר. פעולה זו אינה הפיכה."
-            : "This action will delete all jobs with the selected status. This action cannot be undone."}
-        </Text>
+        <Text fontSize="sm">{t("modals.deleteJobs.warning")}</Text>
       </Alert>
 
       <SelectField
-        label={
-          language === "he" ? "בחר סטטוס למחיקה" : "Select Status to Delete"
-        }
+        label={t("modals.deleteJobs.selectStatus")}
         value={values.selectedStatus}
         onChange={(value) =>
           setValue("selectedStatus", value === "" ? "" : parseInt(value))
         }
-        placeholder={language === "he" ? "בחר סטטוס..." : "Select status..."}
+        placeholder={t("modals.deleteJobs.selectPlaceholder")}
         options={statusOptions}
         error={errors.selectedStatus}
         isRequired
@@ -113,15 +105,11 @@ export const DeleteJobsModal: React.FC<DeleteJobsModalProps> = ({
 
       {values.selectedStatus !== "" && (
         <Text fontSize="sm" color={getGrayColor("600", isDark)}>
-          {language === "he"
-            ? `זה ימחק את כל העבודות עם סטטוס "${getStatusLabel(
-                values.selectedStatus as JobStatus,
-                "he"
-              )}".`
-            : `This will delete all jobs with status "${getStatusLabel(
-                values.selectedStatus as JobStatus,
-                "en"
-              )}".`}
+          {t("modals.deleteJobs.confirmationText", {
+            status:
+              statusOptions.find((opt) => opt.value === values.selectedStatus)
+                ?.label || "",
+          })}
         </Text>
       )}
     </BaseModal>

@@ -1,0 +1,124 @@
+{
+  "app": {
+    "title": "Job Management Dashboard",
+    "loading": "Loading...",
+    "error": "Error: {{message}}"
+  },
+  "language": {
+    "label": "Language:",
+    "english": "EN",
+    "hebrew": "עברית"
+  },
+  "jobStatus": {
+    "pending": "Pending",
+    "inQueue": "In Queue",
+    "running": "Running",
+    "completed": "Completed",
+    "failed": "Failed",
+    "stopped": "Stopped"
+  },
+  "jobPriority": {
+    "regular": "Regular",
+    "high": "High"
+  },
+  "jobs": {
+    "createNew": "Create New Job",
+    "deleteJobs": "Delete Jobs",
+    "refresh": "Refresh",
+    "search": "Search jobs...",
+    "noJobs": "No jobs found",
+    "actions": {
+      "delete": "Delete",
+      "restart": "Restart",
+      "stop": "Stop"
+    },
+    "table": {
+      "name": "Name",
+      "status": "Status",
+      "priority": "Priority",
+      "progress": "Progress",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "filters": {
+      "allStatuses": "All Statuses",
+      "sortBy": "Sort by"
+    }
+  },
+  "modals": {
+    "createJob": {
+      "title": "Create New Job",
+      "jobName": "Job Name",
+      "jobNamePlaceholder": "Enter job name...",
+      "priority": "Priority",
+      "create": "Create",
+      "cancel": "Cancel"
+    },
+    "deleteJobs": {
+      "title": "Delete Jobs by Status",
+      "warning": "This action will delete all jobs with the selected status. This action cannot be undone.",
+      "selectStatus": "Select Status to Delete",
+      "selectPlaceholder": "Select status...",
+      "confirmationText": "This will delete all jobs with status \"{{status}}\".",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "confirmAction": {
+      "title": "Confirm Action",
+      "deleteJob": "Are you sure you want to delete this job?",
+      "restartJob": "Are you sure you want to restart this job?",
+      "stopJob": "Are you sure you want to stop this job?",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    }
+  },
+  "validation": {
+    "jobNameRequired": "Job name is required",
+    "jobNameTooShort": "Job name must be at least 3 characters",
+    "jobNameTooLong": "Job name must be less than 100 characters",
+    "jobNameInvalidChars": "Job name contains invalid characters",
+    "statusRequired": "Status is required",
+    "networkError": "Network error occurred",
+    "unknownError": "An unknown error occurred"
+  },
+  "notifications": {
+    "jobCreated": "Job created successfully",
+    "jobDeleted": "Job deleted successfully",
+    "jobsDeleted": "Jobs deleted successfully",
+    "jobRestarted": "Job restarted successfully",
+    "jobStopped": "Job stopped successfully",
+    "errorCreatingJob": "Error creating job",
+    "errorDeletingJob": "Error deleting job",
+    "errorDeletingJobs": "Error deleting jobs",
+    "errorRestartingJob": "Error restarting job",
+    "errorStoppingJob": "Error stopping job"
+  },
+  "signalr": {
+    "connected": "Connected",
+    "connecting": "Connecting",
+    "disconnected": "Disconnected",
+    "reconnecting": "Reconnecting",
+    "status": "SignalR Status",
+    "hubUrl": "Hub URL"
+  },
+  "logs": {
+    "title": "System Logs",
+    "noLogs": "No logs available",
+    "level": {
+      "info": "INFO",
+      "warning": "WARNING",
+      "error": "ERROR",
+      "success": "SUCCESS"
+    }
+  },
+  "common": {
+    "processing": "Processing...",
+    "creating": "Creating...",
+    "deleting": "Deleting...",
+    "restarting": "Restarting...",
+    "stopping": "Stopping...",
+    "submit": "Submit",
+    "close": "Close",
+    "retry": "Try Again"
+  }
+}
