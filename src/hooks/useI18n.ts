@@ -31,3 +31,4 @@ export const useI18n = () => {
     isHebrew: language === "he",
   };
 };
+

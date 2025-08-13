@@ -8,6 +8,35 @@ body {
   font-size: 14px;
 }
 
+/* Default light theme */
+html,
+body,
+#root {
+  background-color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+
+/* Dark theme - when Chakra UI dark mode is active */
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] #root,
+.chakra-ui-dark html,
+.chakra-ui-dark body,
+.chakra-ui-dark #root {
+  background-color: #0d1117 !important;
+}
+
+/* Additional dark mode selectors for different Chakra UI approaches */
+[data-chakra-ui-color-mode="dark"] html,
+[data-chakra-ui-color-mode="dark"] body,
+[data-chakra-ui-color-mode="dark"] #root {
+  background-color: #0d1117 !important;
+}
+
+#root {
+  min-height: 100vh;
+}
+
 /* Global smaller font sizes */
 h1 {
   font-size: 1.5rem !important;

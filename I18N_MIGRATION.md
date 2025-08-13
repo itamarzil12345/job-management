@@ -280,3 +280,4 @@ return <Box textAlign={isRTL ? "right" : "left"}>{t("jobs.table.name")}</Box>;
 - Easy to extend
 
 This migration sets up a **professional, scalable internationalization system** that follows industry best practices and provides excellent developer experience!
+

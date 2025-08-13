@@ -369,7 +369,7 @@ export const JobDashboard: React.FC = () => {
           borderColor={getGrayColor("200", isDark)}
           overflow="hidden"
           zIndex={1000}
-          bg={getAdditionalColor("white", isDark)}
+          bg={getCardBackgroundColor(isDark)}
           _dark={{
             bg: getCardBackgroundColor(isDark),
             borderColor: getBorderColor(isDark),

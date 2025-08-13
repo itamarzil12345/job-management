@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ChakraProvider, Box, Container, Text } from "@chakra-ui/react";
 import { useTheme } from "./hooks/useTheme";
 import { JobDashboard } from "./components/JobDashboard";
@@ -12,6 +12,12 @@ import {
 
 function App() {
   const { isDark } = useTheme();
+
+  // Update body background when theme changes
+  useEffect(() => {
+    document.body.style.backgroundColor = getBackgroundColor(isDark);
+    document.documentElement.style.backgroundColor = getBackgroundColor(isDark);
+  }, [isDark]);
 
   return (
     <ChakraProvider>
