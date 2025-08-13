@@ -5,15 +5,26 @@ import {
   VStack,
   Text,
   useColorModeValue,
+  useColorMode,
 } from "@chakra-ui/react";
 import { JobStatus } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
+import {
+  getCardBackgroundColor,
+  getTextColor,
+  getBorderColor,
+  getAdditionalColor,
+} from "../theme";
 
 interface StatusCardsProps {
   counts: Record<number, number>;
 }
 
-const getStatusConfig = (status: JobStatus, language: string) => {
+const getStatusConfig = (
+  status: JobStatus,
+  language: string,
+  isDark: boolean
+) => {
   const configs = {
     [JobStatus.Pending]: {
       label: language === "he" ? "ממתין" : "Pending",
@@ -21,8 +32,8 @@ const getStatusConfig = (status: JobStatus, language: string) => {
       icon: "⏳",
       bgColor: "blue.50",
       borderColor: "orange.400",
-      darkBgColor: "#1a1a2e",
-      darkTextColor: "#00bfff",
+      darkBgColor: getCardBackgroundColor(true),
+      darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
     [JobStatus.InQueue]: {
       label: language === "he" ? "בתור" : "In Queue",
@@ -30,8 +41,8 @@ const getStatusConfig = (status: JobStatus, language: string) => {
       icon: "📋",
       bgColor: "purple.50",
       borderColor: "purple.400",
-      darkBgColor: "#1a1a2e",
-      darkTextColor: "#8a2be2",
+      darkBgColor: getCardBackgroundColor(true),
+      darkTextColor: getAdditionalColor("brightPurple", true),
     },
     [JobStatus.Running]: {
       label: language === "he" ? "רץ" : "Running",
@@ -39,8 +50,8 @@ const getStatusConfig = (status: JobStatus, language: string) => {
       icon: "▶️",
       bgColor: "blue.50",
       borderColor: "blue.400",
-      darkBgColor: "#1a1a2e",
-      darkTextColor: "#00bfff",
+      darkBgColor: getCardBackgroundColor(true),
+      darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
     [JobStatus.Completed]: {
       label: language === "he" ? "הושלם" : "Completed",
@@ -48,8 +59,8 @@ const getStatusConfig = (status: JobStatus, language: string) => {
       icon: "✅",
       bgColor: "green.50",
       borderColor: "green.400",
-      darkBgColor: "#1a1a2e",
-      darkTextColor: "#00ff80",
+      darkBgColor: getCardBackgroundColor(true),
+      darkTextColor: getAdditionalColor("brightGreenLight", true),
     },
     [JobStatus.Failed]: {
       label: language === "he" ? "נכשל" : "Failed",
@@ -57,8 +68,8 @@ const getStatusConfig = (status: JobStatus, language: string) => {
       icon: "❌",
       bgColor: "red.50",
       borderColor: "red.400",
-      darkBgColor: "#1a1a2e",
-      darkTextColor: "#ff6b6b",
+      darkBgColor: getCardBackgroundColor(true),
+      darkTextColor: getAdditionalColor("deepSkyBlue", true),
     },
     [JobStatus.Stopped]: {
       label: language === "he" ? "עצר" : "Stopped",
@@ -66,8 +77,8 @@ const getStatusConfig = (status: JobStatus, language: string) => {
       icon: "⏹️",
       bgColor: "gray.50",
       borderColor: "gray.400",
-      darkBgColor: "#1a1a2e",
-      darkTextColor: "#8a2be2",
+      darkBgColor: getCardBackgroundColor(true),
+      darkTextColor: getAdditionalColor("brightPurple", true),
     },
   };
   return configs[status];
@@ -75,6 +86,8 @@ const getStatusConfig = (status: JobStatus, language: string) => {
 
 export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
   const { language } = useLanguage();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
 
   return (
     <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing={4}>
@@ -86,27 +99,19 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
         JobStatus.Failed,
         JobStatus.Stopped,
       ].map((status) => {
-        const config = getStatusConfig(status, language);
+        const config = getStatusConfig(status, language, isDark);
         return (
           <Box
             key={status}
-            bg="white"
+            bg={isDark ? config.darkBgColor : "white"}
             p={6}
             borderRadius="lg"
-            boxShadow="md"
             borderTop="6px solid"
-            borderTopColor={config.borderColor}
-            _dark={{
-              bg: config.darkBgColor,
-              borderTopColor: config.darkTextColor,
-              boxShadow: "0 0 20px rgba(138, 43, 226, 0.1)",
-            }}
+            borderTopColor={isDark ? config.darkTextColor : config.borderColor}
+            boxShadow={isDark ? "0 0 20px rgba(138, 43, 226, 0.1)" : "md"}
             _hover={{
               transform: "translateY(-2px)",
-              boxShadow: "lg",
-              _dark: {
-                boxShadow: "0 0 25px rgba(138, 43, 226, 0.2)",
-              },
+              boxShadow: isDark ? "0 0 25px rgba(138, 43, 226, 0.2)" : "lg",
             }}
             transition="all 0.2s"
             textAlign="center"
@@ -115,20 +120,18 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ counts }) => {
               <Text
                 fontSize="3xl"
                 fontWeight="bold"
-                color={`${config.color}.600`}
-                _dark={{
-                  color: config.darkTextColor,
-                }}
+                color={isDark ? config.darkTextColor : `${config.color}.600`}
               >
                 {counts[status as keyof typeof counts] || 0}
               </Text>
               <Text
                 fontSize="sm"
-                color="gray.600"
+                color={
+                  isDark
+                    ? getAdditionalColor("brightPurple", isDark)
+                    : "gray.600"
+                }
                 fontWeight="medium"
-                _dark={{
-                  color: "#8a2be2",
-                }}
               >
                 {config.label}
               </Text>

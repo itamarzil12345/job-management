@@ -7,6 +7,7 @@ import {
   Icon,
   Badge,
   useColorModeValue,
+  useColorMode,
 } from "@chakra-ui/react";
 import {
   FaCircle,
@@ -16,6 +17,13 @@ import {
   FaInfoCircle,
 } from "react-icons/fa";
 import { IconType } from "react-icons";
+import {
+  getBackgroundColor,
+  getTextColor,
+  getBorderColor,
+  getStatusColor,
+  getAdditionalColor,
+} from "../theme";
 
 export interface LogEntry {
   id: string;
@@ -31,13 +39,18 @@ interface SystemLogsProps {
 }
 
 const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
-  const bgColor = useColorModeValue("#f8f9fa", "#0f0f23"); // Light gray / Dark blue-purple
-  const textColor = useColorModeValue("#006400", "#8a2be2"); // Dark green / Bright purple
-  const borderColor = useColorModeValue("#006400", "#8a2be2"); // Dark green / Bright purple
-  const accentColor = useColorModeValue("#8b008b", "#ff0080"); // Dark magenta / Bright magenta
-  const warningColor = useColorModeValue("#ff8c00", "#ffaa00"); // Dark orange / Bright orange
-  const errorColor = useColorModeValue("#dc143c", "#ff0040"); // Crimson red / Bright red
-  const successColor = useColorModeValue("#228b22", "#00bfff"); // Forest green / Deep sky blue
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
+
+  const bgColor = getBackgroundColor(isDark);
+  const textColor = getTextColor(isDark);
+  const borderColor = getBorderColor(isDark);
+  const accentColor = isDark
+    ? getAdditionalColor("brightMagenta", isDark)
+    : getAdditionalColor("darkMagenta", isDark);
+  const warningColor = getStatusColor("warning", isDark);
+  const errorColor = getStatusColor("error", isDark);
+  const successColor = getStatusColor("success", isDark);
 
   const getLogIcon = (level: LogEntry["level"]): IconType => {
     switch (level) {
@@ -55,13 +68,13 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
   const getLogColor = (level: LogEntry["level"]) => {
     switch (level) {
       case "success":
-        return successColor; // Forest green
+        return successColor;
       case "warning":
         return warningColor;
       case "error":
         return errorColor;
       default:
-        return "#4169e1"; // Royal blue
+        return getStatusColor("info", isDark);
     }
   };
 
@@ -80,13 +93,15 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
   const getSourceColor = (source?: LogEntry["source"]) => {
     switch (source) {
       case "signalr":
-        return accentColor; // Dark magenta
+        return accentColor;
       case "nodejs":
-        return "#4169e1"; // Royal blue
+        return getStatusColor("info", isDark);
       case "dotnet":
-        return successColor; // Forest green
+        return successColor;
       default:
-        return "#696969"; // Dim gray
+        return isDark
+          ? getAdditionalColor("dimGray", isDark)
+          : getAdditionalColor("gray", isDark);
     }
   };
 
@@ -167,7 +182,7 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
         bg={useColorModeValue("white", "rgba(15, 15, 35, 0.9)")}
         _dark={{
           bg: "rgba(15, 15, 35, 0.9)",
-          borderColor: "#8a2be2",
+          borderColor: getAdditionalColor("brightPurple", isDark),
           boxShadow: "0 0 20px rgba(138, 43, 226, 0.4)",
         }}
         _after={{
@@ -241,7 +256,11 @@ const SystemLogs: React.FC<SystemLogsProps> = ({ logs, maxLogs = 100 }) => {
               _hover={{ bg: "rgba(0, 100, 0, 0.05)" }}
             >
               <Text
-                color="#666"
+                color={
+                  isDark
+                    ? getAdditionalColor("dimGray", isDark)
+                    : getAdditionalColor("gray", isDark)
+                }
                 fontSize="9px"
                 minW="70px"
                 fontFamily="mono"

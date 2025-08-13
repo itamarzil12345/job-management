@@ -6,9 +6,16 @@ import {
   HStack,
   Icon,
   useColorModeValue,
+  useColorMode,
 } from "@chakra-ui/react";
 import { CheckCircleIcon, CloseIcon, WarningIcon } from "@chakra-ui/icons";
 import { useLanguage } from "../contexts/LanguageContext";
+import {
+  getBackgroundColor,
+  getTextColor,
+  getBorderColor,
+  getAdditionalColor,
+} from "../theme";
 
 interface SignalRStatusProps {
   isConnected: boolean;
@@ -22,6 +29,8 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
   hubUrl,
 }) => {
   const { language } = useLanguage();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
 
   const getStatusColor = () => {
     if (isConnected && connectionState === "Connected") return "green";
@@ -53,16 +62,11 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
   return (
     <Box
       p={3}
-      bg="white"
+      bg={isDark ? getBackgroundColor(isDark) : "white"}
       borderRadius="md"
-      boxShadow="sm"
+      boxShadow={isDark ? "0 0 20px rgba(138, 43, 226, 0.1)" : "sm"}
       border="1px solid"
-      borderColor="gray.200"
-      _dark={{
-        bg: "#0f0f23",
-        borderColor: "#8a2be2",
-        boxShadow: "0 0 20px rgba(138, 43, 226, 0.1)",
-      }}
+      borderColor={isDark ? getBorderColor(isDark) : "gray.200"}
     >
       <HStack spacing={3} align="center">
         <Icon
@@ -74,10 +78,7 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
           <Text
             fontSize="sm"
             fontWeight="medium"
-            color="gray.700"
-            _dark={{
-              color: "#8a2be2",
-            }}
+            color={isDark ? getTextColor(isDark) : "gray.700"}
           >
             {language === "he" ? "סטטוס SignalR" : "SignalR Status"}
           </Text>
@@ -87,10 +88,9 @@ export const SignalRStatus: React.FC<SignalRStatusProps> = ({
             </Badge>
             <Text
               fontSize="xs"
-              color="gray.500"
-              _dark={{
-                color: "#00bfff",
-              }}
+              color={
+                isDark ? getAdditionalColor("deepSkyBlue", isDark) : "gray.500"
+              }
             >
               {hubUrl}
             </Text>

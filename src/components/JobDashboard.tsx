@@ -8,6 +8,7 @@ import {
   useDisclosure,
   Grid,
   GridItem,
+  useColorMode,
 } from "@chakra-ui/react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { SignalRStatus } from "./SignalRStatus";
@@ -21,6 +22,12 @@ import { CreateJobModal } from "./CreateJobModal";
 import { DeleteJobsModal } from "./DeleteJobsModal";
 import { JobTable } from "./JobTable";
 import { StatusCards } from "./StatusCards";
+import {
+  getBackgroundColor,
+  getCardBackgroundColor,
+  getBorderColor,
+  getAdditionalColor,
+} from "../theme";
 
 // Import the USE_MOCK_DATA constant
 const USE_MOCK_DATA = process.env.REACT_APP_USE_MOCK_DATA === "true";
@@ -37,6 +44,8 @@ export const JobDashboard: React.FC = () => {
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
 
   const {
     isOpen: isCreateOpen,
@@ -236,8 +245,7 @@ export const JobDashboard: React.FC = () => {
         maxW="100vw"
         ml={0}
         pl={0}
-        bg="gray.50"
-        _dark={{ bg: "#0a0a0a" }}
+        bg={isDark ? getBackgroundColor(isDark) : "gray.50"}
         pt={4}
       >
         <VStack spacing={6} align="stretch" p={4} pl={0}>
@@ -250,8 +258,8 @@ export const JobDashboard: React.FC = () => {
             border="1px solid"
             borderColor="gray.200"
             _dark={{
-              bg: "#0f0f23",
-              borderColor: "#8a2be2",
+              bg: getCardBackgroundColor(isDark),
+              borderColor: getBorderColor(isDark),
               boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
             }}
           >
@@ -277,8 +285,8 @@ export const JobDashboard: React.FC = () => {
             border="1px solid"
             borderColor="gray.200"
             _dark={{
-              bg: "#0f0f23",
-              borderColor: "#8a2be2",
+              bg: getCardBackgroundColor(isDark),
+              borderColor: getBorderColor(isDark),
               boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
             }}
           >
@@ -295,8 +303,8 @@ export const JobDashboard: React.FC = () => {
               border="1px solid"
               borderColor="gray.200"
               _dark={{
-                bg: "#0f0f23",
-                borderColor: "#8a2be2",
+                bg: getCardBackgroundColor(isDark),
+                borderColor: getBorderColor(isDark),
                 boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
               }}
             >
@@ -317,8 +325,8 @@ export const JobDashboard: React.FC = () => {
             border="1px solid"
             borderColor="gray.200"
             _dark={{
-              bg: "#0f0f23",
-              borderColor: "#8a2be2",
+              bg: getCardBackgroundColor(isDark),
+              borderColor: getBorderColor(isDark),
               boxShadow: "0 0 20px rgba(138, 43, 226, 0.2)",
             }}
           >
@@ -357,8 +365,8 @@ export const JobDashboard: React.FC = () => {
         zIndex={1000}
         bg="white"
         _dark={{
-          bg: "#0f0f23",
-          borderColor: "#8a2be2",
+          bg: getCardBackgroundColor(isDark),
+          borderColor: getBorderColor(isDark),
           boxShadow: "0 0 30px rgba(138, 43, 226, 0.3)",
         }}
         boxShadow="lg"
@@ -382,13 +390,15 @@ export const JobDashboard: React.FC = () => {
             boxShadow: "0 0 15px rgba(59, 130, 246, 0.7)",
           }}
           _dark={{
-            bg: isResizing ? "#8a2be2" : "#1a1a2e",
+            bg: isResizing
+              ? getBorderColor(isDark)
+              : getCardBackgroundColor(isDark),
             _hover: {
-              bg: "#8a2be2",
+              bg: getBorderColor(isDark),
               boxShadow: "0 0 15px rgba(138, 43, 226, 0.6)",
             },
             _active: {
-              bg: "#8a2be2",
+              bg: getBorderColor(isDark),
               boxShadow: "0 0 20px rgba(138, 43, 226, 0.8)",
             },
           }}
@@ -411,7 +421,9 @@ export const JobDashboard: React.FC = () => {
             borderRadius: "2px",
             opacity: isResizing ? 1 : 0.8,
             _dark: {
-              bg: isResizing ? "#8a2be2" : "#8a2be2",
+              bg: isResizing
+                ? "white"
+                : getAdditionalColor("brightPurple", isDark),
               opacity: isResizing ? 1 : 0.6,
             },
           }}
@@ -427,7 +439,9 @@ export const JobDashboard: React.FC = () => {
             borderRadius: "1px",
             opacity: isResizing ? 1 : 0.9,
             _dark: {
-              bg: isResizing ? "#8a2be2" : "#8a2be2",
+              bg: isResizing
+                ? "white"
+                : getAdditionalColor("brightPurple", isDark),
               opacity: isResizing ? 1 : 0.8,
             },
           }}

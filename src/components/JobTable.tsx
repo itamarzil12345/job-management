@@ -22,11 +22,17 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useRef } from "react";
 
 import { Job, JobStatus, JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
+import {
+  getBackgroundColor,
+  getCardBackgroundColor,
+  getAdditionalColor,
+} from "../theme";
 
 interface JobTableProps {
   jobs: Job[];
@@ -40,6 +46,8 @@ export const JobTable: React.FC<JobTableProps> = ({
   onRefresh,
 }) => {
   const { language } = useLanguage();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
   const [filters, setFilters] = useState({
     status: "",
     search: "",
@@ -280,10 +288,7 @@ export const JobTable: React.FC<JobTableProps> = ({
         >
           <Table variant="simple" size="md">
             <Thead
-              bg="blue.800"
-              _dark={{
-                bg: "#000000",
-              }}
+              bg={isDark ? getAdditionalColor("black", isDark) : "blue.800"}
             >
               <Tr>
                 <Th
@@ -403,18 +408,25 @@ export const JobTable: React.FC<JobTableProps> = ({
               {filteredAndSortedJobs.map((job, index) => (
                 <Tr
                   key={job.jobID}
-                  bg={index % 2 === 0 ? "gray.100" : "white"}
+                  bg={
+                    index % 2 === 0
+                      ? isDark
+                        ? getCardBackgroundColor(isDark)
+                        : "gray.100"
+                      : isDark
+                      ? getBackgroundColor(isDark)
+                      : "white"
+                  }
                   borderBottom="1px solid"
-                  borderColor="gray.200"
-                  _dark={{
-                    bg: index % 2 === 0 ? "#1a1a2e" : "#0f0f23",
-                    borderColor: "#8a2be2",
-                  }}
+                  borderColor={
+                    isDark
+                      ? getAdditionalColor("brightPurple", isDark)
+                      : "gray.200"
+                  }
                   _hover={{
-                    bg: "blue.100",
-                    _dark: {
-                      bg: "#2a2a3e",
-                    },
+                    bg: isDark
+                      ? getAdditionalColor("mediumBluePurple", isDark)
+                      : "blue.100",
                   }}
                   transition="all 0.2s"
                 >

@@ -12,6 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { FaSun, FaMoon, FaServer } from "react-icons/fa";
 import { IconType } from "react-icons";
+import {
+  getBackgroundColor,
+  getTextColor,
+  getBorderColor,
+  getAdditionalColor,
+} from "../theme";
 
 const TopBar: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -19,11 +25,11 @@ const TopBar: React.FC = () => {
 
   const bgColor = useColorModeValue(
     "rgba(255, 255, 255, 0.95)",
-    "rgba(15, 15, 35, 0.95)"
+    `rgba(15, 15, 35, 0.95)`
   );
-  const borderColor = useColorModeValue("gray.200", "#8a2be2");
-  const textColor = useColorModeValue("gray.800", "#8a2be2");
-  const logoColor = useColorModeValue("blue.600", "#8a2be2");
+  const borderColor = useColorModeValue("gray.200", getBorderColor(true));
+  const textColor = useColorModeValue("gray.800", getTextColor(true));
+  const logoColor = useColorModeValue("blue.600", getTextColor(true));
 
   return (
     <Box
@@ -48,8 +54,22 @@ const TopBar: React.FC = () => {
         right: 0,
         bottom: 0,
         background: useColorModeValue(
-          "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          "linear-gradient(135deg, #0f0f23 0%, #8a2be2 25%, #ff0080 50%, #00bfff 75%, #0f0f23 100%)"
+          `linear-gradient(135deg, ${getAdditionalColor(
+            "blueGradientStart",
+            false
+          )} 0%, ${getAdditionalColor("purpleGradientEnd", false)} 100%)`,
+          `linear-gradient(135deg, ${getBackgroundColor(
+            true
+          )} 0%, ${getAdditionalColor(
+            "brightPurple",
+            true
+          )} 25%, ${getAdditionalColor(
+            "brightMagenta",
+            true
+          )} 50%, ${getAdditionalColor(
+            "deepSkyBlue",
+            true
+          )} 75%, ${getBackgroundColor(true)} 100%)`
         ),
         opacity: useColorModeValue(0.1, 0.3),
         zIndex: -1,
