@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import {
   Box,
   Table,
@@ -24,7 +24,6 @@ import {
   AlertDialogOverlay,
   useColorMode,
 } from "@chakra-ui/react";
-import { useRef } from "react";
 
 import { Job, JobStatus, JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
