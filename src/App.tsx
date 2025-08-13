@@ -9,12 +9,7 @@ import {
 import { useTheme } from "./hooks/useTheme";
 import { JobDashboard } from "./components/JobDashboard";
 import "./i18n"; // Initialize i18n
-import {
-  getBackgroundColor,
-  getTextColor,
-  getAdditionalColor,
-  getBlueColor,
-} from "./theme";
+import { getBackgroundColor, getTextColor, getBlueColor } from "./theme";
 
 // Configure Chakra UI theme with proper color mode support
 const chakraTheme = extendTheme({
@@ -26,8 +21,41 @@ const chakraTheme = extendTheme({
     global: (props: any) => ({
       body: {
         bg: props.colorMode === "dark" ? "#0d1117" : "#ffffff",
+        color: props.colorMode === "dark" ? "#f0f6fc" : "#2d3748",
+      },
+      // Ensure all text elements inherit proper colors
+      "p, div, span, h1, h2, h3, h4, h5, h6": {
+        color: props.colorMode === "dark" ? "#f0f6fc" : "#2d3748",
+      },
+      // Secondary text elements
+      ".chakra-text": {
+        color: props.colorMode === "dark" ? "#8b949e" : "#4a5568",
+      },
+      // Input and form elements
+      "input, select, textarea": {
+        bg: props.colorMode === "dark" ? "#21262d" : "#ffffff",
+        color: props.colorMode === "dark" ? "#f0f6fc" : "#2d3748",
+        borderColor: props.colorMode === "dark" ? "#30363d" : "#e2e8f0",
+      },
+      // Button text
+      button: {
+        color: props.colorMode === "dark" ? "#f0f6fc" : "#2d3748",
       },
     }),
+  },
+  colors: {
+    gray: {
+      50: "#f7fafc",
+      100: "#edf2f7",
+      200: "#e2e8f0",
+      300: "#cbd5e0",
+      400: "#a0aec0",
+      500: "#718096",
+      600: "#4a5568",
+      700: "#2d3748",
+      800: "#1a202c",
+      900: "#171923",
+    },
   },
 });
 
@@ -54,14 +82,10 @@ const AppContent: React.FC = () => {
             fontWeight="bold"
             color={
               isDark
-                ? getAdditionalColor("brightGreen", isDark)
+                ? "#f0f6fc" // Light text for dark mode
                 : getBlueColor("600", isDark)
             }
-            textShadow={
-              isDark
-                ? `0 0 10px ${getAdditionalColor("brightGreen", isDark)}4D`
-                : "none"
-            }
+            textShadow="none"
           >
             Job Dashboard
           </Text>

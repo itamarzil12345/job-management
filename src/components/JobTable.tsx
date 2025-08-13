@@ -306,7 +306,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("name")}
-                  color={getGrayColor("100", isDark)}
+                  color={isDark ? "#f0f6fc" : "#2d3748"}
                 >
                   {"Job Name"}
                   {filters.sortBy === "name" && (
@@ -327,7 +327,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("priority")}
-                  color={getGrayColor("100", isDark)}
+                  color={isDark ? "#f0f6fc" : "#2d3748"}
                 >
                   {"Priority"}
                   {filters.sortBy === "priority" && (
@@ -348,7 +348,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("status")}
-                  color={getGrayColor("100", isDark)}
+                  color={isDark ? "#f0f6fc" : "#2d3748"}
                 >
                   {"Status"}
                   {filters.sortBy === "status" && (
@@ -366,11 +366,11 @@ export const JobTable: React.FC<JobTableProps> = ({
                     </Text>
                   )}
                 </Th>
-                <Th color={getGrayColor("100", isDark)}>{"Progress"}</Th>
+                <Th color={isDark ? "#f0f6fc" : "#2d3748"}>{"Progress"}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("startedAt")}
-                  color={getGrayColor("100", isDark)}
+                  color={isDark ? "#f0f6fc" : "#2d3748"}
                 >
                   {"Start Time"}
                   {filters.sortBy === "startedAt" && (
@@ -391,7 +391,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                 <Th
                   cursor="pointer"
                   onClick={() => handleSort("completedAt")}
-                  color={getGrayColor("100", isDark)}
+                  color={isDark ? "#f0f6fc" : "#2d3748"}
                 >
                   {"End Time"}
                   {filters.sortBy === "completedAt" && (
@@ -409,7 +409,7 @@ export const JobTable: React.FC<JobTableProps> = ({
                     </Text>
                   )}
                 </Th>
-                <Th color={getGrayColor("100", isDark)}>{"Actions"}</Th>
+                <Th color={isDark ? "#f0f6fc" : "#2d3748"}>{"Actions"}</Th>
               </Tr>
             </Thead>
             <Tbody>

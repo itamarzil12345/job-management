@@ -24,6 +24,7 @@ html[data-theme="dark"] #root,
 .chakra-ui-dark body,
 .chakra-ui-dark #root {
   background-color: #0d1117 !important;
+  color: #f0f6fc !important;
 }
 
 /* Additional dark mode selectors for different Chakra UI approaches */
@@ -31,6 +32,30 @@ html[data-theme="dark"] #root,
 [data-chakra-ui-color-mode="dark"] body,
 [data-chakra-ui-color-mode="dark"] #root {
   background-color: #0d1117 !important;
+  color: #f0f6fc !important;
+}
+
+/* Dark mode text colors for all elements */
+[data-chakra-ui-color-mode="dark"] p,
+[data-chakra-ui-color-mode="dark"] div,
+[data-chakra-ui-color-mode="dark"] span,
+[data-chakra-ui-color-mode="dark"] h1,
+[data-chakra-ui-color-mode="dark"] h2,
+[data-chakra-ui-color-mode="dark"] h3,
+[data-chakra-ui-color-mode="dark"] h4,
+[data-chakra-ui-color-mode="dark"] h5,
+[data-chakra-ui-color-mode="dark"] h6 {
+  color: #f0f6fc !important;
+}
+
+/* Dark mode secondary text */
+[data-chakra-ui-color-mode="dark"] .secondary-text {
+  color: #8b949e !important;
+}
+
+/* Dark mode muted text */
+[data-chakra-ui-color-mode="dark"] .muted-text {
+  color: #6e7681 !important;
 }
 
 #root {
