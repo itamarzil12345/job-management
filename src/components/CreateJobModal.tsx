@@ -19,7 +19,6 @@ import {
 } from "@chakra-ui/react";
 import { JobPriority } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
-import { getBlueColor } from "../theme";
 
 interface CreateJobModalProps {
   isOpen: boolean;

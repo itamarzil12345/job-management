@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { JobStatus } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
-import { getGrayColor, getRedColor } from "../theme";
+import { getGrayColor } from "../theme";
 
 interface DeleteJobsModalProps {
   isOpen: boolean;

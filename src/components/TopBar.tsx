@@ -11,7 +11,6 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FaSun, FaMoon, FaServer } from "react-icons/fa";
-import { IconType } from "react-icons";
 import {
   getBackgroundColor,
   getTextColor,

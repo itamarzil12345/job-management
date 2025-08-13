@@ -1,18 +1,9 @@
 import React from "react";
-import {
-  SimpleGrid,
-  Box,
-  VStack,
-  Text,
-  useColorModeValue,
-  useColorMode,
-} from "@chakra-ui/react";
+import { SimpleGrid, Box, VStack, Text, useColorMode } from "@chakra-ui/react";
 import { JobStatus } from "../types/job";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
   getCardBackgroundColor,
-  getTextColor,
-  getBorderColor,
   getAdditionalColor,
   getGrayColor,
   getBlueColor,

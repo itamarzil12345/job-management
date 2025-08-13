@@ -4,10 +4,7 @@ import {
   VStack,
   HStack,
   Button,
-  Text,
   useDisclosure,
-  Grid,
-  GridItem,
   useColorMode,
 } from "@chakra-ui/react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -116,12 +113,6 @@ export const JobDashboard: React.FC = () => {
       setIsResizing(false);
       document.body.style.cursor = "";
       document.body.style.userSelect = "";
-    };
-
-    const handleMouseDown = () => {
-      setIsResizing(true);
-      document.body.style.cursor = "col-resize";
-      document.body.style.userSelect = "none";
     };
 
     if (isResizing) {

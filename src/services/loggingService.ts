@@ -1,4 +1,4 @@
-import { LogEntry } from '../components/SystemLogs';
+import { LogEntry } from "../components/SystemLogs";
 
 class LoggingService {
   private logs: LogEntry[] = [];
@@ -6,9 +6,9 @@ class LoggingService {
   private maxLogs = 200;
 
   addLog(
-    level: LogEntry['level'],
+    level: LogEntry["level"],
     message: string,
-    source?: LogEntry['source']
+    source?: LogEntry["source"]
   ) {
     const log: LogEntry = {
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
@@ -29,29 +29,20 @@ class LoggingService {
     this.notifyListeners();
   }
 
-  addInfo(message: string, source?: LogEntry['source']) {
-    this.addLog('info', message, source);
+  addInfo(message: string, source?: LogEntry["source"]) {
+    this.addLog("info", message, source);
   }
 
-  addSuccess(message: string, source?: LogEntry['source']) {
-    this.addLog('success', message, source);
+  addSuccess(message: string, source?: LogEntry["source"]) {
+    this.addLog("success", message, source);
   }
 
-  addWarning(message: string, source?: LogEntry['source']) {
-    this.addLog('warning', message, source);
+  addWarning(message: string, source?: LogEntry["source"]) {
+    this.addLog("warning", message, source);
   }
 
-  addError(message: string, source?: LogEntry['source']) {
-    this.addLog('error', message, source);
-  }
-
-  getLogs(): LogEntry[] {
-    return [...this.logs];
-  }
-
-  clearLogs() {
-    this.logs = [];
-    this.notifyListeners();
+  addError(message: string, source?: LogEntry["source"]) {
+    this.addLog("error", message, source);
   }
 
   subscribe(callback: (logs: LogEntry[]) => void) {
@@ -65,7 +56,7 @@ class LoggingService {
   }
 
   private notifyListeners() {
-    this.listeners.forEach(callback => callback([...this.logs]));
+    this.listeners.forEach((callback) => callback([...this.logs]));
   }
 }
 

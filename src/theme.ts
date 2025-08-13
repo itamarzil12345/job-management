@@ -239,11 +239,6 @@ export const theme = {
   },
 };
 
-// Helper function to get theme-aware colors
-export const getThemeColors = (isDark: boolean) => {
-  return isDark ? theme.colors.dark : theme.colors.light;
-};
-
 // Export individual color getters for convenience
 export const getBackgroundColor = (isDark: boolean) =>
   isDark ? theme.colors.dark.primary : theme.colors.light.primary;
